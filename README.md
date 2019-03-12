@@ -12,10 +12,13 @@ Python规范参考：[Google Python Style Guide](https://google.github.io/styleg
 
 ## 需求分析
 
-> 需要实现的功能（不分前后）
+> 需要提供的功能（不分前后）
 
 + [ ] 中文分词
 + [ ] 倒排索引
+
+
+## 接口设计
 
 
 ## 具体实现
