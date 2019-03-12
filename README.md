@@ -3,11 +3,22 @@
 > 本项目仅包含A组部分实践内容
 
 
+## [使用文档](./DOC.md)
+
+
 ## 代码规范
 
 Cpp规范参考：[Google C++ Style Guide](https://google.github.io/styleguide/cppguide.html)
 
 Python规范参考：[Google Python Style Guide](https://google.github.io/styleguide/pyguide.html)
+
+更改以及补充参见：[Code Style](./CODESTYLE.md)
+
+
+## 目录结构
+* src -------- 源代码
+* test ------- 测试代码
+* examples --- 示例
 
 
 ## 需求分析
