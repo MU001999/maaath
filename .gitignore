@@ -31,5 +31,9 @@
 *.out
 *.app
 
+# Editor folders
 .vscode/
 .vs/
+
+# Python
+*.pyc
