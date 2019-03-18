@@ -1,8 +1,10 @@
+#include<des.hpp>
+
 #include<map>
-#include<vector>
 #include<set>
 
 #include"utf8string.cpp"
+
 class InvertedIndex
 {
 	private:
