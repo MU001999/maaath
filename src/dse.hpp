@@ -1,4 +1,7 @@
+#include <cstring>
+
 #include <vector>
-#include <bitset>
+#include <string>
+#include <memory>
 
 #include "utf8string.hpp"
