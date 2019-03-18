@@ -105,3 +105,8 @@ const char* Utf8String::c_str() const noexcept
 {
     return raw_string.c_str();
 }
+
+bool operator==(const Utf8String &lhs, const Utf8String &rhs)
+{
+    return lhs.raw == rhs.raw;
+}
