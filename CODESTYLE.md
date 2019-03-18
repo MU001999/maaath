@@ -113,7 +113,7 @@ includes的顺序如下
 
 ### 避免在头文件中using namespace xxx
 
-避免在头文件中`using namespace xxx`，是的C++文件中的作用域被污染。
+避免在头文件中`using namespace xxx`，使得C++文件中的作用域被污染。
 
 ## 杂项
 
