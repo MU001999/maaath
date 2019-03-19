@@ -19,10 +19,13 @@ private:
 public:
     static const size_type npos = -1;
 
+
     Utf8String(std::vector<value_type> &&data) noexcept;
 
     // Constructor, receives std::string
     Utf8String(const raw_type &raw_string);
+
+    Utf8String(const char *raw_string);
 
     Utf8String(const Utf8String &rhs);
 
@@ -30,32 +33,39 @@ public:
 
     ~Utf8String();
 
+
     Utf8String& operator=(const raw_type &raw_string);
+
+    Utf8String& operator=(const char *raw_string);
 
     Utf8String& operator=(const Utf8String &rhs);
 
     Utf8String& operator=(Utf8String &&rhs) noexcept;
 
-    reference operator[](std::size_t index);
-
     const_reference operator[](std::size_t index) const;
+
 
     // Returns a substring [pos, pos+count). if the requested substring extends past the end of the string, or if count == npos, the returned substring is [pos, size()).
     Utf8String substr(size_type pos = 0, size_type count = npos) const;
 
-    const size_type size() const noexcept;
+    size_type size() const noexcept;
 
     raw_type raw() const noexcept;
 
     const char* c_str() const noexcept;
 
+
     friend bool operator==(const Utf8String &lhs, const Utf8String &rhs);
+
+    friend bool operator!=(const Utf8String &lhs, const Utf8String &rhs);
 
     friend bool operator<(const Utf8String &lhs, const Utf8String &rhs);
 };
 
 
 extern bool operator==(const Utf8String &lhs, const Utf8String &rhs);
+
+extern bool operator!=(const Utf8String &lhs, const Utf8String &rhs);
 
 extern bool operator<(const Utf8String &lhs, const Utf8String &rhs);
 
