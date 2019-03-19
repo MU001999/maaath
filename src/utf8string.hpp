@@ -1,3 +1,6 @@
+#pragma once
+
+
 class Utf8String
 {
 public:
@@ -52,7 +55,7 @@ public:
 };
 
 
-extern bool operator==(const U8S &lhs, const Utf8String &rhs);
+extern bool operator==(const Utf8String &lhs, const Utf8String &rhs);
 
 extern bool operator<(const Utf8String &lhs, const Utf8String &rhs);
 
