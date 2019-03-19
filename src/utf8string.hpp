@@ -16,6 +16,8 @@ private:
 public:
     static const size_type npos = -1;
 
+    Utf8String(std::vector<value_type> &&data) noexcept;
+
     // Constructor, receives std::string
     Utf8String(const raw_type &raw_string);
 
