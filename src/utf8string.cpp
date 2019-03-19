@@ -4,6 +4,35 @@
 using U8S = Utf8String;
 
 
+U8S::Utf8String(std::vector<value_type> &&temp) noexcept : data(std::move(temp))
+{
+    for (auto chr: data)
+    {
+        switch (chr & 0b11111000111100001110000000000000)
+        {
+        case 0:
+            raw_string += *(((char*)&chr)+3);
+            break;
+        case 0b11 << 14:
+            raw_string += *(((char*)&chr)+2);
+            raw_string += *(((char*)&chr)+3);
+            break;
+        case 0b111000001 << 15:
+            raw_string += *(((char*)&chr)+1);
+            raw_string += *(((char*)&chr)+2);
+            raw_string += *(((char*)&chr)+3);
+            break;
+        case 0b11110000100000001 << 15:
+            raw_string += *(((char*)&chr)+0);
+            raw_string += *(((char*)&chr)+1);
+            raw_string += *(((char*)&chr)+2);
+            raw_string += *(((char*)&chr)+3);
+        default:
+            break;
+        }
+    }
+}
+
 U8S::Utf8String(const raw_type &raw_string) : raw_string(raw_string)
 {
     value_type temp;
@@ -38,10 +67,9 @@ U8S::Utf8String(const U8S &rhs) : data(rhs.data), raw_string(rhs.raw_string)
     // nothing
 }
 
-U8S::Utf8String(U8S &&rhs) noexcept
+U8S::Utf8String(U8S &&rhs) noexcept : data(std::move(rhs.data)), raw_string(std::move(rhs.raw_string))
 {
-    std::swap(data, rhs.data);
-    std::swap(raw_string, rhs.raw_string);
+    // nothing
 }
 
 U8S::~Utf8String()
@@ -60,7 +88,7 @@ U8S& U8S::operator=(const raw_type &raw_string)
     {
         switch (*reading & 0b11111000)
         {
-        case 0b00000000:
+        case 0:
             data.push_back(*reading++);
             break;
         case 0b11000000:
@@ -102,6 +130,11 @@ U8S::reference U8S::operator[](std::size_t index)
 U8S::const_reference U8S::operator[](std::size_t index) const
 {
     return data[index];
+}
+
+Utf8String U8S::substr(size_type pos, size_type count) const
+{
+    return std::vector<value_type>(data.begin() + pos, data.begin() + std::min(size(), pos + count));
 }
 
 const U8S::size_type U8S::size() const noexcept
