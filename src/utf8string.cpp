@@ -1,7 +1,10 @@
 #include <dse.hpp>
 
 
-Utf8String::Utf8String(const raw_type &raw_string) : raw_string(raw_string)
+using U8S = Utf8String;
+
+
+U8S::Utf8String(const raw_type &raw_string) : raw_string(raw_string)
 {
     value_type temp;
 
@@ -30,23 +33,23 @@ Utf8String::Utf8String(const raw_type &raw_string) : raw_string(raw_string)
     }
 }
 
-Utf8String::Utf8String(const Utf8String &rhs) : data(rhs.data), raw_string(rhs.raw_string)
+U8S::Utf8String(const U8S &rhs) : data(rhs.data), raw_string(rhs.raw_string)
 {
     // nothing
 }
 
-Utf8String::Utf8String(Utf8String &&rhs) noexcept
+U8S::Utf8String(U8S &&rhs) noexcept
 {
     std::swap(data, rhs.data);
     std::swap(raw_string, rhs.raw_string);
 }
 
-Utf8String::~Utf8String()
+U8S::~Utf8String()
 {
     // nothing
 }
 
-Utf8String& Utf8String::operator=(const Utf8String::raw_type &raw_string)
+U8S& U8S::operator=(const raw_type &raw_string)
 {
     this->raw_string = raw_string;
 
@@ -79,34 +82,49 @@ Utf8String& Utf8String::operator=(const Utf8String::raw_type &raw_string)
     return *this;
 }
 
-Utf8String& Utf8String::operator=(const Utf8String &rhs)
+U8S& U8S::operator=(const U8S &rhs)
 {
     data = rhs.data;
     raw_string = rhs.raw_string;
 }
 
-Utf8String& Utf8String::operator=(Utf8String &&rhs) noexcept
+U8S& U8S::operator=(U8S &&rhs) noexcept
 {
     std::swap(data, rhs.data);
     std::swap(raw_string, rhs.raw_string);
 }
 
-const Utf8String::size_type Utf8String::size() const noexcept
+U8S::reference U8S::operator[](std::size_t index)
+{
+    return data[index];
+}
+
+U8S::const_reference U8S::operator[](std::size_t index) const
+{
+    return data[index];
+}
+
+const U8S::size_type U8S::size() const noexcept
 {
     return data.size();
 }
 
-Utf8String::raw_type Utf8String::raw() const noexcept
+U8S::raw_type U8S::raw() const noexcept
 {
     return raw_string;
 }
 
-const char* Utf8String::c_str() const noexcept
+const char* U8S::c_str() const noexcept
 {
     return raw_string.c_str();
 }
 
-bool operator==(const Utf8String &lhs, const Utf8String &rhs)
+bool operator==(const U8S &lhs, const Utf8String &rhs)
 {
-    return lhs.raw == rhs.raw;
+    return lhs.raw_string == rhs.raw_string;
+}
+
+bool operator<(const Utf8String &lhs, const Utf8String &rhs)
+{
+    return lhs.raw_string < rhs.raw_string;
 }
