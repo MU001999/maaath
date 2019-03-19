@@ -77,6 +77,7 @@ string table_name; // OK - uses underscore
 string tablename; // OK - all lowercase
 ```
 ```cpp
+// ×
 string tableName; // Bad - mixed case
 ```
 
