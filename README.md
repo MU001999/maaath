@@ -25,7 +25,7 @@ Python规范参考：[Google Python Style Guide](https://google.github.io/styleg
 
 > 需要提供的功能（不分前后）
 
-+ [ ] UTF-8字符串解析
++ [x] UTF-8字符串解析
 + [ ] 获取信息量
 + [ ] 中文分词
 + [ ] 倒排索引
