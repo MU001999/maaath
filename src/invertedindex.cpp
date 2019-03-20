@@ -20,7 +20,6 @@ void InvertedIndex::add_file(Utf8String utf8_string,int file_id)
 {
 	std::vector<wordmap> word_list;
 	word_list = get_segmentation(Utf8String sentence,InfoQuantity dict);
-	std::set<int>::iterator t;
 	for(int i = 0;i<word_list.size();i++)
 	{	
 		this->index[word_list[i].word].insert(file_id);
