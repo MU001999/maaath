@@ -3,11 +3,11 @@
 class InfoQuantity
 {
 private:
-    std::map<std::string, double> info_quantity;
+    std::map<Utf8String, double> info_quantity;
 
 public:
 
-    InfoQuantity(std::string filename1 = "../resources/charfreq.txt", std::string filename2 = "../resources/wordfreq.txt");
-    double get_infoquantity(std::string word);
+    InfoQuantity(Utf8String filename1 = "../resources/charfreq.txt", Utf8String filename2 = "../resources/wordfreq.txt");
+    double get_infoquantity(Utf8String word);
     ~InfoQuantity();
 };
