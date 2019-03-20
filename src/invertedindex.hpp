@@ -1,19 +1,12 @@
-#include<dse.hpp>
-
-#include<map>
-#include<set>
-
-#include"utf8string.cpp"
+#pragma once
 
 class InvertedIndex
 {
 	private:
-		map<int,set<int>> index;//索引中每个词id对应一个文件id列表
+		std::ap<Utf8String,set<int>> index;//索引中每个词id对应一个文件id列表
 	public:
 		InvertedIndex();
-		set<int> get_file_list(int id);
-		void add_file(int id,int fileid);
-		map<int,int> get_word_interval(Utf8String file,int fileid,map<string,double>word);//这里的file utf8类
-		vector<int> get_best_interval(int nowpos,vector<vector<int>>& interval_list,wordfreq word);//word 词频字频类
+		std::set<int> get_file_list(Utf8String utf8_string);
+		void add_file(Utf8String utf8_string,int file_id);//utf8_string 词
 
 };
