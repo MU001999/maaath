@@ -139,7 +139,7 @@ Utf8String::raw_type Utf8String::raw()
         else if (chr < 0b11111U << 27) (((raw_string += chr >> 24 & 0xFF) += chr >> 16 & 0xFF) += chr >> 8 & 0xFF) += chr & 0xFF;
         else break;
     }
-    
+
     return raw_string;
 }
 
@@ -161,15 +161,15 @@ const char* Utf8String::c_str() const noexcept
 
 bool operator==(const Utf8String &lhs, const Utf8String &rhs)
 {
-    return lhs.raw_string == rhs.raw_string;
+    return lhs.data == rhs.data;
 }
 
 bool operator!=(const Utf8String &lhs, const Utf8String &rhs)
 {
-    return lhs.raw_string != rhs.raw_string;
+    return lhs.data != rhs.data;
 }
 
 bool operator<(const Utf8String &lhs, const Utf8String &rhs)
 {
-    return lhs.raw_string < rhs.raw_string;
+    return lhs.data < rhs.data;
 }
