@@ -16,7 +16,7 @@ std::set<int> InvertedIndex::get_file_list(Utf8String word)
 			return empty_file_list;	
 	} 
 }
-void InvertedIndex::add_file(Utf8String sentence,int file_id,InfoQuantity dict)
+void InvertedIndex::add_file(Utf8String sentence,int file_id,InfoQuantity dict)//将一句话中的所有的词加入到倒排索引中 
 {
 	std::vector<wordmap> word_list;
 	std::map<int,int> ambiguity_section;
