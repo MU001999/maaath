@@ -1,5 +1,6 @@
 #include <cstring>
 
+#include <set>
 #include <map>
 #include <vector>
 #include <string>
@@ -9,3 +10,4 @@
 
 #include "utf8string.hpp"
 #include "infoquantity.hpp"
+#include "invertedindex.hpp"
