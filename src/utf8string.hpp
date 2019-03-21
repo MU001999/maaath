@@ -61,9 +61,13 @@ public:
     size_type size() const noexcept;
 
     // Returns the raw string
+    raw_type raw();
+
     raw_type raw() const noexcept;
 
     // Returns a non-modifiable standard C character array version of the string
+    const char* c_str();
+
     const char* c_str() const noexcept;
 
 

@@ -13,17 +13,7 @@
 
 Utf8String::Utf8String() {}
 
-Utf8String::Utf8String(std::vector<value_type> &&temp) noexcept : data(std::move(temp))
-{
-    for (auto chr : data)
-    {
-        if (chr < 0b10000000U) raw_string += chr;
-        else if (chr < 0b111U << 13) (raw_string += chr >> 8 & 0xFF) += chr & 0xFF;
-        else if (chr < 0b1111U << 20) ((raw_string += chr >> 16 & 0xFF) += chr >> 8 & 0xFF) += chr & 0xFF;
-        else if (chr < 0b11111U << 27) (((raw_string += chr >> 24 & 0xFF) += chr >> 16 & 0xFF) += chr >> 8 & 0xFF) += chr & 0xFF;
-        else break;
-    }
-}
+Utf8String::Utf8String(std::vector<value_type> &&temp) noexcept : data(std::move(temp)) {}
 
 Utf8String::Utf8String(const raw_type &raw_string) : raw_string(raw_string)
 {
@@ -137,9 +127,30 @@ Utf8String::size_type Utf8String::size() const noexcept
     return data.size();
 }
 
+Utf8String::raw_type Utf8String::raw()
+{
+    if (!raw_string.empty()) return raw_string;
+
+    for (auto chr : data)
+    {
+        if (chr < 0b10000000U) raw_string += chr;
+        else if (chr < 0b111U << 13) (raw_string += chr >> 8 & 0xFF) += chr & 0xFF;
+        else if (chr < 0b1111U << 20) ((raw_string += chr >> 16 & 0xFF) += chr >> 8 & 0xFF) += chr & 0xFF;
+        else if (chr < 0b11111U << 27) (((raw_string += chr >> 24 & 0xFF) += chr >> 16 & 0xFF) += chr >> 8 & 0xFF) += chr & 0xFF;
+        else break;
+    }
+    
+    return raw_string;
+}
+
 Utf8String::raw_type Utf8String::raw() const noexcept
 {
     return raw_string;
+}
+
+const char* Utf8String::c_str()
+{
+    return raw().c_str();
 }
 
 const char* Utf8String::c_str() const noexcept
