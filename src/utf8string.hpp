@@ -86,15 +86,18 @@ extern bool operator!=(const Utf8String &lhs, const Utf8String &rhs);
 extern bool operator<(const Utf8String &lhs, const Utf8String &rhs);
 
 
-template <>
-struct std::less<Utf8String>
+namespace std
 {
-    using result_type = bool;
-    using first_argument_type = Utf8String;
-    using second_argument_type = Utf8String;
-
-    bool operator()(const Utf8String &lhs, const Utf8String &rhs) const
+    template <>
+    struct less<Utf8String>
     {
-        return lhs < rhs;
-    }
-};
+        using result_type = bool;
+        using first_argument_type = Utf8String;
+        using second_argument_type = Utf8String;
+
+        bool operator()(const Utf8String &lhs, const Utf8String &rhs) const
+        {
+            return lhs < rhs;
+        }
+    };
+}
