@@ -9,7 +9,7 @@
 #include <iostream>
 #include <functional>
 
-#include "../src/utf8string.hpp"
+#include "../src/utf8string.cpp"
 
 
 #define TEST(NAME) static int NAME = []{
