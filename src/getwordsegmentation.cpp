@@ -13,7 +13,7 @@ struct wordmap
 	int pos_in_sentence;
 };
 
-std::map<int,int> get_ambiguity_interval(Utf8String sentence,InfoQuantity dict)
+std::map<int,int> get_ambiguity_section(Utf8String sentence,InfoQuantity dict)
 {
 	int pos_of_sen = 0;
 	int temp_pos = 0;
