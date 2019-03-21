@@ -36,6 +36,10 @@ void InvertedIndex::add_file(Utf8String sentence,int file_id,InfoQuantity dict)
 		t++;
 		word_list.clear();
 
+	word_list = get_segmentation(Utf8String sentence,InfoQuantity dict);
+	for(int i = 0;i<word_list.size();i++)
+	{	
+		this->index[word_list[i].word].insert(file_id);
 	}
 	t = ambiguity_section.begin();
 	int se_begin = 0;
