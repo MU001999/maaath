@@ -37,3 +37,7 @@
 
 # Python
 *.pyc
+
+# vs files
+*.sln
+*.vcxproj*
