@@ -17,16 +17,16 @@ std::map<int,int> get_ambiguity_section(Utf8String sentence,InfoQuantity dict)
 	int pos_of_sen = 0;
 	int temp_pos = 0;
 	int end_of_sen = 0;
-	std::map<int,int>interval;
+	std::map<int,int>ambiguity;
 	double freq;
-	while(start<file.size())
+	while(pos_of_sen<sentence.size())
 	{
 		Utf8String temp;
 		int i;
 		for(i=8;i>1;i--)
 		{
 
-			temp = file.substr(start,i);
+			temp = sentence.substr(pos_of_sen,i);
 			freq = dict.get_infoquantity(temp);
 
 			if(freq>0)
@@ -60,15 +60,15 @@ std::map<int,int> get_ambiguity_section(Utf8String sentence,InfoQuantity dict)
 
 			temp_pos++;
 		}
-		interval[pos_of_sen] = end_of_sen;
+		ambiguity[pos_of_sen] = end_of_sen;
 		pos_of_sen = end_of_sen+1;
 
 	}
-	std::map<int,int>::iterator t = interval.end();
+	std::map<int,int>::iterator t = ambiguity.end();
 	t--;
 	if(t->second>=sentence.size())
 		t->second = sentence.size();
-	return interval;
+	return ambiguity;
 }
 
 double get_infoquantity(std::vector<wordmap>wl,InfoQuantity dict)
@@ -115,7 +115,7 @@ std::vector<wordmap> get_segmentation(Utf8String sentence,InfoQuantity dict)
 	Utf8String temp;
 	std::vector<wordmap> word_map_dict;
 	for(int i = 0;i<sentence.size()-1;i++){
-		if(sentence.size()-i==2){
+		if(sentence.size()-i<=2){
 			temp = sentence.substr(i,2);
 			if(dict.get_infoquantity(temp)>0)
 			word_map.pos_in_sentence =i;
@@ -161,7 +161,7 @@ std::vector<wordmap> get_segmentation(Utf8String sentence,InfoQuantity dict)
 		{
 			wordmap tem;
 			int pos_of_sen = 0;
-			int temp_size = sentence.size();
+			int temp_size = temp_segment.size();
 			for(int i =0;i<temp_size;i++){
 				while(pos_of_sen < temp_segment[i].pos_in_sentence){
 					tem.word = sentence.substr(pos_of_sen,1);
