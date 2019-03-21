@@ -9,9 +9,10 @@
 
 #include "utf8string.hpp"
 
-
 using U8S = Utf8String;
 
+
+U8S::Utf8String() {}
 
 U8S::Utf8String(std::vector<value_type> &&temp) noexcept : data(std::move(temp))
 {
