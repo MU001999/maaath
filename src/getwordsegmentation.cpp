@@ -83,11 +83,11 @@ double get_infoquantity(std::vector<wordmap>wl,InfoQuantity dict)
 	}
 	return info;
 } 
-void choice_word(std::vector<wordmap>word,std::bitset<32>bits,int count,std::vector<wordmap>&interval)
+void choice_word(std::vector<wordmap>word,std::bitset<32>bits,int count,std::vector<wordmap>&section)
 {
 	for(int i = 0;i<count;i++){
 		if(bits[i]){
-			interval.push_back(word[count-i-1]);
+			section.push_back(word[count-i-1]);
 		}
 	}
 }
@@ -108,7 +108,7 @@ bool is_overlapping(std::vector<wordmap>wd)
 	return false;
 }
 std::vector<wordmap> get_segmentation(Utf8String sentence,InfoQuantity dict)
-{//一个歧义区间 
+{
 	wordmap word_map;
 	Utf8String temp;
 	vector<wordmap> word_map_dict;
@@ -133,10 +133,9 @@ std::vector<wordmap> get_segmentation(Utf8String sentence,InfoQuantity dict)
 			
 		}
 	}
-	//word_map_dict 所有可能的词 
-	int count = word_map_dict.size();//开始全排列 
+	int count = word_map_dict.size();
 	int arrange = BIT; 
-	arrange = arrange<<count;//设置全排列的bit 
+	arrange = arrange<<count;
 	std::vector<wordmap>temp_segment;
 	std::vector<wordmap>best_segment;
 	for(int i =0;i<sentence.size();i++){
@@ -144,7 +143,7 @@ std::vector<wordmap> get_segmentation(Utf8String sentence,InfoQuantity dict)
 		tem.word=sentence.substr(i,1);
 		tem.pos_in_sentence = i; 
 		best_segment.push_back(tem);
-	}//最坏情况 
+	}
 	double freq = get_infoquantity(best_segment,dict);
 	while(arrange<BIT)
 	{
@@ -156,7 +155,7 @@ std::vector<wordmap> get_segmentation(Utf8String sentence,InfoQuantity dict)
 			arrange++;
 			continue;
 		}
-		else//将无冲突区间以及单字加入到temp_segment 
+		else
 		{
 			wordmap tem;
 			int pos_of_sen = 0;
