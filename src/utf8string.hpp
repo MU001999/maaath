@@ -87,9 +87,8 @@ extern bool operator<(const Utf8String &lhs, const Utf8String &rhs);
 
 
 template <>
-class std::less<Utf8String>
+struct std::less<Utf8String>
 {
-public:
     using result_type = bool;
     using first_argument_type = Utf8String;
     using second_argument_type = Utf8String;
