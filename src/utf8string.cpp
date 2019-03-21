@@ -13,7 +13,7 @@
 
 Utf8String::Utf8String() {}
 
-Utf8String::Utf8String(std::vector<value_type> &&temp) noexcept : data(std::move(temp)) {}
+Utf8String::Utf8String(std::u32string &&temp) noexcept : data(std::move(temp)) {}
 
 Utf8String::Utf8String(const raw_type &raw_string) : raw_string(raw_string)
 {
@@ -26,20 +26,20 @@ Utf8String::Utf8String(const raw_type &raw_string) : raw_string(raw_string)
         else if (*reading < 0b11100000U)
         {
             (temp = *reading++) <<= 8;
-            data.push_back(temp |= *reading++);
+            data += (temp |= *reading++);
         }
         else if (*reading < 0b11110000U)
         {
             (temp = *reading++) <<= 8;
             (temp |= *reading++) <<= 8;
-            data.push_back(temp |= *reading++);
+            data += (temp |= *reading++);
         }
         else if (*reading < 0b11111000U)
         {
             (temp = *reading++) <<= 8;
             (temp |= *reading++) <<= 8;
             (temp |= *reading++) <<= 8;
-            data.push_back(temp |= *reading++);
+            data += (temp |= *reading++);
         }
         else break;
         temp = 0;
@@ -65,24 +65,24 @@ Utf8String& Utf8String::operator=(const raw_type &raw_string)
     auto reading = (unsigned char*)raw_string.c_str();
     while (*reading != 0)
     {
-        if (*reading < 0b10000000U) data.push_back(*reading++);
+        if (*reading < 0b10000000U) data += *reading++;
         else if (*reading < 0b11100000U)
         {
             (temp = *reading++) <<= 8;
-            data.push_back(temp |= *reading++);
+            data += (temp |= *reading++);
         }
         else if (*reading < 0b11110000U)
         {
             (temp = *reading++) <<= 8;
             (temp |= *reading++) <<= 8;
-            data.push_back(temp |= *reading++);
+            data += (temp |= *reading++);
         }
         else if (*reading < 0b11111000U)
         {
             (temp = *reading++) <<= 8;
             (temp |= *reading++) <<= 8;
             (temp |= *reading++) <<= 8;
-            data.push_back(temp |= *reading++);
+            data += (temp |= *reading++);
         }
         else break;
         temp = 0;
@@ -118,8 +118,7 @@ Utf8String::const_reference Utf8String::operator[](std::size_t index) const
 
 Utf8String Utf8String::substr(size_type pos, size_type count) const
 {
-    if (count == npos) return std::vector<value_type>(data.begin() + pos, data.end());
-    return std::vector<value_type>(data.begin() + pos, data.begin() + std::min(size(), pos + count));
+    return data.substr(pos, count);
 }
 
 Utf8String::size_type Utf8String::size() const noexcept

@@ -13,7 +13,7 @@ public:
     using const_pointer = const value_type&;
 
 private:
-    std::vector<value_type> data;
+    std::u32string data;
     raw_type raw_string;
 
 public:
@@ -24,7 +24,7 @@ public:
     Utf8String();
 
     // Constructor, receives std::vector<value_type>
-    Utf8String(std::vector<value_type> &&data) noexcept;
+    Utf8String(std::u32string &&data) noexcept;
 
     // Constructor, receives raw_string
     Utf8String(const raw_type &raw_string);
