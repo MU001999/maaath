@@ -1,3 +1,5 @@
+#include "dse.hpp"
+
 #include <cstring>
 
 #include <map>
@@ -5,8 +7,6 @@
 #include <iostream>
 #include <fstream>
 #include <cmath>
-
-#include "dse.hpp"
 
 InfoQuantity::InfoQuantity(Utf8String filename1, Utf8String filename2)
 {
@@ -37,7 +37,4 @@ double InfoQuantity::get_infoquantity(Utf8String word)
         if(word == mp.first) return mp.second;
 }
 
-InfoQuantity::~InfoQuantity()
-{
-
-}
+InfoQuantity::~InfoQuantity() {}
