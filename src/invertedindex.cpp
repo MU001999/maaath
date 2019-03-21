@@ -253,5 +253,23 @@ void InvertedIndex::add_file(Utf8String sentence,int file_id, InfoQuantity dict)
 		se_begin = t->second+1;
 		t++;
 	}
+	if(se_begin<sentence.size())
+	{
+		int j;
+		for(int i = se_begin;i<sentence.size();)
+		{
+			for(j=8;j>=2;j--)
+			{
+				Utf8String temp = sentence.substr(i,j);
+				if(dict.get_infoquantity(temp)>0)
+				{
+					this->index[temp.substr(i,j)].insert(file_id);
+					i = i+j;
+					break;
+				}
+			}
+			if(j==1)i++;
+		}
+	}
 
 }
