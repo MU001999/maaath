@@ -10,14 +10,10 @@
 #endif // DEBUG
 
 
-struct wordmap
-{
-    Utf8String word;
-    int pos_in_sentence;
-};
+static auto dict = InfoQuantity();
 
 
-static std::map<int, int> get_ambiguity_section(const Utf8String &sentence, InfoQuantity &dict)
+static std::map<int, int> get_ambiguity_section(const Utf8String &sentence)
 {
     int pos_of_sen = 0;
     int temp_pos = 0;
@@ -76,7 +72,7 @@ static std::map<int, int> get_ambiguity_section(const Utf8String &sentence, Info
     return ambiguity;
 }
 
-static double get_infoquantity(const std::vector<wordmap> &wl, InfoQuantity &dict)
+static double get_infoquantity(const std::vector<wordmap> &wl)
 {
     double info = 0;
     for (auto w : wl)
@@ -109,7 +105,7 @@ static bool is_overlapping(const std::vector<wordmap> &wd)
     return false;
 }
 
-std::vector<wordmap> get_segmentation(const Utf8String &sentence, InfoQuantity dict)
+std::vector<wordmap> get_segmentation(const Utf8String &sentence)
 {
     wordmap word_map;
     Utf8String temp;
@@ -158,7 +154,7 @@ std::vector<wordmap> get_segmentation(const Utf8String &sentence, InfoQuantity d
         auto temp_segment = choice_word(word_map_dict, bits, count);
         if (!is_overlapping(temp_segment))
         {
-            if ((tmpfreq = get_infoquantity(temp_segment, dict)) >= freq)
+            if ((tmpfreq = get_infoquantity(temp_segment)) >= freq)
             {
 #ifdef DEBUG
                 std::cout << "[FREQ] " << tmpfreq << std::endl;
@@ -188,6 +184,12 @@ std::vector<wordmap> get_segmentation(const Utf8String &sentence, InfoQuantity d
 }
 
 
+std::vector<wordmap> Segmentation::segment(const Utf8String &sentence)
+{
+    return get_segmentation(sentence);
+}
+
+
 InvertedIndex::InvertedIndex()
 {
     // TODO: Check if the serialization file exists, initialize the object
@@ -207,17 +209,17 @@ std::set<int> InvertedIndex::get_file_list(const Utf8String &word)
     }
 }
 
-void InvertedIndex::add_file(const Utf8String &sentence, int file_id, InfoQuantity dict)// Add all the words in a sentence to the inverted index
+void InvertedIndex::add_file(const Utf8String &sentence, int file_id)// Add all the words in a sentence to the inverted index
 {
     std::vector<wordmap> word_list;
     std::map<int, int> ambiguity_section;
-    ambiguity_section = get_ambiguity_section(sentence, dict);
+    ambiguity_section = get_ambiguity_section(sentence);
     Utf8String segment;
     std::map<int, int>::iterator t = ambiguity_section.begin();
     while (t != ambiguity_section.end())
     {
         segment = sentence.substr(t->first, t->second - t->first + 1);
-        word_list = get_segmentation(segment, dict);
+        word_list = get_segmentation(segment);
         for (int i = 0; i < word_list.size(); i++)
         {
             Utf8String temp = word_list[i].word;

@@ -1,5 +1,19 @@
 #pragma once
 
+
+struct wordmap
+{
+    Utf8String word;
+    int pos_in_sentence;
+};
+
+
+struct Segmentation
+{
+    static std::vector<wordmap> segment(const Utf8String &sentence);
+};
+
+
 class InvertedIndex
 {
 private:
@@ -10,5 +24,5 @@ public:
     ~InvertedIndex() {}
 
     std::set<int> get_file_list(const Utf8String &utf8_string);
-    void add_file(const Utf8String &utf8_string, int file_id, InfoQuantity dict); // utf8_string word
+    void add_file(const Utf8String &utf8_string, int file_id); // utf8_string word
 };
