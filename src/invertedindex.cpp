@@ -207,7 +207,7 @@ std::set<int> InvertedIndex::get_file_list(const Utf8String &word)
     }
 }
 
-void InvertedIndex::add_file(Utf8String sentence, int file_id, InfoQuantity dict)// Add all the words in a sentence to the inverted index
+void InvertedIndex::add_file(const Utf8String &sentence, int file_id, InfoQuantity dict)// Add all the words in a sentence to the inverted index
 {
     std::vector<wordmap> word_list;
     std::map<int, int> ambiguity_section;
