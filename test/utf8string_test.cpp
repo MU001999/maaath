@@ -33,6 +33,16 @@ TEST(OPERATORS)
 
     u8s = "罗钥轩天下No.1可爱！！！";
     assert(u8s.substr(0, 3) == "罗钥轩");
+
+    u8s[3] = '宇';
+    u8s[4] = '宙';
+    assert(u8s == "罗钥轩宇宙No.1可爱！！！");
+
+    u8s += "真的超级可爱啊啊啊啊！！！";
+    assert(u8s == "罗钥轩宇宙No.1可爱！！！真的超级可爱啊啊啊啊！！！");
+    
+    Utf8String an8s = "真的超级可爱啊啊啊啊！！！";
+    assert("罗钥轩宇宙No.1可爱！！！" + an8s == u8s);
 END()
 
 
