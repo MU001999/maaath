@@ -16,9 +16,10 @@ Python规范参考：[Google Python Style Guide](https://google.github.io/styleg
 
 
 ## 目录结构
-* src -------- 源代码
-* test ------- 测试代码
-* examples --- 示例
+* src --------- 源代码
+* test -------- 测试代码
+* examples ---- 示例
+* resources --- 资源文件
 
 
 ## 需求分析
@@ -26,8 +27,8 @@ Python规范参考：[Google Python Style Guide](https://google.github.io/styleg
 > 需要提供的功能（不分前后）
 
 + [x] UTF-8字符串解析
-+ [ ] 获取信息量
-+ [ ] 中文分词
++ [x] 获取信息量
++ [x] 中文分词
 + [ ] 倒排索引
 
 
