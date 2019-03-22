@@ -33,12 +33,12 @@ InfoQuantity::InfoQuantity(Utf8String filename1, Utf8String filename2)
 
 InfoQuantity::~InfoQuantity() {}
 
-double InfoQuantity::get_infoquantity(Utf8String word)
+double InfoQuantity::get_infoquantity(const Utf8String &word)
 {
     return info_quantity[word];
 }
 
-bool InfoQuantity::count(Utf8String word)
+bool InfoQuantity::count(const Utf8String &word) const
 {
     return info_quantity.count(word);
 }

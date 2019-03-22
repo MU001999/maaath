@@ -17,7 +17,7 @@ struct wordmap
 };
 
 
-static std::map<int, int> get_ambiguity_section(const Utf8String &sentence, const InfoQuantity &dict)
+static std::map<int, int> get_ambiguity_section(const Utf8String &sentence, InfoQuantity &dict)
 {
     int pos_of_sen = 0;
     int temp_pos = 0;
@@ -76,7 +76,7 @@ static std::map<int, int> get_ambiguity_section(const Utf8String &sentence, cons
     return ambiguity;
 }
 
-static double get_infoquantity(const std::vector<wordmap> &wl, const InfoQuantity &dict)
+static double get_infoquantity(const std::vector<wordmap> &wl, InfoQuantity &dict)
 {
     double info = 0;
     for (auto w : wl)
@@ -109,7 +109,7 @@ static bool is_overlapping(const std::vector<wordmap> &wd)
     return false;
 }
 
-std::vector<wordmap> get_segmentation(const Utf8String &sentence, const InfoQuantity &dict)
+std::vector<wordmap> get_segmentation(const Utf8String &sentence, InfoQuantity dict)
 {
     wordmap word_map;
     Utf8String temp;

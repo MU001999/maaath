@@ -12,8 +12,11 @@
 
 
 TEST(GETSEGMENT)
-    auto res = get_segmentation("记者读报道的来源是呱呱食堂", InfoQuantity());
-    for (auto s : res) std::cout << s.word.raw() << std::endl;
+    for (auto &s : get_segmentation("记者读报道的来源是呱呱食堂", InfoQuantity())) 
+        std::cout << s.word.raw() << std::endl;
+
+    for (auto &s : get_segmentation("要长大，要可爱，但不要变成各种奇奇怪怪的不可爱的人", InfoQuantity()))
+        std::cout << s.word.raw() << std::endl;
 END()
 
 
