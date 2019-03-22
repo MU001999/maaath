@@ -13,7 +13,7 @@
 
 Utf8String::Utf8String() {}
 
-Utf8String::Utf8String(std::u32string &&temp) noexcept : data(std::move(temp)) {}
+Utf8String::Utf8String(data_type &&temp) noexcept : data(std::move(temp)) {}
 
 Utf8String::Utf8String(const raw_type &raw_string) : raw_string(raw_string)
 {
@@ -47,6 +47,8 @@ Utf8String::Utf8String(const raw_type &raw_string) : raw_string(raw_string)
 }
 
 Utf8String::Utf8String(const char *raw_string) : Utf8String(std::string(raw_string)) {}
+
+Utf8String::Utf8String(size_type count, value_type chr) : Utf8String(raw_type(count, chr)) {}
 
 Utf8String::Utf8String(const Utf8String &rhs) : data(rhs.data), raw_string(rhs.raw_string) {}
 
@@ -110,9 +112,29 @@ Utf8String& Utf8String::operator=(Utf8String &&rhs) noexcept
     return *this;
 }
 
-Utf8String::const_reference Utf8String::operator[](std::size_t index) const
+Utf8String::reference Utf8String::operator[](size_type index)
+{
+    raw_string.clear();
+    return data[index];
+}
+
+Utf8String::const_reference Utf8String::operator[](size_type index) const
 {
     return data[index];
+}
+
+Utf8String& Utf8String::operator+=(value_type rhs)
+{
+    data += rhs;
+    raw_string.clear();
+    return *this;
+}
+
+Utf8String& Utf8String::operator+=(const Utf8String &rhs)
+{
+    data += rhs.data;
+    raw_string += rhs.raw();
+    return *this;
 }
 
 
@@ -157,6 +179,11 @@ const char* Utf8String::c_str() const noexcept
     return raw_string.c_str();
 }
 
+
+Utf8String operator+(const Utf8String &lhs, const Utf8String &rhs)
+{
+    return lhs.data + rhs.data;
+}
 
 bool operator==(const Utf8String &lhs, const Utf8String &rhs)
 {

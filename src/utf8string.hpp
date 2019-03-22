@@ -5,6 +5,7 @@ class Utf8String
 {
 public:
     using value_type = char32_t;
+    using data_type = std::u32string;
     using raw_type = std::string;
     using size_type = std::size_t;
     using reference = value_type & ;
@@ -13,7 +14,7 @@ public:
     using const_pointer = const value_type&;
 
 private:
-    std::u32string data;
+    data_type data;
     raw_type raw_string;
 
 public:
@@ -24,13 +25,16 @@ public:
     Utf8String();
 
     // Constructor, receives std::vector<value_type>
-    Utf8String(std::u32string &&data) noexcept;
+    Utf8String(data_type &&data) noexcept;
 
     // Constructor, receives raw_string
     Utf8String(const raw_type &raw_string);
 
     // Constructor, receives raw_string
     Utf8String(const char *raw_string);
+
+    // Consturctor, receives single char
+    Utf8String(size_type count, value_type chr);
 
     // Copy constructor
     Utf8String(const Utf8String &rhs);
@@ -51,11 +55,16 @@ public:
     Utf8String& operator=(Utf8String &&rhs) noexcept;
 
     // Accesses the specified character
-    const_reference operator[](std::size_t index) const;
+    reference operator[](size_type index);
 
+    const_reference operator[](size_type index) const;
+
+    Utf8String& operator+=(value_type rhs);
+
+    Utf8String& operator+=(const Utf8String &rhs);
 
     // Returns a substring [pos, pos+count). if the requested substring extends past the end of the string, or if count == npos, the returned substring is [pos, size()).
-    Utf8String substr(size_type pos = 0, size_type count = npos) const;
+    Utf8String substr(size_type pos, size_type count = npos) const;
 
     // Returns the number of characters
     size_type size() const noexcept;
@@ -71,6 +80,8 @@ public:
     const char* c_str() const noexcept;
 
 
+    friend Utf8String operator+(const Utf8String &lhs, const Utf8String &rhs);
+
     friend bool operator==(const Utf8String &lhs, const Utf8String &rhs);
 
     friend bool operator!=(const Utf8String &lhs, const Utf8String &rhs);
@@ -78,6 +89,8 @@ public:
     friend bool operator<(const Utf8String &lhs, const Utf8String &rhs);
 };
 
+
+extern Utf8String operator+(const Utf8String &lhs, const Utf8String &rhs);
 
 extern bool operator==(const Utf8String &lhs, const Utf8String &rhs);
 
