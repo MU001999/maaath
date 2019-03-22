@@ -7,6 +7,6 @@ private:
 
 public:
     InvertedIndex();
-    std::set<int> get_file_list(Utf8String utf8_string);
+    std::set<int> get_file_list(const Utf8String &utf8_string);
     void add_file(Utf8String utf8_string, int file_id, InfoQuantity dict); // utf8_string word
 };

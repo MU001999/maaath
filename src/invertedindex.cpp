@@ -20,7 +20,7 @@ struct wordmap
 };
 
 
-static std::map<int, int> get_ambiguity_section(Utf8String sentence, InfoQuantity dict)
+static std::map<int, int> get_ambiguity_section(const Utf8String &sentence, const InfoQuantity &dict)
 {
     int pos_of_sen = 0;
     int temp_pos = 0;
@@ -79,7 +79,7 @@ static std::map<int, int> get_ambiguity_section(Utf8String sentence, InfoQuantit
     return ambiguity;
 }
 
-static double get_infoquantity(std::vector<wordmap>wl, InfoQuantity dict)
+static double get_infoquantity(const std::vector<wordmap> &wl, const InfoQuantity &dict)
 {
     double info = 0;
     for (auto w : wl)
@@ -89,16 +89,18 @@ static double get_infoquantity(std::vector<wordmap>wl, InfoQuantity dict)
     return info;
 }
 
-static void choice_word(std::vector<wordmap>word, std::bitset<32>bits, int count, std::vector<wordmap>&section)
+static decltype(auto) choice_word(const std::vector<wordmap> &word, std::bitset<32> bits, int count)
 {
+    std::vector<wordmap> section;
     for (int i = 0; i < count; i++) {
         if (bits[i]) {
             section.push_back(word[i]);
         }
     }
+    return section;
 }
 
-static bool is_overlapping(std::vector<wordmap>wd)
+static bool is_overlapping(const std::vector<wordmap> &wd)
 {
     int word_end_pos = -1;
     for (auto w: wd)
@@ -110,7 +112,7 @@ static bool is_overlapping(std::vector<wordmap>wd)
     return false;
 }
 
-std::vector<wordmap> get_segmentation(Utf8String sentence, InfoQuantity dict)
+std::vector<wordmap> get_segmentation(const Utf8String &sentence, const InfoQuantity &dict)
 {
     wordmap word_map;
     Utf8String temp;
@@ -144,19 +146,10 @@ std::vector<wordmap> get_segmentation(Utf8String sentence, InfoQuantity dict)
     }
 #endif // DEBUG
 
-    int count = word_map_dict.size();
     int arrange = -1;
-    std::vector<wordmap>temp_segment;
-    std::vector<wordmap>best_segment;
-    /*
-    for (int i = 0; i < sentence.size(); i++) {
-        wordmap tem;
-        tem.word = sentence.substr(i, 1);
-        tem.pos_in_sentence = i;
-        best_segment.push_back(tem);
-    }
-    double freq = get_infoquantity(best_segment, dict);
-    */
+    int count = word_map_dict.size();
+    std::vector<wordmap> best_segment;
+
     double freq = DBL_MIN, tmpfreq;
     while (++arrange < (1 << count))
     {
@@ -165,8 +158,7 @@ std::vector<wordmap> get_segmentation(Utf8String sentence, InfoQuantity dict)
         std::cout << "[BITS] " << bits << std::endl;
 #endif // DEBUG
 
-        temp_segment.clear();
-        choice_word(word_map_dict, bits, count, temp_segment);
+        auto temp_segment = choice_word(word_map_dict, bits, count);
         if (!is_overlapping(temp_segment))
         {
             if ((tmpfreq = get_infoquantity(temp_segment, dict)) >= freq)
@@ -181,21 +173,19 @@ std::vector<wordmap> get_segmentation(Utf8String sentence, InfoQuantity dict)
         }
     }
 
-    {
-        auto temp_segment = best_segment;
-        best_segment.clear();
+    auto temp_segment = best_segment;
+    best_segment.clear();
 
-        int end_pos = -1;
-        for (auto &word : temp_segment)
-        {
-            while (++end_pos < word.pos_in_sentence)
-                best_segment.push_back({ sentence.substr(end_pos, 1) , end_pos });
-            best_segment.push_back(word);
-            end_pos = word.pos_in_sentence + word.word.size() - 1;
-        }
-        while (++end_pos < sentence.size())
+    int end_pos = -1;
+    for (auto &word : temp_segment)
+    {
+        while (++end_pos < word.pos_in_sentence)
             best_segment.push_back({ sentence.substr(end_pos, 1) , end_pos });
+        best_segment.push_back(word);
+        end_pos = word.pos_in_sentence + word.word.size() - 1;
     }
+    while (++end_pos < sentence.size())
+        best_segment.push_back({ sentence.substr(end_pos, 1) , end_pos });
 
     return best_segment;
 }
@@ -206,7 +196,7 @@ InvertedIndex::InvertedIndex()
     // TODO: Check if the serialization file exists, initialize the object
 };
 
-std::set<int> InvertedIndex::get_file_list(Utf8String word)
+std::set<int> InvertedIndex::get_file_list(const Utf8String &word)
 {
     std::map<Utf8String, std::set<int>>::iterator t;
     t = this->index.find(word);
