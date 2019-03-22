@@ -10,9 +10,6 @@
 #endif // DEBUG
 
 
-#define BIT 0xffffffff
-
-
 struct wordmap
 {
     Utf8String word;
