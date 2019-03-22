@@ -31,10 +31,14 @@ InfoQuantity::InfoQuantity(Utf8String filename1, Utf8String filename2)
     fin.close();
 }
 
+InfoQuantity::~InfoQuantity() {}
+
 double InfoQuantity::get_infoquantity(Utf8String word)
 {
-    for (auto &mp : info_quantity)
-        if (word == mp.first) return mp.second;
+    return info_quantity[word];
 }
 
-InfoQuantity::~InfoQuantity() {}
+bool InfoQuantity::count(Utf8String word)
+{
+    return info_quantity.count(word);
+}
