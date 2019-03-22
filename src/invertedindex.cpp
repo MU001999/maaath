@@ -20,7 +20,7 @@ static std::map<int, int> get_ambiguity_section(const Utf8String &sentence)
     int end_of_sen = 0;
     std::map<int, int>ambiguity;
     double freq;
-    while (pos_of_sen < sentence.size())
+    while (pos_of_sen < (int)sentence.size())
     {
         Utf8String temp;
         int i;
@@ -42,7 +42,7 @@ static std::map<int, int> get_ambiguity_section(const Utf8String &sentence)
             continue;
         }
         temp_pos = pos_of_sen + 1;
-        while (temp_pos <= end_of_sen && temp_pos < sentence.size())
+        while (temp_pos <= end_of_sen && temp_pos < (int)sentence.size())
         {
             for (i = 8; i > 1; i--)
             {
@@ -67,7 +67,7 @@ static std::map<int, int> get_ambiguity_section(const Utf8String &sentence)
     }
     std::map<int, int>::iterator t = ambiguity.end();
     t--;
-    if (t->second >= sentence.size())
+    if (t->second >= (int)sentence.size())
         t->second = sentence.size();
     return ambiguity;
 }
@@ -110,7 +110,7 @@ std::vector<wordmap> get_segmentation(const Utf8String &sentence)
     wordmap word_map;
     Utf8String temp;
     std::vector<wordmap> word_map_dict;
-    for (int i = 0; i < sentence.size() - 1; i++) {
+    for (int i = 0; i < (int)sentence.size() - 1; i++) {
         if (sentence.size() - i <= 2) {
             temp = sentence.substr(i, 2);
             if (dict.count(temp))
@@ -177,7 +177,7 @@ std::vector<wordmap> get_segmentation(const Utf8String &sentence)
         best_segment.push_back(word);
         end_pos = word.pos_in_sentence + word.word.size() - 1;
     }
-    while (++end_pos < sentence.size())
+    while (++end_pos < (int)sentence.size())
         best_segment.push_back({ sentence.substr(end_pos, 1) , end_pos });
 
     return best_segment;
@@ -220,7 +220,7 @@ void InvertedIndex::add_file(const Utf8String &sentence, int file_id)// Add all 
     {
         segment = sentence.substr(t->first, t->second - t->first + 1);
         word_list = get_segmentation(segment);
-        for (int i = 0; i < word_list.size(); i++)
+        for (int i = 0; i < (int)word_list.size(); i++)
         {
             Utf8String temp = word_list[i].word;
             if (temp.size() >= 2)
@@ -240,7 +240,7 @@ void InvertedIndex::add_file(const Utf8String &sentence, int file_id)// Add all 
             Utf8String temp = sentence.substr(se_begin, se_end - se_begin);
             int pos = 0;
             int i;
-            while (pos < temp.size())
+            while (pos < (int)temp.size())
             {
                 for (i = 8; i >= 2; i--)
                 {
@@ -258,10 +258,10 @@ void InvertedIndex::add_file(const Utf8String &sentence, int file_id)// Add all 
         se_begin = t->second + 1;
         t++;
     }
-    if (se_begin < sentence.size())
+    if (se_begin < (int)sentence.size())
     {
         int j;
-        for (int i = se_begin; i < sentence.size();)
+        for (int i = se_begin; i < (int)sentence.size();)
         {
             for (j = 8; j >= 2; j--)
             {
