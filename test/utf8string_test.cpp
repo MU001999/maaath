@@ -43,6 +43,10 @@ TEST(OPERATORS)
     
     Utf8String an8s = "真的超级可爱啊啊啊啊！！！";
     assert("罗钥轩宇宙No.1可爱！！！" + an8s == u8s);
+
+    an8s = '我';
+    assert(an8s == '我');
+    assert(an8s.substr(0, 1) == '我');
 END()
 
 
