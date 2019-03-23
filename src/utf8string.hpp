@@ -4,10 +4,10 @@
 class Utf8String
 {
 public:
-    using value_type = char32_t;
     using data_type = std::u32string;
+    using value_type = data_type::value_type;
     using raw_type = std::string;
-    using size_type = std::size_t;
+    using size_type = data_type::size_type;
     using reference = value_type & ;
     using const_reference = const value_type&;
     using pointer = value_type * ;
@@ -63,11 +63,24 @@ public:
 
     Utf8String& operator+=(const Utf8String &rhs);
 
+    
+    value_type& front();
+
+    const value_type& front() const;
+
+    value_type& back();
+
+    const value_type& back() const;
+
     // Returns a substring [pos, pos+count). if the requested substring extends past the end of the string, or if count == npos, the returned substring is [pos, size()).
     Utf8String substr(size_type pos, size_type count = npos) const;
 
     // Returns the number of characters
     size_type size() const noexcept;
+
+    size_type length() const noexcept;
+
+    bool empty() const noexcept;
 
     // Returns the raw string
     raw_type raw();

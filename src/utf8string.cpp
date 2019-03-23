@@ -138,6 +138,28 @@ Utf8String& Utf8String::operator+=(const Utf8String &rhs)
 }
 
 
+Utf8String::value_type& Utf8String::front()
+{
+    raw_string.clear();
+    return data.front();
+}
+
+const Utf8String::value_type& Utf8String::front() const
+{
+    return data.front();
+}
+
+Utf8String::value_type& Utf8String::back()
+{
+    raw_string.clear();
+    return data.back();
+}
+
+const Utf8String::value_type& Utf8String::back() const
+{
+    return data.back();
+}
+
 Utf8String Utf8String::substr(size_type pos, size_type count) const
 {
     return data.substr(pos, count);
@@ -146,6 +168,16 @@ Utf8String Utf8String::substr(size_type pos, size_type count) const
 Utf8String::size_type Utf8String::size() const noexcept
 {
     return data.size();
+}
+
+Utf8String::size_type Utf8String::length() const noexcept
+{
+    return data.length();
+}
+
+bool Utf8String::empty() const noexcept
+{
+    return data.empty();
 }
 
 Utf8String::raw_type Utf8String::raw()
