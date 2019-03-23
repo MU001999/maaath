@@ -13,7 +13,7 @@
 
 Utf8String::Utf8String() {}
 
-Utf8String::Utf8String(data_type &&temp) noexcept : data(std::move(temp)) {}
+Utf8String::Utf8String(data_type &&data) noexcept : data(std::move(data)) {}
 
 Utf8String::Utf8String(const raw_type &raw_string) : raw_string(raw_string)
 {
@@ -48,7 +48,9 @@ Utf8String::Utf8String(const raw_type &raw_string) : raw_string(raw_string)
 
 Utf8String::Utf8String(const char *raw_string) : Utf8String(std::string(raw_string)) {}
 
-Utf8String::Utf8String(size_type count, value_type chr) : Utf8String(raw_type(count, chr)) {}
+Utf8String::Utf8String(value_type ch) : Utf8String(1, ch) {}
+
+Utf8String::Utf8String(size_type count, value_type ch) : Utf8String(data_type(count, ch)) {}
 
 Utf8String::Utf8String(const Utf8String &rhs) : data(rhs.data), raw_string(rhs.raw_string) {}
 
@@ -158,6 +160,18 @@ Utf8String::value_type& Utf8String::back()
 const Utf8String::value_type& Utf8String::back() const
 {
     return data.back();
+}
+
+void Utf8String::clear()
+{
+    data.clear();
+    raw_string.clear();
+}
+
+void Utf8String::push_back(value_type ch)
+{
+    data.push_back(ch);
+    raw_string.clear();
 }
 
 Utf8String Utf8String::substr(size_type pos, size_type count) const

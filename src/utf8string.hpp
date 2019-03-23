@@ -33,8 +33,10 @@ public:
     // Constructor, receives raw_string
     Utf8String(const char *raw_string);
 
+    Utf8String(value_type ch);
+
     // Consturctor, receives single char
-    Utf8String(size_type count, value_type chr);
+    Utf8String(size_type count, value_type ch);
 
     // Copy constructor
     Utf8String(const Utf8String &rhs);
@@ -71,6 +73,10 @@ public:
     value_type& back();
 
     const value_type& back() const;
+
+    void clear();
+
+    void push_back(value_type ch);
 
     // Returns a substring [pos, pos+count). if the requested substring extends past the end of the string, or if count == npos, the returned substring is [pos, size()).
     Utf8String substr(size_type pos, size_type count = npos) const;
