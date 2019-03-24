@@ -1,21 +1,12 @@
 #pragma once
 
 
-struct Wordmap
-{
-    Utf8String word;
-    int pos_in_sentence;
-};
-
-
-struct Segmentation
-{
-    static std::vector<Wordmap> segment(const Utf8String &sentence);
-};
-
-
 class InvertedIndex
 {
+public:
+    using key_type = Utf8String;
+    using value_type = int;
+
 private:
     std::map<Utf8String, std::set<int>> index; // Each word id in the index corresponds to a list of file ids
 

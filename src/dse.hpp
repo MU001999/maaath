@@ -10,4 +10,5 @@
 
 #include "utf8string.hpp"
 #include "infoquantity.hpp"
+#include "segmentation.hpp"
 #include "invertedindex.hpp"
