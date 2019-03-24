@@ -62,7 +62,7 @@ static std::map<int, int> get_ambiguity_section(const Utf8String &sentence)
         pos_of_sen = end_of_sen + 1;
 
     }
-    std::map<int, int>::iterator t = ambiguity.end();
+    auto t = ambiguity.end();
     t--;
     if (t->second >= (int)sentence.size())
         t->second = sentence.size();
@@ -101,7 +101,7 @@ static bool is_overlapping(const std::vector<Wordmap> &wd)
     return false;
 }
 
-std::vector<Wordmap> get_segmentation(const Utf8String &sentence)
+static std::vector<Wordmap> get_segmentation(const Utf8String &sentence)
 {
     Wordmap word_map;
     Utf8String temp;
@@ -171,12 +171,12 @@ std::vector<Wordmap> get_segmentation(const Utf8String &sentence)
     for (auto &word : temp_segment)
     {
         while (++end_pos < word.pos_in_sentence)
-            best_segment.push_back({ sentence.substr(end_pos, 1) , end_pos });
+            best_segment.push_back({ sentence[end_pos] , end_pos });
         best_segment.push_back(word);
         end_pos = word.pos_in_sentence + word.word.size() - 1;
     }
     while (++end_pos < (int)sentence.size())
-        best_segment.push_back({ sentence.substr(end_pos, 1) , end_pos });
+        best_segment.push_back({ sentence[end_pos] , end_pos });
 
     return best_segment;
 }
