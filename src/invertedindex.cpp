@@ -49,9 +49,27 @@ static decltype(auto) get_ambiguity_section(const Utf8String &sentence)
 }
 
 
+bool InvertedIndex::serialize()
+{
+    // TODO: implement serialize
+    return true;
+}
+
+bool InvertedIndex::unserialize()
+{
+    // TODO: implement unserialize
+    return false;
+}
+
 InvertedIndex::value_type InvertedIndex::get_files_list(const key_type &word)
 {
     return files[word];
+}
+
+void InvertedIndex::add_files(const std::string &folderpath)
+{
+    // TODO: implement add files with receiving a folder path
+    serialize();
 }
 
 void InvertedIndex::add_file(const key_type &sentence, const std::string &filepath)// Add all the words in a sentence to the inverted index
