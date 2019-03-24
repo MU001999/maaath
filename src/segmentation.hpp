@@ -10,5 +10,5 @@ struct Wordmap
 
 struct Segmentation
 {
-    static std::vector<Wordmap> segment(const Utf8String &sentence);
+    static std::vector<Utf8String> segment(const Utf8String &sentence);
 };

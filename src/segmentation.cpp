@@ -39,42 +39,27 @@ static bool is_overlapping(const std::vector<Wordmap> &wd)
 
 static decltype(auto) get_segmentation(const Utf8String &sentence)
 {
-    Wordmap word_map;
-    Utf8String temp;
-    std::vector<Wordmap> word_map_dict;
+    std::vector<Wordmap> word_maps;
     for (int i = 0; i < (int)sentence.size() - 1; i++)
     {
-        if (sentence.size() - i <= 2)
-        {
-            temp = sentence.substr(i, 2);
-            if (InfoQuantity::count(temp))
-                word_map.pos_in_sentence = i;
-            word_map.word = temp;
-            word_map_dict.push_back(word_map);
-            break;
-        }
         for (int j = 7; j >= 2; j--)
         {
-            temp = sentence.substr(i, j);
-            if (InfoQuantity::count(temp))
-            {
-                word_map.pos_in_sentence = i;
-                word_map.word = temp;
-                word_map_dict.push_back(word_map);
-            }
+            if (i + j > (int)sentence.size()) j = sentence.size() - i;
+            auto temp = sentence.substr(i, j);
+            if (InfoQuantity::count(temp)) word_maps.push_back({ temp, i });
         }
     }
 
 #ifdef DEBUG
     std::cout << "[CODE LINE] " << __LINE__ << std::endl;
-    for (auto &wm : word_map_dict)
+    for (auto &wm : word_maps)
     {
         std::cout << wm.word.raw() << std::endl;
     }
 #endif // DEBUG
 
     int arrange = -1;
-    int count = word_map_dict.size();
+    int count = word_maps.size();
     std::vector<Wordmap> best_segment;
 
     double freq = DBL_MIN, tmpfreq;
@@ -85,7 +70,7 @@ static decltype(auto) get_segmentation(const Utf8String &sentence)
         std::cout << "[BITS] " << bits << std::endl;
 #endif // DEBUG
 
-        auto temp_segment = choice_word(word_map_dict, bits, count);
+        auto temp_segment = choice_word(word_maps, bits, count);
         if (!is_overlapping(temp_segment))
         {
             if ((tmpfreq = get_infoquantity(temp_segment)) >= freq)
@@ -100,6 +85,7 @@ static decltype(auto) get_segmentation(const Utf8String &sentence)
         }
     }
 
+    /* add single character into result
     auto temp_segment = best_segment;
     best_segment.clear();
 
@@ -113,12 +99,15 @@ static decltype(auto) get_segmentation(const Utf8String &sentence)
     }
     while (++end_pos < (int)sentence.size())
         best_segment.push_back({ sentence[end_pos] , end_pos });
+    */
 
-    return best_segment;
+    std::vector<Utf8String> result;
+    for (auto &wm : best_segment) result.push_back(wm.word);
+    return result;
 }
 
 
-std::vector<Wordmap> Segmentation::segment(const Utf8String &sentence)
+std::vector<Utf8String> Segmentation::segment(const Utf8String &sentence)
 {
     return get_segmentation(sentence);
 }
