@@ -67,91 +67,61 @@ static decltype(auto) get_ambiguity_section(const Utf8String &sentence)
 }
 
 
-InvertedIndex::InvertedIndex()
+InvertedIndex::value_type InvertedIndex::get_files_list(const key_type &word)
 {
-    // TODO: Check if the serialization file exists, initialize the object
-};
-
-std::set<int> InvertedIndex::get_file_list(const Utf8String &word)
-{
-    std::map<Utf8String, std::set<int>>::iterator t;
-    t = this->index.find(word);
-    if (t != this->index.end())
-        return t->second;
-    else
-    {
-        std::set<int> empty_file_list;
-        empty_file_list.clear();
-        return empty_file_list;
-    }
+    return files[word];
 }
 
-void InvertedIndex::add_file(const Utf8String &sentence, int file_id)// Add all the words in a sentence to the inverted index
+void InvertedIndex::add_file(const key_type &sentence, int file_id)// Add all the words in a sentence to the inverted index
 {
-    std::vector<Wordmap> word_list;
-    std::map<int, int> ambiguity_section;
-    ambiguity_section = get_ambiguity_section(sentence);
-    Utf8String segment;
-    std::map<int, int>::iterator t = ambiguity_section.begin();
-    while (t != ambiguity_section.end())
+    auto ambiguity_section = get_ambiguity_section(sentence);
+    for (auto &mp : ambiguity_section)
     {
-        segment = sentence.substr(t->first, t->second - t->first + 1);
-        word_list = Segmentation::segment(segment);
-        for (int i = 0; i < (int)word_list.size(); i++)
+        for (auto &wordmap : Segmentation::segment(sentence.substr(mp.first, mp.second - mp.first + 1)))
         {
-            Utf8String temp = word_list[i].word;
-            if (temp.size() >= 2)
-                this->index[temp].insert(file_id);
+            if (wordmap.word.size() >= 2) 
+                files[wordmap.word].push_back(file_id);
         }
-        t++;
-        word_list.clear();
     }
-    t = ambiguity_section.begin();
-    int se_begin = 0;
-    int se_end;
-    while (t != ambiguity_section.end())
+
+    int se_begin = 0, se_end;
+    for (auto &mp : ambiguity_section)
     {
-        if (t->first > se_begin)
+        if (mp.first > se_begin)
         {
-            se_end = t->first;
-            Utf8String temp = sentence.substr(se_begin, se_end - se_begin);
-            int pos = 0;
-            int i;
+            se_end = mp.first;
+            auto temp = sentence.substr(se_begin, se_end - se_begin);
+            int pos = 0, i;
             while (pos < (int)temp.size())
             {
-                for (i = 8; i >= 2; i--)
+                for (i = 8; i >= 2; --i)
                 {
-                    if (InfoQuantity::get_infoquantity(temp.substr(pos, i)) > 0)
+                    auto kw = temp.substr(pos, i);
+                    if (InfoQuantity::count(kw))
                     {
-                        this->index[temp.substr(pos, i)].insert(file_id);
-                        pos = pos + i;
+                        files[kw].push_back(file_id);
+                        pos += i;
                         break;
                     }
                 }
-                if (i == 1) pos++;
+                pos += (i == 1);
             }
-
         }
-        se_begin = t->second + 1;
-        t++;
+        se_begin = mp.second + 1;
     }
-    if (se_begin < (int)sentence.size())
+
+    for (int i = se_begin, j; i < (int)sentence.size();)
     {
-        int j;
-        for (int i = se_begin; i < (int)sentence.size();)
+        for (j = 8; j >= 2; j--)
         {
-            for (j = 8; j >= 2; j--)
+            auto temp = sentence.substr(i, j);
+            if (InfoQuantity::count(temp) > 0)
             {
-                Utf8String temp = sentence.substr(i, j);
-                if (InfoQuantity::get_infoquantity(temp) > 0)
-                {
-                    this->index[temp.substr(i, j)].insert(file_id);
-                    i = i + j;
-                    break;
-                }
+                files[temp].push_back(file_id);
+                i += j;
+                break;
             }
-            if (j == 1)i++;
         }
+        i += (j == 1);
     }
-
 }
