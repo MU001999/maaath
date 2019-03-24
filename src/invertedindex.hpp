@@ -1,7 +1,7 @@
 #pragma once
 
 
-struct wordmap
+struct Wordmap
 {
     Utf8String word;
     int pos_in_sentence;
@@ -10,7 +10,7 @@ struct wordmap
 
 struct Segmentation
 {
-    static std::vector<wordmap> segment(const Utf8String &sentence);
+    static std::vector<Wordmap> segment(const Utf8String &sentence);
 };
 
 

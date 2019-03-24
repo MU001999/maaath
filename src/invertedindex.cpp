@@ -15,18 +15,15 @@ static auto dict = InfoQuantity();
 
 static std::map<int, int> get_ambiguity_section(const Utf8String &sentence)
 {
-    int pos_of_sen = 0;
-    int temp_pos = 0;
-    int end_of_sen = 0;
-    std::map<int, int>ambiguity;
     double freq;
+    int pos_of_sen = 0, temp_pos = 0, end_of_sen = 0;
+    std::map<int, int> ambiguity;
     while (pos_of_sen < (int)sentence.size())
     {
         Utf8String temp;
         int i;
         for (i = 8; i > 1; i--)
         {
-
             temp = sentence.substr(pos_of_sen, i);
             freq = dict.get_infoquantity(temp);
 
@@ -72,7 +69,7 @@ static std::map<int, int> get_ambiguity_section(const Utf8String &sentence)
     return ambiguity;
 }
 
-static double get_infoquantity(const std::vector<wordmap> &wl)
+static double get_infoquantity(const std::vector<Wordmap> &wl)
 {
     double info = 0;
     for (auto w : wl)
@@ -82,18 +79,17 @@ static double get_infoquantity(const std::vector<wordmap> &wl)
     return info;
 }
 
-static decltype(auto) choice_word(const std::vector<wordmap> &word, std::bitset<32> bits, int count)
+static decltype(auto) choice_word(const std::vector<Wordmap> &word, std::bitset<32> bits, int count)
 {
-    std::vector<wordmap> section;
-    for (int i = 0; i < count; i++) {
-        if (bits[i]) {
-            section.push_back(word[i]);
-        }
+    std::vector<Wordmap> section;
+    for (int i = 0; i < count; i++) 
+    {
+        if (bits[i]) section.push_back(word[i]);
     }
     return section;
 }
 
-static bool is_overlapping(const std::vector<wordmap> &wd)
+static bool is_overlapping(const std::vector<Wordmap> &wd)
 {
     int word_end_pos = -1;
     for (auto w: wd)
@@ -105,13 +101,15 @@ static bool is_overlapping(const std::vector<wordmap> &wd)
     return false;
 }
 
-std::vector<wordmap> get_segmentation(const Utf8String &sentence)
+std::vector<Wordmap> get_segmentation(const Utf8String &sentence)
 {
-    wordmap word_map;
+    Wordmap word_map;
     Utf8String temp;
-    std::vector<wordmap> word_map_dict;
-    for (int i = 0; i < (int)sentence.size() - 1; i++) {
-        if (sentence.size() - i <= 2) {
+    std::vector<Wordmap> word_map_dict;
+    for (int i = 0; i < (int)sentence.size() - 1; i++) 
+    {
+        if (sentence.size() - i <= 2) 
+        {
             temp = sentence.substr(i, 2);
             if (dict.count(temp))
                 word_map.pos_in_sentence = i;
@@ -141,7 +139,7 @@ std::vector<wordmap> get_segmentation(const Utf8String &sentence)
 
     int arrange = -1;
     int count = word_map_dict.size();
-    std::vector<wordmap> best_segment;
+    std::vector<Wordmap> best_segment;
 
     double freq = DBL_MIN, tmpfreq;
     while (++arrange < (1 << count))
@@ -184,7 +182,7 @@ std::vector<wordmap> get_segmentation(const Utf8String &sentence)
 }
 
 
-std::vector<wordmap> Segmentation::segment(const Utf8String &sentence)
+std::vector<Wordmap> Segmentation::segment(const Utf8String &sentence)
 {
     return get_segmentation(sentence);
 }
@@ -211,7 +209,7 @@ std::set<int> InvertedIndex::get_file_list(const Utf8String &word)
 
 void InvertedIndex::add_file(const Utf8String &sentence, int file_id)// Add all the words in a sentence to the inverted index
 {
-    std::vector<wordmap> word_list;
+    std::vector<Wordmap> word_list;
     std::map<int, int> ambiguity_section;
     ambiguity_section = get_ambiguity_section(sentence);
     Utf8String segment;
