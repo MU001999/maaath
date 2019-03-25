@@ -22,7 +22,7 @@ static decltype(auto) get_ambiguity_section(const Utf8String &sentence)
 {
     int pos_of_sen = 0, temp_pos = 0, end_of_sen = 0;
     std::map<int, int> ambiguity;
-    
+
     for (int pos = 0, length; pos < (int)sentence.size() - 1;)
     {
         for (length = 7; length > 1; --length)

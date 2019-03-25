@@ -45,7 +45,7 @@ public:
         return info_quantity[word];
     }
 
-    bool count(const Utf8String &word) const 
+    bool count(const Utf8String &word) const
     {
         return info_quantity.count(word);
     }

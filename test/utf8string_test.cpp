@@ -40,7 +40,7 @@ TEST(OPERATORS)
 
     u8s += "真的超级可爱啊啊啊啊！！！";
     assert(u8s == "罗钥轩宇宙No.1可爱！！！真的超级可爱啊啊啊啊！！！");
-    
+
     Utf8String an8s = "真的超级可爱啊啊啊啊！！！";
     assert("罗钥轩宇宙No.1可爱！！！" + an8s == u8s);
 

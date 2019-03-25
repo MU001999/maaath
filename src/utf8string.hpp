@@ -65,7 +65,7 @@ public:
 
     Utf8String& operator+=(const Utf8String &rhs);
 
-    
+
     value_type& front();
 
     const value_type& front() const;
