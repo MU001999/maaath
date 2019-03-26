@@ -2,11 +2,12 @@
 
 #include <cfloat>
 #include <bitset>
+#include <fstream>
+#include <iostream>
 #include <iterator>
 
 #ifdef DEBUG
 #include <cstdio>
-#include <iostream>
 #endif // DEBUG
 
 
@@ -49,16 +50,57 @@ static decltype(auto) get_ambiguity_section(const Utf8String &sentence)
 }
 
 
-bool InvertedIndex::serialize()
+/*
+Structure of temp file for serialization
+*/
+
+
+bool InvertedIndex::serialize(const std::string &filepath = "./dseii.tmp")
 {
-    // TODO: implement serialize
+    auto fout = std::ofstream(filepath);
+
+    if (!fout) return false;
+
+    for (auto &kv : files)
+    {
+        fout << kv.first << std::endl;
+        for (auto &file : kv.second)
+        {
+            fout << file.filepath << std::endl;
+            fout << file.times << ' ' << file.density << ' ' << file.is_appeared_in_title << std::endl;
+        }
+        fout << std::endl;
+    }
+
     return true;
 }
 
-bool InvertedIndex::unserialize()
+bool InvertedIndex::unserialize(const std::string &filepath = "./dseii.tmp")
 {
-    // TODO: implement unserialize
-    return false;
+    auto fin = std::ifstream(filepath);
+    
+    if (!fin)
+    {
+        add_files();
+        return false;
+    }
+
+    std::string line, kw;
+    while (std::getline(fin, kw))
+    {
+        while (std::getline(fin, line))
+        {
+            if (line.empty()) break;
+
+            double times, density;
+            bool is_appeared_in_title;
+
+            fin >> times >> density >> is_appeared_in_title;
+            files[kw].push_back({ line, times, density, is_appeared_in_title });
+        }
+    }
+
+    return true;
 }
 
 InvertedIndex::value_type InvertedIndex::get_files_list(const key_type &word)
