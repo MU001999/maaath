@@ -106,6 +106,10 @@ public:
     friend bool operator!=(const Utf8String &lhs, const Utf8String &rhs);
 
     friend bool operator<(const Utf8String &lhs, const Utf8String &rhs);
+
+    friend std::ostream& operator<<(std::ostream &out, const Utf8String &str);
+    
+    friend std::istream& operator>>(std::istream &in, Utf8String &str);
 };
 
 
@@ -116,6 +120,10 @@ extern bool operator==(const Utf8String &lhs, const Utf8String &rhs);
 extern bool operator!=(const Utf8String &lhs, const Utf8String &rhs);
 
 extern bool operator<(const Utf8String &lhs, const Utf8String &rhs);
+
+extern std::ostream& operator<<(std::ostream &out, const Utf8String &str);
+
+extern std::istream& operator>>(std::istream &in, Utf8String &str);
 
 
 namespace std

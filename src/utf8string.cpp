@@ -245,3 +245,15 @@ bool operator<(const Utf8String &lhs, const Utf8String &rhs)
 {
     return lhs.data < rhs.data;
 }
+
+std::ostream& operator<<(std::ostream &out, const Utf8String &str)
+{
+    return out << str.raw();
+}
+
+std::istream& operator>>(std::istream &in, Utf8String &str)
+{
+    in >> str.raw_string;
+    str = str.raw_string;
+    return in;
+}
