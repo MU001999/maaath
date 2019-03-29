@@ -5,6 +5,7 @@
 #include <fstream>
 #include <iostream>
 #include <iterator>
+#include <algorithm>
 
 #ifdef DEBUG
 #include <cstdio>
@@ -51,7 +52,7 @@ static decltype(auto) get_ambiguity_section(const Utf8String &sentence)
 
 
 // TODO: return scores of files
-std::map<std::string, double> InvertedIndex::cal_scores(const data_type &files)
+std::map<std::string, double> InvertedIndex::cal_scores(const data_type &data)
 {
 
 }
@@ -113,10 +114,34 @@ InvertedIndex::value_type InvertedIndex::get_fileinfos(const key_type &word)
     return files[word];
 }
 
-// TODO: return ordered filepaths
 std::vector<std::string> InvertedIndex::get_filepaths(const std::vector<key_type> &keywords)
 {
+    data_type fileinfos, for_cal_scores;
+    std::vector<std::vector<std::string>> filepaths_list;
+    for (auto &kw : keywords)
+    {
+        fileinfos[kw] = get_fileinfos(kw);
+        filepaths_list.push_back(std::vector<std::string>());
+        for (auto &fileinfo : fileinfos[kw])
+            filepaths_list.back().push_back(fileinfo.filepath);
+    }
 
+    std::vector<std::string> filepaths;
+    // auto filepaths = and_files(filepaths_list);
+
+    for (auto &filepath : filepaths)
+        for (auto &mp : fileinfos)
+            for (auto &fileinfo : mp.second)
+                if (fileinfo.filepath == filepath)
+                    for_cal_scores[mp.first].push_back(fileinfo);
+
+    auto scores = cal_scores(for_cal_scores);
+    std::sort(filepaths.rbegin(), filepaths.rend(), [&](const std::string &a, const std::string &b)
+    {
+        return scores[a] < scores[b];
+    });
+
+    return filepaths;
 }
 
 // TODO: sort by chapter order
