@@ -16,12 +16,17 @@ public:
     using value_type = std::vector<FileInfo>;
     using data_type = std::map<key_type, value_type>;
 
+private:
+    static std::map<std::string, double> cal_scores(const data_type &files);
 
+public:
     static bool serialize(const std::string &filepath = "./dseii.tmp");
 
     static bool unserialize(const std::string &fllepath = "./dseii.tmp");
 
-    static value_type get_files_list(const key_type &sentence);
+    static value_type get_fileinfos(const key_type &sentence);
+
+    static std::vector<std::string> get_filepaths(const std::vector<key_type> &keywords);
 
     // Add files with receiving a folder path
     static void add_files(const std::string &folderpath = "./inputfiles");

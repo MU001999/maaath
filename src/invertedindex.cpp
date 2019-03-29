@@ -50,10 +50,15 @@ static decltype(auto) get_ambiguity_section(const Utf8String &sentence)
 }
 
 
+// TODO: return scores of files
+std::map<std::string, double> InvertedIndex::cal_scores(const data_type &files)
+{
+
+}
+
 /*
 Structure of temp file for serialization
 */
-
 
 bool InvertedIndex::serialize(const std::string &filepath = "./dseii.tmp")
 {
@@ -103,9 +108,15 @@ bool InvertedIndex::unserialize(const std::string &filepath = "./dseii.tmp")
     return true;
 }
 
-InvertedIndex::value_type InvertedIndex::get_files_list(const key_type &word)
+InvertedIndex::value_type InvertedIndex::get_fileinfos(const key_type &word)
 {
     return files[word];
+}
+
+// TODO: return ordered filepaths
+std::vector<std::string> InvertedIndex::get_filepaths(const std::vector<key_type> &keywords)
+{
+
 }
 
 void InvertedIndex::add_files(const std::string &folderpath)
@@ -114,6 +125,7 @@ void InvertedIndex::add_files(const std::string &folderpath)
     serialize();
 }
 
+// TODO: sort by chapter order
 void InvertedIndex::add_file(const key_type &sentence, const std::string &filepath)// Add all the words in a sentence to the inverted index
 {
     double alltimes = 0.0;
