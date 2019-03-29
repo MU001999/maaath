@@ -119,13 +119,13 @@ std::vector<std::string> InvertedIndex::get_filepaths(const std::vector<key_type
 
 }
 
+// TODO: sort by chapter order
 void InvertedIndex::add_files(const std::string &folderpath)
 {
     // TODO: implement add files with receiving a folder path
     serialize();
 }
 
-// TODO: sort by chapter order
 void InvertedIndex::add_file(const key_type &sentence, const std::string &filepath)// Add all the words in a sentence to the inverted index
 {
     double alltimes = 0.0;
