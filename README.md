@@ -30,7 +30,7 @@ Python规范参考：[Google Python Style Guide](https://google.github.io/styleg
 + [x] 获取信息量
 + [x] 中文分词
 + [x] 倒排索引
-* [x] 结果量化
+* [ ] 结果量化
 
 
 ## 接口设计
