@@ -5,11 +5,8 @@
 #include <fstream>
 #include <iostream>
 #include <iterator>
-<<<<<<< HEAD
-=======
 #include <algorithm>
 
->>>>>>> 9d13db8b4d6e4c6db0eb02176829cf1d7b171b2f
 #ifdef DEBUG
 #include <cstdio>
 #endif // DEBUG
@@ -55,7 +52,6 @@ static decltype(auto) get_ambiguity_section(const Utf8String &sentence)
 
 
 // TODO: return scores of files
-<<<<<<< HEAD
 int get_pos(std::string &filepath,key_type &kw) { //read file ,get distance
 	std::ifstream file.open(filepath);
 	int len = kw.size();
@@ -82,9 +78,6 @@ int get_pos(std::string &filepath,key_type &kw) { //read file ,get distance
 		
 }
 std::map<std::string, double> InvertedIndex::cal_scores(const data_type &files, info_quantity &freq)
-=======
-std::map<std::string, double> InvertedIndex::cal_scores(const data_type &data)
->>>>>>> 9d13db8b4d6e4c6db0eb02176829cf1d7b171b2f
 {
 	std::map<std::string, double>scores;//init scores
 	data_type::iterator t = files.begin();
@@ -93,7 +86,7 @@ std::map<std::string, double> InvertedIndex::cal_scores(const data_type &data)
 	{
 		for(int i =0;i<count;i++)//every keyword ->every file
 			if(t->second[i].is_appeared_in_title)
-				scores[t->second[i].filepath]+=1000£»
+				scores[t->second[i].filepath]+=1000Â£Â»
 			else
 			{
 				int pos = get_pos(t->second[i].filepath, t->first);
