@@ -17,7 +17,7 @@ public:
     using data_type = std::map<key_type, value_type>;
 
 private:
-    static std::map<std::string, double> cal_scores(const data_type &files);
+    static std::map<std::string, double> cal_scores(const data_type &files,info_quantity &freq);
 
 public:
     static bool serialize(const std::string &filepath = "./dseii.tmp");

@@ -50,7 +50,7 @@ static decltype(auto) get_ambiguity_section(const Utf8String &sentence)
 
 
 // TODO: return scores of files
-int get_pos(std::string &filepath,key_type &kw) {
+int get_pos(std::string &filepath,key_type &kw) { //read file ,get distance
 	std::ifstream file.open(filepath);
 	int len = kw.size();
 	if (file) {
@@ -80,7 +80,7 @@ std::map<std::string, double> InvertedIndex::cal_scores(const data_type &files, 
 	std::map<std::string, double>scores;//init scores
 	data_type::iterator t = files.begin();
 	int count = t->second.size();
-	while (t != files.end()) 
+	while (t != files.end()) // Traversing each keyword in every file
 	{
 		for(int i =0;i<count;i++)//every keyword ->every file
 			if(t->second[i].is_appeared_in_title)
@@ -90,7 +90,7 @@ std::map<std::string, double> InvertedIndex::cal_scores(const data_type &files, 
 				int pos = get_pos(t->second[i].filepath, t->first);
 				scores[t->second[i].filepath] -= (pos +pos * t->second[i].density);//Average distance
 			}
-		scores[t->second[i].filepath] += t->second[i].density*freq.get_infoquantity(t->first);//freq in file
+		scores[t->second[i].filepath] += t->second[i].density*freq.get_infoquantity(t->first);//a keyword freq in a file
 		t++;
 	}
 	return scores;
