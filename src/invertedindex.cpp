@@ -5,6 +5,11 @@
 #include <fstream>
 #include <iostream>
 #include <iterator>
+<<<<<<< HEAD
+=======
+#include <algorithm>
+
+>>>>>>> 9d13db8b4d6e4c6db0eb02176829cf1d7b171b2f
 #ifdef DEBUG
 #include <cstdio>
 #endif // DEBUG
@@ -50,6 +55,7 @@ static decltype(auto) get_ambiguity_section(const Utf8String &sentence)
 
 
 // TODO: return scores of files
+<<<<<<< HEAD
 int get_pos(std::string &filepath,key_type &kw) { //read file ,get distance
 	std::ifstream file.open(filepath);
 	int len = kw.size();
@@ -76,6 +82,9 @@ int get_pos(std::string &filepath,key_type &kw) { //read file ,get distance
 		
 }
 std::map<std::string, double> InvertedIndex::cal_scores(const data_type &files, info_quantity &freq)
+=======
+std::map<std::string, double> InvertedIndex::cal_scores(const data_type &data)
+>>>>>>> 9d13db8b4d6e4c6db0eb02176829cf1d7b171b2f
 {
 	std::map<std::string, double>scores;//init scores
 	data_type::iterator t = files.begin();
@@ -153,10 +162,34 @@ InvertedIndex::value_type InvertedIndex::get_fileinfos(const key_type &word)
     return files[word];
 }
 
-// TODO: return ordered filepaths
 std::vector<std::string> InvertedIndex::get_filepaths(const std::vector<key_type> &keywords)
 {
+    data_type fileinfos, for_cal_scores;
+    std::vector<std::vector<std::string>> filepaths_list;
+    for (auto &kw : keywords)
+    {
+        fileinfos[kw] = get_fileinfos(kw);
+        filepaths_list.push_back(std::vector<std::string>());
+        for (auto &fileinfo : fileinfos[kw])
+            filepaths_list.back().push_back(fileinfo.filepath);
+    }
 
+    std::vector<std::string> filepaths;
+    // auto filepaths = and_files(filepaths_list);
+
+    for (auto &filepath : filepaths)
+        for (auto &mp : fileinfos)
+            for (auto &fileinfo : mp.second)
+                if (fileinfo.filepath == filepath)
+                    for_cal_scores[mp.first].push_back(fileinfo);
+
+    auto scores = cal_scores(for_cal_scores);
+    std::sort(filepaths.rbegin(), filepaths.rend(), [&](const std::string &a, const std::string &b)
+    {
+        return scores[a] < scores[b];
+    });
+
+    return filepaths;
 }
 
 // TODO: sort by chapter order
