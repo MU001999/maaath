@@ -51,31 +51,7 @@ static decltype(auto) get_ambiguity_section(const Utf8String &sentence)
 
 
 // TODO: return scores of files
-int get_pos(std::string &filepath, const InvertedIndex::key_type &kw) { //read file ,get distance
-	std::ifstream file(filepath);
-	int len = kw.size();
-	if (file) {
-		std::string temp;
-		std::string article="";
-		while (!file.eof()) 
-		{
-			std::getline(file, temp);
-			article += temp;
-		}
-        InvertedIndex::key_type words(article);
-        for (int i = 0; i < words.size(); ++i) {
-			if (words.substr(i, len) == kw)
-				file.close();
-				return i;
-		}
-	}
-	else 
-	{
-		file.close();
-		return -1;
-	}
-		
-}
+
 std::map<std::string, double> InvertedIndex::cal_scores(const data_type &data)
 {
 	std::map<std::string, double>scores;//init scores
@@ -84,15 +60,14 @@ std::map<std::string, double> InvertedIndex::cal_scores(const data_type &data)
 	while (t != files.end()) // Traversing each keyword in every file
 	{
 		for(int i =0;i<count;i++)//every keyword ->every file
+        {
 			if(t->second[i].is_appeared_in_title)
 				scores[t->second[i].filepath]+=1000;
 			else
-			{
-				int pos = get_pos(t->second[i].filepath, t->first);
-				scores[t->second[i].filepath] -= (pos +pos * t->second[i].density);//Average distance
-			}
-		scores[t->second[i].filepath] += t->second[i].density*InfoQuantity::get_infoquantity(t->first);//a keyword freq in a file
-		t++;
+                scores[t->second[i].filepath]-=this->filesorder[t->second[i].filepath];//distance
+            scores[t->second[i].filepath] += t->second[i].density*InfoQuantity::get_infoquantity(t->first);//a keyword freq in a file
+		}
+        t++;
 	}
 	return scores;
 }
