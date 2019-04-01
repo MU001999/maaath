@@ -17,20 +17,24 @@ public:
     using data_type = std::map<key_type, value_type>;
 
 private:
+    data_type files;
+    std::string tempfilepath;
 
-    static std::map<std::string, double> cal_scores(const data_type &data);
+    std::map<std::string, double> cal_scores(const data_type &data);
 
 public:
-    static bool serialize(const std::string &filepath = "./dseii.tmp");
+    InvertedIndex(const std::string &filepath);
 
-    static bool unserialize(const std::string &fllepath = "./dseii.tmp");
+    bool serialize();
 
-    static value_type get_fileinfos(const key_type &sentence);
+    bool unserialize();
 
-    static std::vector<std::string> get_filepaths(const std::vector<key_type> &keywords);
+    value_type get_fileinfos(const key_type &sentence);
+
+    std::vector<std::string> get_filepaths(const std::vector<key_type> &keywords);
 
     // Add files with receiving a folder path
-    static void add_files(const std::string &folderpath = "./inputfiles");
+    void add_files(const std::string &folderpath = "./inputfiles");
 
-    static void add_file(const key_type &sentence, const std::string &filepath);
+    void add_file(const key_type &sentence, const std::string &filepath);
 };

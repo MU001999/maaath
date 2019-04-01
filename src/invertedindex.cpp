@@ -18,7 +18,6 @@ struct _KeywordInfo
     bool is_appeared_in_title = false;
 };
 
-static std::map<InvertedIndex::key_type, InvertedIndex::value_type> files;
 
 static decltype(auto) get_ambiguity_section(const Utf8String &sentence)
 {
@@ -52,8 +51,8 @@ static decltype(auto) get_ambiguity_section(const Utf8String &sentence)
 
 
 // TODO: return scores of files
-int get_pos(std::string &filepath,key_type &kw) { //read file ,get distance
-	std::ifstream file.open(filepath);
+int get_pos(std::string &filepath, const InvertedIndex::key_type &kw) { //read file ,get distance
+	std::ifstream file(filepath);
 	int len = kw.size();
 	if (file) {
 		std::string temp;
@@ -63,8 +62,8 @@ int get_pos(std::string &filepath,key_type &kw) { //read file ,get distance
 			std::getline(file, temp);
 			article += temp;
 		}
-		key_type words(article);
-		for (int i = 0; i < words.size()) {
+        InvertedIndex::key_type words(article);
+        for (int i = 0; i < words.size(); ++i) {
 			if (words.substr(i, len) == kw)
 				file.close();
 				return i;
@@ -98,13 +97,19 @@ std::map<std::string, double> InvertedIndex::cal_scores(const data_type &data)
 	return scores;
 }
 
+
+InvertedIndex::InvertedIndex(const std::string &filepath) : tempfilepath(filepath)
+{
+    serialize();
+}
+
 /*
 Structure of temp file for serialization
 */
 
-bool InvertedIndex::serialize(const std::string &filepath = "./dseii.tmp")
+bool InvertedIndex::serialize()
 {
-    auto fout = std::ofstream(filepath);
+    auto fout = std::ofstream(tempfilepath);
 
     if (!fout) return false;
 
@@ -122,9 +127,9 @@ bool InvertedIndex::serialize(const std::string &filepath = "./dseii.tmp")
     return true;
 }
 
-bool InvertedIndex::unserialize(const std::string &filepath = "./dseii.tmp")
+bool InvertedIndex::unserialize()
 {
-    auto fin = std::ifstream(filepath);
+    auto fin = std::ifstream(tempfilepath);
     
     if (!fin)
     {
