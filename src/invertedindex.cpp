@@ -5,11 +5,9 @@
 #include <fstream>
 #include <iostream>
 #include <iterator>
-<<<<<<< HEAD
-=======
+
 #include <algorithm>
 
->>>>>>> 9d13db8b4d6e4c6db0eb02176829cf1d7b171b2f
 #ifdef DEBUG
 #include <cstdio>
 #endif // DEBUG
@@ -81,10 +79,7 @@ int get_pos(std::string &filepath,key_type &kw) { //read file ,get distance
 	}
 		
 }
-std::map<std::string, double> InvertedIndex::cal_scores(const data_type &files, info_quantity &freq)
-=======
 std::map<std::string, double> InvertedIndex::cal_scores(const data_type &data)
->>>>>>> 9d13db8b4d6e4c6db0eb02176829cf1d7b171b2f
 {
 	std::map<std::string, double>scores;//init scores
 	data_type::iterator t = files.begin();
@@ -99,7 +94,7 @@ std::map<std::string, double> InvertedIndex::cal_scores(const data_type &data)
 				int pos = get_pos(t->second[i].filepath, t->first);
 				scores[t->second[i].filepath] -= (pos +pos * t->second[i].density);//Average distance
 			}
-		scores[t->second[i].filepath] += t->second[i].density*freq.get_infoquantity(t->first);//a keyword freq in a file
+		scores[t->second[i].filepath] += t->second[i].density*InfoQuantity::get_infoquantity(t->first);//a keyword freq in a file
 		t++;
 	}
 	return scores;
