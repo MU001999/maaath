@@ -86,7 +86,7 @@ std::map<std::string, double> InvertedIndex::cal_scores(const data_type &data)
 	{
 		for(int i =0;i<count;i++)//every keyword ->every file
 			if(t->second[i].is_appeared_in_title)
-				scores[t->second[i].filepath]+=1000£»
+				scores[t->second[i].filepath]+=1000;
 			else
 			{
 				int pos = get_pos(t->second[i].filepath, t->first);
