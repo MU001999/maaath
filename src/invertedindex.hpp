@@ -19,6 +19,7 @@ public:
 private:
     data_type files;
     std::string tempfilepath;
+    std::map<std::string, int> filesorder;
 
     std::map<std::string, double> cal_scores(const data_type &data);
 
