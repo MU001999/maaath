@@ -57,6 +57,7 @@ static decltype(auto) get_ambiguity_section(const Utf8String &sentence)
 std::map<std::string, double> InvertedIndex::cal_scores(const data_type &data)
 {
     std::map<std::string, double> scores; // init scores
+
     auto t = kwmappings.begin();
     int count = t->second.size();
     while (t != kwmappings.end()) // traversing each keyword in every file
@@ -66,11 +67,12 @@ std::map<std::string, double> InvertedIndex::cal_scores(const data_type &data)
             if (t->second[i].is_appeared_in_title)
                 scores[t->second[i].filepath] += 1000;
             else
-                scores[t->second[i].filepath] -= this->filesorder[t->second[i].filepath]; // distance
+                scores[t->second[i].filepath] -= filesorder[t->second[i].filepath]; // distance
             scores[t->second[i].filepath] += t->second[i].density * InfoQuantity::get_infoquantity(t->first); // a keyword freq in a file
         }
         t++;
     }
+
     return scores;
 }
 
