@@ -2,6 +2,7 @@
 
 #include <cfloat>
 #include <bitset>
+#include <cstdlib>
 #include <fstream>
 #include <iostream>
 #include <iterator>
@@ -53,24 +54,22 @@ static decltype(auto) get_ambiguity_section(const Utf8String &sentence)
 }
 
 
-// TODO: return scores of files
 std::map<std::string, double> InvertedIndex::cal_scores(const data_type &data)
 {
     std::map<std::string, double> scores; // init scores
 
-    auto t = kwmappings.begin();
-    int count = t->second.size();
-    while (t != kwmappings.end()) // traversing each keyword in every file
+    for (auto &keyword_fileinfos : data)
     {
-        for (int i = 0; i < count; i++) //every keyword ->every file
+        auto &fileinfos = keyword_fileinfos.second;
+        int concept_pos = -1;
+        for (int i = 0; i < (int)fileinfos.size(); ++i)
         {
-            if (t->second[i].is_appeared_in_title)
-                scores[t->second[i].filepath] += 1000;
-            else
-                scores[t->second[i].filepath] -= filesorder[t->second[i].filepath]; // distance
-            scores[t->second[i].filepath] += t->second[i].density * InfoQuantity::get_infoquantity(t->first); // a keyword freq in a file
+            if (fileinfos[i].is_appeared_in_title) 
+                scores[fileinfos[(concept_pos = i)].filepath] += 1000;
+            else if (concept_pos > -1) 
+                scores[fileinfos[i].filepath] -= abs(i - concept_pos) * 100;
+            scores[fileinfos[i].filepath] += fileinfos[i].times * InfoQuantity::get_infoquantity(keyword_fileinfos.first);
         }
-        t++;
     }
 
     return scores;
