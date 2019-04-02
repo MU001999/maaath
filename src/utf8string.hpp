@@ -99,6 +99,9 @@ public:
     const char* c_str() const noexcept;
 
 
+    size_type find(const Utf8String &str, size_type pos = 0) const;
+
+
     friend Utf8String operator+(const Utf8String &lhs, const Utf8String &rhs);
 
     friend bool operator==(const Utf8String &lhs, const Utf8String &rhs);
