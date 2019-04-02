@@ -137,7 +137,7 @@ InvertedIndex::value_type InvertedIndex::get_fileinfos(const key_type &word)
     return kwmappings[word];
 }
 
-std::vector<FileInfoWithAllKeywords> InvertedIndex::get_fileinfos(const std::vector<key_type> &keywords)
+std::vector<FileInfoWithAllKeywords> InvertedIndex::get_fileinfos(const std::vector<key_type> &keywords, const int pagenum, const int perpage)
 {
     data_type kwmps, for_cal_scores;
     std::vector<std::vector<std::string>> filepaths_list;
@@ -182,7 +182,7 @@ std::vector<FileInfoWithAllKeywords> InvertedIndex::get_fileinfos(const std::vec
         return scores[a.filepath] < scores[b.filepath];
     });
 
-    return fileinfos;
+    return decltype(fileinfos)(fileinfos.begin() + pagenum * perpage - perpage, fileinfos.begin() + pagenum * perpage);
 }
 
 std::vector<std::string> InvertedIndex::get_filepaths(const std::vector<key_type> &keywords)
