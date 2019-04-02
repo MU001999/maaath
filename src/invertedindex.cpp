@@ -51,25 +51,24 @@ static decltype(auto) get_ambiguity_section(const Utf8String &sentence)
 
 
 // TODO: return scores of files
-
 std::map<std::string, double> InvertedIndex::cal_scores(const data_type &data)
 {
-	std::map<std::string, double>scores;//init scores
-	data_type::iterator t = files.begin();
-	int count = t->second.size();
-	while (t != files.end()) // Traversing each keyword in every file
-	{
-		for(int i =0;i<count;i++)//every keyword ->every file
+    std::map<std::string, double> scores; // init scores
+    auto t = files.begin();
+    int count = t->second.size();
+    while (t != files.end()) // traversing each keyword in every file
+    {
+        for (int i = 0; i < count; i++) //every keyword ->every file
         {
-			if(t->second[i].is_appeared_in_title)
-				scores[t->second[i].filepath]+=1000;
-			else
-                scores[t->second[i].filepath]-=this->filesorder[t->second[i].filepath];//distance
-            scores[t->second[i].filepath] += t->second[i].density*InfoQuantity::get_infoquantity(t->first);//a keyword freq in a file
-		}
+            if (t->second[i].is_appeared_in_title)
+                scores[t->second[i].filepath] += 1000;
+            else
+                scores[t->second[i].filepath] -= this->filesorder[t->second[i].filepath]; // distance
+            scores[t->second[i].filepath] += t->second[i].density * InfoQuantity::get_infoquantity(t->first); // a keyword freq in a file
+        }
         t++;
-	}
-	return scores;
+    }
+    return scores;
 }
 
 
@@ -105,7 +104,7 @@ bool InvertedIndex::serialize()
 bool InvertedIndex::unserialize()
 {
     auto fin = std::ifstream(tempfilepath);
-    
+
     if (!fin)
     {
         add_files();
