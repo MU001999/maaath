@@ -9,6 +9,22 @@ struct FileInfo
 };
 
 
+struct KeywordInfo
+{
+    double times = 0.0, density = 0.0;
+    bool is_appeared_in_title = false;
+};
+
+
+struct FileInfoWithAllKeywords
+{
+    std::string filepath;
+    std::map<Utf8String, KeywordInfo> kwinfos;
+
+    FileInfoWithAllKeywords(const std::string &filepath);
+};
+
+
 class InvertedIndex
 {
 public:
@@ -17,7 +33,7 @@ public:
     using data_type = std::map<key_type, value_type>;
 
 private:
-    data_type files;
+    data_type kwmappings;
     std::string tempfilepath;
     std::map<std::string, int> filesorder;
 
@@ -31,6 +47,8 @@ public:
     bool unserialize();
 
     value_type get_fileinfos(const key_type &sentence);
+
+    std::vector<FileInfoWithAllKeywords> get_fileinfos(const std::vector<key_type> &keywords);
 
     std::vector<std::string> get_filepaths(const std::vector<key_type> &keywords);
 

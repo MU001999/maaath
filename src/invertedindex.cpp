@@ -19,6 +19,9 @@ struct _KeywordInfo
 };
 
 
+FileInfoWithAllKeywords::FileInfoWithAllKeywords(const std::string &filepath) : filepath(filepath) {}
+
+
 static decltype(auto) get_ambiguity_section(const Utf8String &sentence)
 {
     int pos_of_sen = 0, temp_pos = 0, end_of_sen = 0;
@@ -54,9 +57,9 @@ static decltype(auto) get_ambiguity_section(const Utf8String &sentence)
 std::map<std::string, double> InvertedIndex::cal_scores(const data_type &data)
 {
     std::map<std::string, double> scores; // init scores
-    auto t = files.begin();
+    auto t = kwmappings.begin();
     int count = t->second.size();
-    while (t != files.end()) // traversing each keyword in every file
+    while (t != kwmappings.end()) // traversing each keyword in every file
     {
         for (int i = 0; i < count; i++) //every keyword ->every file
         {
@@ -87,7 +90,7 @@ bool InvertedIndex::serialize()
 
     if (!fout) return false;
 
-    for (auto &kv : files)
+    for (auto &kv : kwmappings)
     {
         fout << kv.first << std::endl;
         for (auto &file : kv.second)
@@ -122,7 +125,7 @@ bool InvertedIndex::unserialize()
             bool is_appeared_in_title;
 
             fin >> times >> density >> is_appeared_in_title;
-            files[kw].push_back({ line, times, density, is_appeared_in_title });
+            kwmappings[kw].push_back({ line, times, density, is_appeared_in_title });
         }
     }
 
@@ -131,18 +134,66 @@ bool InvertedIndex::unserialize()
 
 InvertedIndex::value_type InvertedIndex::get_fileinfos(const key_type &word)
 {
-    return files[word];
+    return kwmappings[word];
+}
+
+std::vector<FileInfoWithAllKeywords> InvertedIndex::get_fileinfos(const std::vector<key_type> &keywords)
+{
+    data_type kwmps, for_cal_scores;
+    std::vector<std::vector<std::string>> filepaths_list;
+    for (auto &kw : keywords)
+    {
+        kwmps[kw] = get_fileinfos(kw);
+        filepaths_list.push_back(std::vector<std::string>());
+        for (auto &fileinfo : kwmps[kw])
+            filepaths_list.back().push_back(fileinfo.filepath);
+    }
+
+    std::map<std::string, FileInfoWithAllKeywords> fileinfomps;
+    // for (auto filepath : and_files(filepaths_list)) fileinfos[filepath] = filepath;
+
+    for (auto &filepath_fileinfo : fileinfomps)
+    {
+        for (auto &keyword_fileinfos : kwmps)
+        {
+            for (auto &fileinfo : keyword_fileinfos.second)
+            {
+                if (fileinfo.filepath == filepath_fileinfo.first)
+                {
+                    for_cal_scores[keyword_fileinfos.first].push_back(fileinfo);
+                    filepath_fileinfo.second.kwinfos[keyword_fileinfos.first] =
+                    {
+                        fileinfo.times, fileinfo.density, fileinfo.is_appeared_in_title
+                    };
+                }
+            }
+        }
+    }
+
+    std::vector<FileInfoWithAllKeywords> fileinfos;
+    for (auto &filepath_fileinfo : fileinfomps)
+    {
+        fileinfos.push_back(filepath_fileinfo.second);
+    }
+
+    auto scores = cal_scores(for_cal_scores);
+    std::sort(fileinfos.rbegin(), fileinfos.rend(), [&](const FileInfoWithAllKeywords &a, const FileInfoWithAllKeywords &b)
+    {
+        return scores[a.filepath] < scores[b.filepath];
+    });
+
+    return fileinfos;
 }
 
 std::vector<std::string> InvertedIndex::get_filepaths(const std::vector<key_type> &keywords)
 {
-    data_type fileinfos, for_cal_scores;
+    data_type kwmp, for_cal_scores;
     std::vector<std::vector<std::string>> filepaths_list;
     for (auto &kw : keywords)
     {
-        fileinfos[kw] = get_fileinfos(kw);
+        kwmp[kw] = get_fileinfos(kw);
         filepaths_list.push_back(std::vector<std::string>());
-        for (auto &fileinfo : fileinfos[kw])
+        for (auto &fileinfo : kwmp[kw])
             filepaths_list.back().push_back(fileinfo.filepath);
     }
 
@@ -150,7 +201,7 @@ std::vector<std::string> InvertedIndex::get_filepaths(const std::vector<key_type
     // auto filepaths = and_files(filepaths_list);
 
     for (auto &filepath : filepaths)
-        for (auto &mp : fileinfos)
+        for (auto &mp : kwmp)
             for (auto &fileinfo : mp.second)
                 if (fileinfo.filepath == filepath)
                     for_cal_scores[mp.first].push_back(fileinfo);
@@ -219,6 +270,6 @@ void InvertedIndex::add_file(const key_type &sentence, const std::string &filepa
     for (auto &kwinfo : kwinfos)
     {
         auto &info = kwinfo.second;
-        files[kwinfo.first].push_back({ filepath, info.times, info.times / alltimes, info.is_appeared_in_title });
+        kwmappings[kwinfo.first].push_back({ filepath, info.times, info.times / alltimes, info.is_appeared_in_title });
     }
 }
