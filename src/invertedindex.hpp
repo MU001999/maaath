@@ -48,7 +48,7 @@ public:
 
     value_type get_fileinfos(const key_type &sentence);
 
-    std::vector<FileInfoWithAllKeywords> get_fileinfos(const std::vector<key_type> &keywords, const int pagenum = 1, const int perpage = 10);
+    std::vector<FileInfoWithAllKeywords> get_fileinfos(const std::vector<key_type> &keywords, int pagenum = 1, int perpage = 10);
 
     std::vector<std::string> get_filepaths(const std::vector<key_type> &keywords);
 

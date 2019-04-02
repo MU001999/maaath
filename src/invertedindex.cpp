@@ -139,7 +139,7 @@ InvertedIndex::value_type InvertedIndex::get_fileinfos(const key_type &word)
     return kwmappings[word];
 }
 
-std::vector<FileInfoWithAllKeywords> InvertedIndex::get_fileinfos(const std::vector<key_type> &keywords, const int pagenum, const int perpage)
+std::vector<FileInfoWithAllKeywords> InvertedIndex::get_fileinfos(const std::vector<key_type> &keywords, int pagenum, int perpage)
 {
     data_type kwmps, for_cal_scores;
     std::vector<std::vector<std::string>> filepaths_list;
@@ -237,7 +237,7 @@ void InvertedIndex::add_file(const key_type &sentence, const std::string &filepa
         {
             alltimes += 1;
             kwinfos[word].times += 1;
-            kwinfos[word].is_appeared_in_title |= false;
+            kwinfos[word].is_appeared_in_title |= Utf8String(filepath).find(word);
         }
     }
 
@@ -252,7 +252,7 @@ void InvertedIndex::add_file(const key_type &sentence, const std::string &filepa
                 if (!InfoQuantity::count(word)) continue;
                 alltimes += 1;
                 kwinfos[word].times += 1;
-                kwinfos[word].is_appeared_in_title |= false;
+                kwinfos[word].is_appeared_in_title |= Utf8String(filepath).find(word);
             }
         }
         endpos = mp.second - 1;
@@ -265,7 +265,7 @@ void InvertedIndex::add_file(const key_type &sentence, const std::string &filepa
             if (!InfoQuantity::count(word)) continue;
             alltimes += 1;
             kwinfos[word].times += 1;
-            kwinfos[word].is_appeared_in_title |= false;
+            kwinfos[word].is_appeared_in_title |= Utf8String(filepath).find(word);
         }
     }
 
