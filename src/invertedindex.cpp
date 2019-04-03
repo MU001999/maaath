@@ -7,6 +7,7 @@
 #include <iostream>
 #include <iterator>
 #include <algorithm>
+#include <sstream>
 
 #ifdef DEBUG
 #include <cstdio>
@@ -20,10 +21,7 @@ struct _KeywordInfo
 };
 
 
-FileInfoWithAllKeywords::FileInfoWithAllKeywords(const std::string &filepath) : filepath(filepath) {}
-
-
-static decltype(auto) get_ambiguity_section(const Utf8String &sentence)
+static decltype(auto) _get_ambiguity_section(const Utf8String &sentence)
 {
     int pos_of_sen = 0, temp_pos = 0, end_of_sen = 0;
     std::map<int, int> ambiguity;
@@ -53,6 +51,17 @@ static decltype(auto) get_ambiguity_section(const Utf8String &sentence)
     return ambiguity;
 }
 
+static int _cal_order_by_secname(const std::string &secname)
+{
+    int first, second, third; char tmp;
+    std::stringstream ss(secname);
+    ss >> first >> tmp >> second >> tmp >> third;
+    return first * 10000 + second * 100 + third;
+}
+
+
+FileInfoWithAllKeywords::FileInfoWithAllKeywords(const std::string &filepath) : filepath(filepath) {}
+
 
 std::map<std::string, double> InvertedIndex::cal_scores(const data_type &data)
 {
@@ -74,7 +83,6 @@ std::map<std::string, double> InvertedIndex::cal_scores(const data_type &data)
 
     return scores;
 }
-
 
 InvertedIndex::InvertedIndex(const std::string &filepath) : tempfilepath(filepath)
 {
@@ -229,7 +237,7 @@ void InvertedIndex::add_file(const key_type &sentence, const std::string &filepa
 
     std::map<key_type, _KeywordInfo> kwinfos;
 
-    auto ambiguities = get_ambiguity_section(sentence);
+    auto ambiguities = _get_ambiguity_section(sentence);
     for (auto &mp : ambiguities)
     {
         for (auto &word : Segmentation::segment(sentence.substr(mp.first, mp.second - mp.first)))
