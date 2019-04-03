@@ -4,10 +4,10 @@
 #include <bitset>
 #include <cstdlib>
 #include <fstream>
+#include <sstream>
 #include <iostream>
 #include <iterator>
 #include <algorithm>
-#include <sstream>
 
 #ifdef DEBUG
 #include <cstdio>
@@ -227,7 +227,20 @@ std::vector<std::string> InvertedIndex::get_filepaths(const std::vector<key_type
 // TODO: sort by chapter order & update filesorder
 void InvertedIndex::add_files(const std::string &folderpath)
 {
-    // TODO: implement add files with receiving a folder path
+    /*
+    std::vector<std::string> filepaths = read_folder(folderpath);
+
+    sort(filepaths.begin(), filepaths.end(), [&](const std::string &a, const std::string &b)
+    {
+        return _cal_order_by_secname(a.substr(a.rfind('/'))) < _cal_order_by_secname(b.substr(b.rfind('/')));
+    });
+
+    for (auto &filepath : filepaths)
+    {
+        add_file(read_file(filepath), filepath);
+    }
+    */
+
     serialize();
 }
 
