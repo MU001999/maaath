@@ -226,7 +226,7 @@ const char* Utf8String::c_str() const noexcept
 }
 
 
-Utf8String::size_type Utf8String::find(const Utf8String &str, size_type pos = 0) const
+Utf8String::size_type Utf8String::find(const Utf8String &str, size_type pos) const
 {
     return data.find(str.data, pos);
 }
