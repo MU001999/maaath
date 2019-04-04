@@ -6,7 +6,14 @@
 #include <iterator>
 
 
-static double _cal_infoquantity_of_words(const std::vector<Wordmap>& wl)
+struct _Wordmap
+{
+	Utf8String word;
+	int pos_in_sentence;
+};
+
+
+static double _cal_infoquantity_of_words(const std::vector<_Wordmap>& wl)
 {
 	double info = 0;
 	for (auto w : wl)
@@ -16,9 +23,9 @@ static double _cal_infoquantity_of_words(const std::vector<Wordmap>& wl)
 	return info;
 }
 
-static decltype(auto) _choice_word(const std::vector<Wordmap>& word, std::bitset<32> bits, int count)
+static decltype(auto) _choice_word(const std::vector<_Wordmap>& word, std::bitset<32> bits, int count)
 {
-	std::vector<Wordmap> section;
+	std::vector<_Wordmap> section;
 	for (int i = 0; i < count; i++)
 	{
 		if (bits[i]) section.push_back(word[i]);
@@ -26,7 +33,7 @@ static decltype(auto) _choice_word(const std::vector<Wordmap>& word, std::bitset
 	return section;
 }
 
-static bool _is_overlapping(const std::vector<Wordmap>& wd)
+static bool _is_overlapping(const std::vector<_Wordmap>& wd)
 {
 	int word_end_pos = -1;
 	for (auto w : wd)
@@ -40,7 +47,7 @@ static bool _is_overlapping(const std::vector<Wordmap>& wd)
 
 static decltype(auto) _get_segmentation(const Utf8String & sentence)
 {
-	std::vector<Wordmap> word_maps;
+	std::vector<_Wordmap> word_maps;
 	for (int i = 0; i < (int)sentence.size() - 1; i++)
 	{
 		for (int j = 7; j >= 2; j--)
@@ -61,12 +68,13 @@ static decltype(auto) _get_segmentation(const Utf8String & sentence)
 
 	int arrange = -1;
 	int count = word_maps.size();
-	std::vector<Wordmap> best_segment;
+	std::vector<_Wordmap> best_segment;
 
 	double freq = DBL_MIN, tmpfreq;
 	while (++arrange < (1 << count))
 	{
 		std::bitset<32> bits(arrange);
+
 #ifdef DEBUG
 		std::cout << "[BITS] " << bits << std::endl;
 #endif // DEBUG
@@ -85,22 +93,6 @@ static decltype(auto) _get_segmentation(const Utf8String & sentence)
 			}
 		}
 	}
-
-	/* add single character into result
-	auto temp_segment = best_segment;
-	best_segment.clear();
-
-	int end_pos = -1;
-	for (auto &word : temp_segment)
-	{
-		while (++end_pos < word.pos_in_sentence)
-			best_segment.push_back({ sentence[end_pos] , end_pos });
-		best_segment.push_back(word);
-		end_pos = word.pos_in_sentence + word.word.size() - 1;
-	}
-	while (++end_pos < (int)sentence.size())
-		best_segment.push_back({ sentence[end_pos] , end_pos });
-	*/
 
 	std::vector<Utf8String> result;
 	for (auto& wm : best_segment) result.push_back(wm.word);
