@@ -68,13 +68,15 @@ std::map<std::string, double> InvertedIndex::cal_scores(const data_type& data)
 	for (auto& keyword_fileinfos : data)
 	{
 		auto& fileinfos = keyword_fileinfos.second;
-		int concept_pos = -1;
-		for (int i = 0; i < (int)fileinfos.size(); ++i)
+		for (int i = 0, concept_pos = -1; i < (int)fileinfos.size(); ++i)
 		{
 			if (fileinfos[i].is_appeared_in_title)
-				scores[fileinfos[(concept_pos = i)].filepath] += 1000;
+			{
+				scores[fileinfos[i].filepath] += 1000;
+				concept_pos = filesorder[fileinfos[i].filepath];
+			}
 			else if (concept_pos > -1)
-				scores[fileinfos[i].filepath] -= abs(i - concept_pos) * 100;
+				scores[fileinfos[i].filepath] -= abs(filesorder[fileinfos[i].filepath] - concept_pos) * 100;
 			scores[fileinfos[i].filepath] += fileinfos[i].times * InfoQuantity::get_infoquantity(keyword_fileinfos.first);
 		}
 	}
@@ -159,22 +161,14 @@ std::vector<FileInfoWithAllKeywords> InvertedIndex::get_fileinfos(const std::vec
 	std::map<std::string, FileInfoWithAllKeywords> fileinfomps;
 	// for (auto filepath : and_files(filepaths_list)) fileinfos[filepath] = filepath;
 
-	for (auto& filepath_fileinfo : fileinfomps)
+	for (auto& filepath_fileinfo : fileinfomps) for (auto& keyword_fileinfos : kwmps) for (auto& fileinfo : keyword_fileinfos.second)
+		if (fileinfo.filepath == filepath_fileinfo.first)
 	{
-		for (auto& keyword_fileinfos : kwmps)
+		for_cal_scores[keyword_fileinfos.first].push_back(fileinfo);
+		filepath_fileinfo.second.kwinfos[keyword_fileinfos.first] =
 		{
-			for (auto& fileinfo : keyword_fileinfos.second)
-			{
-				if (fileinfo.filepath == filepath_fileinfo.first)
-				{
-					for_cal_scores[keyword_fileinfos.first].push_back(fileinfo);
-					filepath_fileinfo.second.kwinfos[keyword_fileinfos.first] =
-					{
-						fileinfo.times, fileinfo.density, fileinfo.is_appeared_in_title
-					};
-				}
-			}
-		}
+			fileinfo.times, fileinfo.density, fileinfo.is_appeared_in_title
+		};
 	}
 
 	std::vector<FileInfoWithAllKeywords> fileinfos;
