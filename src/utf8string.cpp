@@ -226,6 +226,12 @@ const char* Utf8String::c_str() const noexcept
 }
 
 
+Utf8String::size_type Utf8String::find(const Utf8String &str, size_type pos) const
+{
+    return data.find(str.data, pos);
+}
+
+
 Utf8String operator+(const Utf8String &lhs, const Utf8String &rhs)
 {
     return lhs.data + rhs.data;

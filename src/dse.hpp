@@ -9,6 +9,7 @@
 #include <memory>
 #include <utility>
 #include <functional>
+#include <unordered_map>
 
 #include "utf8string.hpp"
 #include "infoquantity.hpp"

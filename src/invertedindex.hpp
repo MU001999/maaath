@@ -9,6 +9,22 @@ struct FileInfo
 };
 
 
+struct KeywordInfo
+{
+    double times = 0.0, density = 0.0;
+    bool is_appeared_in_title = false;
+};
+
+
+struct FileInfoWithAllKeywords
+{
+    std::string filepath;
+    std::map<Utf8String, KeywordInfo> kwinfos;
+
+    FileInfoWithAllKeywords(const std::string &filepath);
+};
+
+
 class InvertedIndex
 {
 public:
@@ -17,19 +33,27 @@ public:
     using data_type = std::map<key_type, value_type>;
 
 private:
-    static std::map<std::string, double> cal_scores(const data_type &files);
+    data_type kwmappings;
+    std::string tempfilepath;
+    std::unordered_map<std::string, int> filesorder;
+
+    std::map<std::string, double> cal_scores(const data_type &data);
 
 public:
-    static bool serialize(const std::string &filepath = "./dseii.tmp");
+    InvertedIndex(const std::string &filepath);
 
-    static bool unserialize(const std::string &fllepath = "./dseii.tmp");
+    bool serialize();
 
-    static value_type get_fileinfos(const key_type &sentence);
+    bool unserialize();
 
-    static std::vector<std::string> get_filepaths(const std::vector<key_type> &keywords);
+    value_type get_fileinfos(const key_type &sentence);
+
+    std::vector<FileInfoWithAllKeywords> get_fileinfos(const std::vector<key_type> &keywords, int pagenum = 1, int perpage = 10);
+
+    std::vector<std::string> get_filepaths(const std::vector<key_type> &keywords);
 
     // Add files with receiving a folder path
-    static void add_files(const std::string &folderpath = "./inputfiles");
+    void add_files(const std::string &folderpath = "./inputfiles");
 
-    static void add_file(const key_type &sentence, const std::string &filepath);
+    void add_file(const key_type &sentence, const std::string &filepath);
 };

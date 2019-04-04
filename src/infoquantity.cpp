@@ -51,6 +51,7 @@ public:
     }
 } _infoquantity;
 
+
 double InfoQuantity::get_infoquantity(const Utf8String &word)
 {
     return _infoquantity.get_infoquantity(word);

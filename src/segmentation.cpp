@@ -5,7 +5,7 @@
 #include <iterator>
 
 
-static double get_infoquantity(const std::vector<Wordmap> &wl)
+static double _cal_infoquantity_of_words(const std::vector<Wordmap> &wl)
 {
     double info = 0;
     for (auto w : wl)
@@ -15,7 +15,7 @@ static double get_infoquantity(const std::vector<Wordmap> &wl)
     return info;
 }
 
-static decltype(auto) choice_word(const std::vector<Wordmap> &word, std::bitset<32> bits, int count)
+static decltype(auto) _choice_word(const std::vector<Wordmap> &word, std::bitset<32> bits, int count)
 {
     std::vector<Wordmap> section;
     for (int i = 0; i < count; i++)
@@ -25,7 +25,7 @@ static decltype(auto) choice_word(const std::vector<Wordmap> &word, std::bitset<
     return section;
 }
 
-static bool is_overlapping(const std::vector<Wordmap> &wd)
+static bool _is_overlapping(const std::vector<Wordmap> &wd)
 {
     int word_end_pos = -1;
     for (auto w : wd)
@@ -37,7 +37,7 @@ static bool is_overlapping(const std::vector<Wordmap> &wd)
     return false;
 }
 
-static decltype(auto) get_segmentation(const Utf8String &sentence)
+static decltype(auto) _get_segmentation(const Utf8String &sentence)
 {
     std::vector<Wordmap> word_maps;
     for (int i = 0; i < (int)sentence.size() - 1; i++)
@@ -70,10 +70,10 @@ static decltype(auto) get_segmentation(const Utf8String &sentence)
         std::cout << "[BITS] " << bits << std::endl;
 #endif // DEBUG
 
-        auto temp_segment = choice_word(word_maps, bits, count);
-        if (!is_overlapping(temp_segment))
+        auto temp_segment = _choice_word(word_maps, bits, count);
+        if (!_is_overlapping(temp_segment))
         {
-            if ((tmpfreq = get_infoquantity(temp_segment)) >= freq)
+            if ((tmpfreq = _cal_infoquantity_of_words(temp_segment)) >= freq)
             {
 #ifdef DEBUG
                 std::cout << "[FREQ] " << tmpfreq << std::endl;
@@ -109,5 +109,5 @@ static decltype(auto) get_segmentation(const Utf8String &sentence)
 
 std::vector<Utf8String> Segmentation::segment(const Utf8String &sentence)
 {
-    return get_segmentation(sentence);
+    return _get_segmentation(sentence);
 }
