@@ -240,6 +240,7 @@ void InvertedIndex::add_files(const std::string & folderpath)
 		std::string content, line;
 		for (; std::getline(fin, line); content += line + " ");
 		add_file(content, filepath);
+		filesorder[filepath] = filesorder.size();
 	}
 
 	serialize();
