@@ -1,113 +1,114 @@
 #include "dse.hpp"
 
 #include <cfloat>
+
 #include <bitset>
 #include <iterator>
 
 
-static double _cal_infoquantity_of_words(const std::vector<Wordmap> &wl)
+static double _cal_infoquantity_of_words(const std::vector<Wordmap>& wl)
 {
-    double info = 0;
-    for (auto w : wl)
-    {
-        if (InfoQuantity::count(w.word)) info += InfoQuantity::get_infoquantity(w.word);
-    }
-    return info;
+	double info = 0;
+	for (auto w : wl)
+	{
+		if (InfoQuantity::count(w.word)) info += InfoQuantity::get_infoquantity(w.word);
+	}
+	return info;
 }
 
-static decltype(auto) _choice_word(const std::vector<Wordmap> &word, std::bitset<32> bits, int count)
+static decltype(auto) _choice_word(const std::vector<Wordmap>& word, std::bitset<32> bits, int count)
 {
-    std::vector<Wordmap> section;
-    for (int i = 0; i < count; i++)
-    {
-        if (bits[i]) section.push_back(word[i]);
-    }
-    return section;
+	std::vector<Wordmap> section;
+	for (int i = 0; i < count; i++)
+	{
+		if (bits[i]) section.push_back(word[i]);
+	}
+	return section;
 }
 
-static bool _is_overlapping(const std::vector<Wordmap> &wd)
+static bool _is_overlapping(const std::vector<Wordmap>& wd)
 {
-    int word_end_pos = -1;
-    for (auto w : wd)
-    {
-        if (word_end_pos <= w.pos_in_sentence)
-            word_end_pos = w.pos_in_sentence + w.word.size();
-        else return true;
-    }
-    return false;
+	int word_end_pos = -1;
+	for (auto w : wd)
+	{
+		if (word_end_pos <= w.pos_in_sentence)
+			word_end_pos = w.pos_in_sentence + w.word.size();
+		else return true;
+	}
+	return false;
 }
 
-static decltype(auto) _get_segmentation(const Utf8String &sentence)
+static decltype(auto) _get_segmentation(const Utf8String & sentence)
 {
-    std::vector<Wordmap> word_maps;
-    for (int i = 0; i < (int)sentence.size() - 1; i++)
-    {
-        for (int j = 7; j >= 2; j--)
-        {
-            if (i + j > (int)sentence.size()) j = sentence.size() - i;
-            auto temp = sentence.substr(i, j);
-            if (InfoQuantity::count(temp)) word_maps.push_back({ temp, i });
-        }
-    }
+	std::vector<Wordmap> word_maps;
+	for (int i = 0; i < (int)sentence.size() - 1; i++)
+	{
+		for (int j = 7; j >= 2; j--)
+		{
+			if (i + j > (int)sentence.size()) j = sentence.size() - i;
+			auto temp = sentence.substr(i, j);
+			if (InfoQuantity::count(temp)) word_maps.push_back({ temp, i });
+		}
+	}
 
 #ifdef DEBUG
-    std::cout << "[CODE LINE] " << __LINE__ << std::endl;
-    for (auto &wm : word_maps)
-    {
-        std::cout << wm.word.raw() << std::endl;
-    }
+	std::cout << "[CODE LINE] " << __LINE__ << std::endl;
+	for (auto& wm : word_maps)
+	{
+		std::cout << wm.word.raw() << std::endl;
+	}
 #endif // DEBUG
 
-    int arrange = -1;
-    int count = word_maps.size();
-    std::vector<Wordmap> best_segment;
+	int arrange = -1;
+	int count = word_maps.size();
+	std::vector<Wordmap> best_segment;
 
-    double freq = DBL_MIN, tmpfreq;
-    while (++arrange < (1 << count))
-    {
-        std::bitset<32> bits(arrange);
+	double freq = DBL_MIN, tmpfreq;
+	while (++arrange < (1 << count))
+	{
+		std::bitset<32> bits(arrange);
 #ifdef DEBUG
-        std::cout << "[BITS] " << bits << std::endl;
+		std::cout << "[BITS] " << bits << std::endl;
 #endif // DEBUG
 
-        auto temp_segment = _choice_word(word_maps, bits, count);
-        if (!_is_overlapping(temp_segment))
-        {
-            if ((tmpfreq = _cal_infoquantity_of_words(temp_segment)) >= freq)
-            {
+		auto temp_segment = _choice_word(word_maps, bits, count);
+		if (!_is_overlapping(temp_segment))
+		{
+			if ((tmpfreq = _cal_infoquantity_of_words(temp_segment)) >= freq)
+			{
 #ifdef DEBUG
-                std::cout << "[FREQ] " << tmpfreq << std::endl;
+				std::cout << "[FREQ] " << tmpfreq << std::endl;
 #endif // DEBUG
 
-                freq = tmpfreq;
-                best_segment = temp_segment;
-            }
-        }
-    }
+				freq = tmpfreq;
+				best_segment = temp_segment;
+			}
+		}
+	}
 
-    /* add single character into result
-    auto temp_segment = best_segment;
-    best_segment.clear();
+	/* add single character into result
+	auto temp_segment = best_segment;
+	best_segment.clear();
 
-    int end_pos = -1;
-    for (auto &word : temp_segment)
-    {
-        while (++end_pos < word.pos_in_sentence)
-            best_segment.push_back({ sentence[end_pos] , end_pos });
-        best_segment.push_back(word);
-        end_pos = word.pos_in_sentence + word.word.size() - 1;
-    }
-    while (++end_pos < (int)sentence.size())
-        best_segment.push_back({ sentence[end_pos] , end_pos });
-    */
+	int end_pos = -1;
+	for (auto &word : temp_segment)
+	{
+		while (++end_pos < word.pos_in_sentence)
+			best_segment.push_back({ sentence[end_pos] , end_pos });
+		best_segment.push_back(word);
+		end_pos = word.pos_in_sentence + word.word.size() - 1;
+	}
+	while (++end_pos < (int)sentence.size())
+		best_segment.push_back({ sentence[end_pos] , end_pos });
+	*/
 
-    std::vector<Utf8String> result;
-    for (auto &wm : best_segment) result.push_back(wm.word);
-    return result;
+	std::vector<Utf8String> result;
+	for (auto& wm : best_segment) result.push_back(wm.word);
+	return result;
 }
 
 
-std::vector<Utf8String> Segmentation::segment(const Utf8String &sentence)
+std::vector<Utf8String> Segmentation::segment(const Utf8String & sentence)
 {
-    return _get_segmentation(sentence);
+	return _get_segmentation(sentence);
 }

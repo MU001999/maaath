@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstdio>
 #include <cstring>
 
 #include <set>
@@ -8,6 +9,7 @@
 #include <string>
 #include <memory>
 #include <utility>
+#include <iostream>
 #include <functional>
 #include <unordered_map>
 
