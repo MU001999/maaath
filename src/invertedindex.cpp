@@ -1,6 +1,8 @@
 #include "dse.hpp"
 
+#include <dirent.h>
 #include <cfloat>
+
 #include <bitset>
 #include <fstream>
 #include <iostream>
@@ -123,6 +125,45 @@ std::vector<std::string> InvertedIndex::get_filepaths(const std::vector<key_type
 void InvertedIndex::add_files(const std::string &folderpath)
 {
     // TODO: implement add files with receiving a folder path
+    DIR *directory_pointer;
+	struct dirent *entry;
+    std::map<std::string, int> filename_val;
+    int temp;
+
+    if((directory_pointer=opendir(folderpath.c_str()))==NULL)
+    {
+        printf("Error open\n");
+        return ;
+    }
+    else
+    {
+        std::vector<std::string> filenames;
+        while((entry=readdir(directory_pointer))!=NULL)
+        {
+            if(entry->d_name[0]=='.') continue;
+            temp = entry->d_name[0]*100+entry->d_name[2]*10+entry->d_name[4];
+            filenames.push_back(entry->d_name);
+            filename_val[entry->d_name] = temp;
+        }
+
+        sort(filenames.begin(), filenames.end(), [&](const std::string &a, const std::string &b)
+        {
+            return filename_val[a] < filename_val[b];
+        });
+
+        std::string prepath = folderpath + ((folderpath.back() == '/') ? "" : "/");
+
+        for(auto &vc : filenames)
+        {
+            //补全路径
+            auto filepath = prepath + vc;
+            //读文件内容
+            std::ifstream fin(filepath.c_str());
+            std::string content, line;
+            for (; std::getline(fin, line); content += line);
+            add_file(content, filepath);
+        }
+    }
     serialize();
 }
 
