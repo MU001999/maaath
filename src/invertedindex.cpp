@@ -226,7 +226,6 @@ std::vector<std::string> InvertedIndex::get_filepaths(const std::vector<key_type
     return filepaths;
 }
 
-// TODO: sort by chapter order & update filesorder
 void InvertedIndex::add_files(const std::string &folderpath)
 {
     DIR *directory_pointer;
