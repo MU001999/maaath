@@ -11,7 +11,7 @@
 static class _InfoQuantity
 {
 private:
-	std::map<Utf8String, double> info_quantity;
+	std::map<Utf8String, double> info_quantity_;
 
 public:
 
@@ -25,7 +25,7 @@ public:
 		fin >> word >> sum;
 		while (fin >> word >> freq)
 		{
-			info_quantity[word] = log(sum / freq);
+			info_quantity_[word] = log(sum / freq);
 		}
 		fin.close();
 		fin.open(filename2.raw(), std::ios::in);
@@ -33,7 +33,7 @@ public:
 		fin >> word >> sum;
 		while (fin >> word >> freq)
 		{
-			info_quantity[word] = log(sum / freq);
+			info_quantity_[word] = log(sum / freq);
 		}
 		fin.close();
 	}
@@ -41,12 +41,12 @@ public:
 
 	double get_infoquantity(const Utf8String & word)
 	{
-		return info_quantity[word];
+		return info_quantity_[word];
 	}
 
 	bool count(const Utf8String & word) const
 	{
-		return info_quantity.count(word);
+		return info_quantity_.count(word);
 	}
 } _infoquantity;
 
