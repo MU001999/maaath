@@ -14,8 +14,8 @@ public:
 	using const_pointer = const value_type &;
 
 private:
-	data_type data;
-	raw_type raw_string;
+	data_type data_;
+	raw_type raw_string_;
 
 public:
 	// This is a special value equal to the maximum value representable by the type size_type. The exact meaning depends on context, but it is generally used either as end of string indicator by the functions that expect a string index or as the error indicator by the functions that return a string index.
