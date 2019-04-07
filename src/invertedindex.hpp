@@ -33,11 +33,11 @@ public:
 	using data_type = std::map<key_type, value_type>;
 
 private:
-	data_type kwmappings;
-	std::string tempfilepath;
-	std::unordered_map<std::string, int> filesorder;
+	data_type kwmappings_;
+	std::string tempfilepath_;
+	std::unordered_map<std::string, int> filesorder_;
 
-	std::map<std::string, double> cal_scores(const data_type& data);
+	std::map<std::string, double> cal_scores_(const data_type& data);
 
 public:
 	InvertedIndex(const std::string& filepath);

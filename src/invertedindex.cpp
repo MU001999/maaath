@@ -61,7 +61,7 @@ static int _cal_order_by_secname(const std::string& secname)
 FileInfoWithAllKeywords::FileInfoWithAllKeywords(const std::string& filepath) : filepath(filepath) {}
 
 
-std::map<std::string, double> InvertedIndex::cal_scores(const data_type& data)
+std::map<std::string, double> InvertedIndex::cal_scores_(const data_type& data)
 {
 	std::map<std::string, double> scores; // init scores
 
@@ -73,10 +73,10 @@ std::map<std::string, double> InvertedIndex::cal_scores(const data_type& data)
 			if (fileinfos[i].is_appeared_in_title)
 			{
 				scores[fileinfos[i].filepath] += 1000;
-				concept_pos = filesorder[fileinfos[i].filepath];
+				concept_pos = filesorder_[fileinfos[i].filepath];
 			}
 			else if (concept_pos > -1)
-				scores[fileinfos[i].filepath] -= abs(filesorder[fileinfos[i].filepath] - concept_pos) * 100;
+				scores[fileinfos[i].filepath] -= abs(filesorder_[fileinfos[i].filepath] - concept_pos) * 100;
 			scores[fileinfos[i].filepath] += fileinfos[i].times * InfoQuantity::get_infoquantity(keyword_fileinfos.first);
 		}
 	}
@@ -84,7 +84,7 @@ std::map<std::string, double> InvertedIndex::cal_scores(const data_type& data)
 	return scores;
 }
 
-InvertedIndex::InvertedIndex(const std::string & filepath) : tempfilepath(filepath)
+InvertedIndex::InvertedIndex(const std::string & filepath) : tempfilepath_(filepath)
 {
 	serialize();
 }
@@ -95,11 +95,11 @@ Structure of temp file for serialization
 
 bool InvertedIndex::serialize()
 {
-	auto fout = std::ofstream(tempfilepath);
+	auto fout = std::ofstream(tempfilepath_);
 
 	if (!fout) return false;
 
-	for (auto& kv : kwmappings)
+	for (auto& kv : kwmappings_)
 	{
 		fout << kv.first << std::endl;
 		for (auto& file : kv.second)
@@ -115,7 +115,7 @@ bool InvertedIndex::serialize()
 
 bool InvertedIndex::unserialize()
 {
-	auto fin = std::ifstream(tempfilepath);
+	auto fin = std::ifstream(tempfilepath_);
 
 	if (!fin)
 	{
@@ -134,7 +134,7 @@ bool InvertedIndex::unserialize()
 			bool is_appeared_in_title;
 
 			fin >> times >> density >> is_appeared_in_title;
-			kwmappings[kw].push_back({ line, times, density, is_appeared_in_title });
+			kwmappings_[kw].push_back({ line, times, density, is_appeared_in_title });
 		}
 	}
 
@@ -143,7 +143,7 @@ bool InvertedIndex::unserialize()
 
 InvertedIndex::value_type InvertedIndex::get_fileinfos(const key_type & word)
 {
-	return kwmappings[word];
+	return kwmappings_[word];
 }
 
 std::vector<FileInfoWithAllKeywords> InvertedIndex::get_fileinfos(const std::vector<key_type> & keywords, int pagenum, int perpage)
@@ -177,7 +177,7 @@ std::vector<FileInfoWithAllKeywords> InvertedIndex::get_fileinfos(const std::vec
 		fileinfos.push_back(filepath_fileinfo.second);
 	}
 
-	auto scores = cal_scores(for_cal_scores);
+	auto scores = cal_scores_(for_cal_scores);
 	std::sort(fileinfos.rbegin(), fileinfos.rend(), [&](const FileInfoWithAllKeywords & a, const FileInfoWithAllKeywords & b)
 		{
 			return scores[a.filepath] < scores[b.filepath];
@@ -204,7 +204,7 @@ std::vector<std::string> InvertedIndex::get_filepaths(const std::vector<key_type
 	for (auto& filepath : filepaths) for (auto& mp : kwmp) for (auto& fileinfo : mp.second)
 		if (fileinfo.filepath == filepath) for_cal_scores[mp.first].push_back(fileinfo);
 
-	auto scores = cal_scores(for_cal_scores);
+	auto scores = cal_scores_(for_cal_scores);
 	std::sort(filepaths.rbegin(), filepaths.rend(), [&](const std::string & a, const std::string & b)
 		{
 			return scores[a] < scores[b];
@@ -240,7 +240,7 @@ void InvertedIndex::add_files(const std::string & folderpath)
 		std::string content, line;
 		for (; std::getline(fin, line); content += line + " ");
 		add_file(content, filepath);
-		filesorder[filepath] = filesorder.size();
+		filesorder_[filepath] = filesorder_.size();
 	}
 
 	serialize();
@@ -295,6 +295,6 @@ void InvertedIndex::add_file(const key_type & sentence, const std::string & file
 	for (auto& kwinfo : kwinfos)
 	{
 		auto& info = kwinfo.second;
-		kwmappings[kwinfo.first].push_back({ filepath, info.times, info.times / alltimes, info.is_appeared_in_title });
+		kwmappings_[kwinfo.first].push_back({ filepath, info.times, info.times / alltimes, info.is_appeared_in_title });
 	}
 }
