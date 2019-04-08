@@ -1,5 +1,6 @@
 #include "dse.hpp"
 
+#include <cstdio>
 #include <cfloat>
 #include <cstdlib>
 #include <dirent.h>
@@ -7,7 +8,6 @@
 #include <bitset>
 #include <fstream>
 #include <sstream>
-#include <iostream>
 #include <iterator>
 #include <algorithm>
 
