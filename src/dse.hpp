@@ -10,6 +10,7 @@
 #include <unordered_map>
 
 #include "utf8string.hpp"
+#include "commucation.hpp"
 #include "infoquantity.hpp"
 #include "segmentation.hpp"
 #include "invertedindex.hpp"
