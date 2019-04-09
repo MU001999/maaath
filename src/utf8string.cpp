@@ -87,7 +87,7 @@ Utf8String& Utf8String::operator=(const raw_type & raw_string)
 	return *this;
 }
 
-Utf8String & Utf8String::operator=(const char* raw_string)
+Utf8String& Utf8String::operator=(const char* raw_string)
 {
 	return operator=(std::string(raw_string));
 }
