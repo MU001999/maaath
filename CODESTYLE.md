@@ -110,8 +110,6 @@ constexpr int kAndroid8_0_0 = 24; // Android 8.0.0
 ### include的顺序
 
 includes的顺序如下
-1. 项目头文件
-1. 空行
 1. C system files
 1. 空行
 1. C++ system files
