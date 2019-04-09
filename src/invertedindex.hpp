@@ -40,6 +40,7 @@ private:
 	std::map<std::string, double> cal_scores_(const data_type& data);
 
 public:
+	// Constructor, recerives the serialization file
 	InvertedIndex(const std::string& filepath);
 
 	bool serialize();
