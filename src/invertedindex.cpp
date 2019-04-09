@@ -12,6 +12,7 @@
 #include <algorithm>
 
 
+// Temporary struct in this file
 struct _KeywordInfo
 {
 	double times = 0.0;
@@ -19,6 +20,7 @@ struct _KeywordInfo
 };
 
 
+// Returns map for ambiguity section by given sentence
 static decltype(auto) _get_ambiguity_section(const Utf8String& sentence)
 {
 	int pos_of_sen = 0, temp_pos = 0, end_of_sen = 0;
@@ -49,6 +51,7 @@ static decltype(auto) _get_ambiguity_section(const Utf8String& sentence)
 	return ambiguity;
 }
 
+// Calculate the order of given section name as '1.5.2 <NAME>' and return the result
 static int _cal_order_by_secname(const std::string& secname)
 {
 	int first, second, third; char tmp;
@@ -58,26 +61,28 @@ static int _cal_order_by_secname(const std::string& secname)
 }
 
 
+// Contructor of FileInfoWithAllKeywords
 FileInfoWithAllKeywords::FileInfoWithAllKeywords(const std::string& filepath) : filepath(filepath) {}
 
 
-std::map<std::string, double> InvertedIndex::cal_scores_(const data_type& data)
+std::map<std::string, double> InvertedIndex::cal_scores_(const data_type& kw_infos_mapping)
 {
 	std::map<std::string, double> scores; // init scores
 
-	for (auto& keyword_fileinfos : data)
+	for (auto& kw_infos : kw_infos_mapping)
 	{
-		auto& fileinfos = keyword_fileinfos.second;
-		for (int i = 0, concept_pos = -1; i < (int)fileinfos.size(); ++i)
+		auto& infos = kw_infos.second;
+		for (int i = 0, concept_pos = -1; i < (int)infos.size(); ++i)
 		{
-			if (fileinfos[i].is_appeared_in_title)
+			if (infos[i].is_appeared_in_title)
 			{
-				scores[fileinfos[i].filepath] += 1000;
-				concept_pos = filesorder_[fileinfos[i].filepath];
+				scores[infos[i].filepath] += 1000;
+				concept_pos = filesorder_[infos[i].filepath];
 			}
 			else if (concept_pos > -1)
-				scores[fileinfos[i].filepath] -= abs(filesorder_[fileinfos[i].filepath] - concept_pos) * 100;
-			scores[fileinfos[i].filepath] += fileinfos[i].times * InfoQuantity::get_infoquantity(keyword_fileinfos.first);
+				scores[infos[i].filepath] -= abs(filesorder_[infos[i].filepath] - concept_pos) * 100;
+			
+			scores[infos[i].filepath] += infos[i].times * InfoQuantity::get_infoquantity(kw_infos.first);
 		}
 	}
 
@@ -99,13 +104,13 @@ bool InvertedIndex::serialize()
 
 	if (!fout) return false;
 
-	for (auto& kv : kwmappings_)
+	for (auto& kw_infos : kw_infos_mapping_)
 	{
-		fout << kv.first << std::endl;
-		for (auto& file : kv.second)
+		fout << kw_infos.first << std::endl;
+		for (auto& infos : kw_infos.second)
 		{
-			fout << file.filepath << std::endl;
-			fout << file.times << ' ' << file.density << ' ' << file.is_appeared_in_title << std::endl;
+			fout << infos.filepath << std::endl;
+			fout << infos.times << ' ' << infos.density << ' ' << infos.is_appeared_in_title << std::endl;
 		}
 		fout << std::endl;
 	}
@@ -115,7 +120,7 @@ bool InvertedIndex::serialize()
 
 bool InvertedIndex::unserialize()
 {
-	auto fin = std::ifstream(tempfilepath_);
+	std::ifstream fin(tempfilepath_);
 
 	if (!fin)
 	{
@@ -134,47 +139,41 @@ bool InvertedIndex::unserialize()
 			bool is_appeared_in_title;
 
 			fin >> times >> density >> is_appeared_in_title;
-			kwmappings_[kw].push_back({ line, times, density, is_appeared_in_title });
+			kw_infos_mapping_[kw].push_back({ line, times, density, is_appeared_in_title });
 		}
 	}
 
 	return true;
 }
 
-InvertedIndex::value_type InvertedIndex::get_fileinfos(const key_type & word)
-{
-	return kwmappings_[word];
-}
-
 std::vector<FileInfoWithAllKeywords> InvertedIndex::get_fileinfos(const std::vector<key_type> & keywords, int pagenum, int perpage)
 {
-	data_type kwmps, for_cal_scores;
-	std::vector<std::vector<std::string>> filepaths_list;
+	data_type kw_infos_mapping, for_cal_scores;
+	std::vector<std::vector<std::string>> paths_list;
 	for (auto& kw : keywords)
 	{
-		kwmps[kw] = get_fileinfos(kw);
-		filepaths_list.push_back(std::vector<std::string>());
-		for (auto& fileinfo : kwmps[kw])
-			filepaths_list.back().push_back(fileinfo.filepath);
+		kw_infos_mapping[kw] = kw_infos_mapping_[kw];
+		paths_list.push_back(std::vector<std::string>());
+		for (auto& info : kw_infos_mapping[kw]) paths_list.back().push_back(info.filepath);
 	}
 
-	std::map<std::string, FileInfoWithAllKeywords> fileinfomps;
-	// for (auto filepath : and_files(filepaths_list)) fileinfos[filepath] = filepath;
+	std::map<std::string, FileInfoWithAllKeywords> path_infos_mapping;
+	// for (auto filepath : and_files(paths_list)) path_infos_mapping[filepath] = filepath;
 
-	for (auto& filepath_fileinfo : fileinfomps) for (auto& keyword_fileinfos : kwmps) for (auto& fileinfo : keyword_fileinfos.second)
-		if (fileinfo.filepath == filepath_fileinfo.first)
+	for (auto& path_infos : path_infos_mapping) for (auto& kw_infos : kw_infos_mapping) for (auto& info : kw_infos.second)
+		if (info.filepath == path_infos.first)
 	{
-		for_cal_scores[keyword_fileinfos.first].push_back(fileinfo);
-		filepath_fileinfo.second.kwinfos[keyword_fileinfos.first] =
+		for_cal_scores[kw_infos.first].push_back(info);
+		path_infos.second.kwinfos[kw_infos.first] =
 		{
-			fileinfo.times, fileinfo.density, fileinfo.is_appeared_in_title
+			info.times, info.density, info.is_appeared_in_title
 		};
 	}
 
 	std::vector<FileInfoWithAllKeywords> fileinfos;
-	for (auto& filepath_fileinfo : fileinfomps)
+	for (auto& path_infos : path_infos_mapping)
 	{
-		fileinfos.push_back(filepath_fileinfo.second);
+		fileinfos.push_back(path_infos.second);
 	}
 
 	auto scores = cal_scores_(for_cal_scores);
@@ -188,21 +187,20 @@ std::vector<FileInfoWithAllKeywords> InvertedIndex::get_fileinfos(const std::vec
 
 std::vector<std::string> InvertedIndex::get_filepaths(const std::vector<key_type> & keywords)
 {
-	data_type kwmp, for_cal_scores;
-	std::vector<std::vector<std::string>> filepaths_list;
+	data_type kw_infos_mapping, for_cal_scores;
+	std::vector<std::vector<std::string>> paths_list;
 	for (auto& kw : keywords)
 	{
-		kwmp[kw] = get_fileinfos(kw);
-		filepaths_list.push_back(std::vector<std::string>());
-		for (auto& fileinfo : kwmp[kw])
-			filepaths_list.back().push_back(fileinfo.filepath);
+		kw_infos_mapping[kw] = kw_infos_mapping_[kw];
+		paths_list.push_back(std::vector<std::string>());
+		for (auto& info : kw_infos_mapping[kw]) paths_list.back().push_back(info.filepath);
 	}
 
 	std::vector<std::string> filepaths;
 	// auto filepaths = and_files(filepaths_list);
 
-	for (auto& filepath : filepaths) for (auto& mp : kwmp) for (auto& fileinfo : mp.second)
-		if (fileinfo.filepath == filepath) for_cal_scores[mp.first].push_back(fileinfo);
+	for (auto& filepath : filepaths) for (auto& kw_infos : kw_infos_mapping) for (auto& info : kw_infos.second)
+		if (info.filepath == filepath) for_cal_scores[kw_infos.first].push_back(info);
 
 	auto scores = cal_scores_(for_cal_scores);
 	std::sort(filepaths.rbegin(), filepaths.rend(), [&](const std::string & a, const std::string & b)
@@ -246,7 +244,6 @@ void InvertedIndex::add_files(const std::string & folderpath)
 	serialize();
 }
 
-// Add all the words in a sentence to the inverted index
 void InvertedIndex::add_file(const key_type & sentence, const std::string & filepath)
 {
 	double alltimes = 0.0;
@@ -295,6 +292,6 @@ void InvertedIndex::add_file(const key_type & sentence, const std::string & file
 	for (auto& kwinfo : kwinfos)
 	{
 		auto& info = kwinfo.second;
-		kwmappings_[kwinfo.first].push_back({ filepath, info.times, info.times / alltimes, info.is_appeared_in_title });
+		kw_infos_mapping_[kwinfo.first].push_back({ filepath, info.times, info.times / alltimes, info.is_appeared_in_title });
 	}
 }
