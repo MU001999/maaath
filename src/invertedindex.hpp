@@ -1,5 +1,12 @@
 #pragma once
 
+#include <map>
+#include <string>
+#include <vector>
+#include <unordered_map>
+
+
+class Utf8String;
 
 // Struct contains filepath and one keyword's info in it
 struct FileInfo

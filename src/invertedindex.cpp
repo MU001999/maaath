@@ -1,5 +1,3 @@
-#include "dse.hpp"
-
 #include <cstdio>
 #include <cfloat>
 #include <cstdlib>
@@ -10,6 +8,10 @@
 #include <sstream>
 #include <iterator>
 #include <algorithm>
+
+#include "utf8string.hpp"
+#include "infoquantity.hpp"
+#include "invertedindex.hpp"
 
 
 // Temporary struct in this file

@@ -1,9 +1,11 @@
-#include "dse.hpp"
-
 #include <cmath>
 
+#include <map>
+#include <iostream>
 #include <fstream>
 
+#include "utf8string.hpp"
+#include "infoquantity.hpp"
 
 // Temporary class
 static class _InfoQuantity

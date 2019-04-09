@@ -1,9 +1,11 @@
-#include "dse.hpp"
-
 #include <cfloat>
 
 #include <bitset>
 #include <iterator>
+
+#include "utf8string.hpp"
+#include "infoquantity.hpp"
+#include "segmentation.hpp"
 
 
 // Struct records word and its position start in its sentence

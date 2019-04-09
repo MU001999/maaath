@@ -1,6 +1,8 @@
 #pragma once
 
 
+class Utf8String;
+
 struct InfoQuantity
 {
 	// Returns the infoquantity of given word
