@@ -6,6 +6,7 @@
 #include <iterator>
 
 
+// Struct records word and its position start in its sentence
 struct _Wordmap
 {
 	Utf8String word;
@@ -13,43 +14,46 @@ struct _Wordmap
 };
 
 
+// Returns summary of infoquantities by given words
 static double _cal_infoquantity_of_words(const std::vector<_Wordmap>& wl)
 {
-	double info = 0;
-	for (auto w : wl)
-	{
-		if (InfoQuantity::count(w.word)) info += InfoQuantity::get_infoquantity(w.word);
-	}
-	return info;
+	double res = 0.0;
+	for (auto &w : wl)
+		if (InfoQuantity::count(w.word)) // if word in given freq files
+			res += InfoQuantity::get_infoquantity(w.word);
+	return res;
 }
 
+// Returns vector<_Wordmap> by given bits
 static decltype(auto) _choice_word(const std::vector<_Wordmap>& word, std::bitset<32> bits, int count)
 {
-	std::vector<_Wordmap> section;
+	std::vector<_Wordmap> res;
 	for (int i = 0; i < count; i++)
-	{
-		if (bits[i]) section.push_back(word[i]);
-	}
-	return section;
+		if (bits[i]) // if it's chosen
+			res.push_back(word[i]);
+	return res;
 }
 
+// Checks it's overlapping or not
 static bool _is_overlapping(const std::vector<_Wordmap>& wd)
 {
 	int word_end_pos = -1;
-	for (auto w : wd)
+	for (auto &w : wd)
 	{
 		if (word_end_pos <= w.pos_in_sentence)
 			word_end_pos = w.pos_in_sentence + w.word.size();
-		else return true;
+		else return true; // is overlapping
 	}
 	return false;
 }
 
+// Real segment function, returns segmentation result from given sentence
 static decltype(auto) _get_segmentation(const Utf8String & sentence)
 {
 	std::vector<_Wordmap> word_maps;
 	for (int i = 0; i < (int)sentence.size() - 1; i++)
 	{
+		// Enumerate all possible words
 		for (int j = 7; j >= 2; j--)
 		{
 			if (i + j > (int)sentence.size()) j = sentence.size() - i;
@@ -62,7 +66,7 @@ static decltype(auto) _get_segmentation(const Utf8String & sentence)
 	std::cout << "[CODE LINE] " << __LINE__ << std::endl;
 	for (auto& wm : word_maps)
 	{
-		std::cout << wm.word.raw() << std::endl;
+		std::cout << wm.word << std::endl;
 	}
 #endif // DEBUG
 
