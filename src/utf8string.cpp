@@ -1,6 +1,6 @@
-#include "utf8string.hpp"
-
 #include <algorithm>
+
+#include "utf8string.hpp"
 
 
 Utf8String::Utf8String() {}
