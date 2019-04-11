@@ -7,6 +7,7 @@
 #include "utf8string.hpp"
 #include "infoquantity.hpp"
 
+
 // Temporary class
 static class _InfoQuantity
 {
