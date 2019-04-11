@@ -8,7 +8,7 @@ class CommProtocol
 public:
     enum TYPE
     {
-        Article,
+        Article = 0,
         Definition,
         Property,
         Example,
