@@ -1,17 +1,20 @@
 #include <cstdio>
 #include <cfloat>
 #include <cstdlib>
-#include <dirent.h>
 
 #include <bitset>
 #include <fstream>
 #include <sstream>
 #include <iterator>
 #include <algorithm>
+#include <filesystem>
 
 #include "utf8string.hpp"
 #include "infoquantity.hpp"
 #include "invertedindex.hpp"
+
+
+namespace fs = std::filesystem;
 
 
 // Temporary struct in this file
@@ -215,32 +218,25 @@ std::vector<std::string> InvertedIndex::get_filepaths(const std::vector<key_type
 
 void InvertedIndex::add_files(const std::string & folderpath)
 {
-	auto directory_pointer = opendir(folderpath.c_str());
+    std::vector<fs::path> paths;
 
-	if (!directory_pointer)
-	{
-		printf("error when openning folder: %s\n", folderpath.c_str());
-		exit(0);
-	}
+    for (const auto &p : fs::directory_iterator(folderpath))
+    {
+        if (p->is_regular_file()) paths.push_back(p->path());
+    }
 
-	std::vector<std::string> filenames;
-	while (auto entry = readdir(directory_pointer)) filenames.push_back(entry->d_name);
-
-	sort(filenames.begin(), filenames.end(), [&](const std::string & a, const std::string & b)
+	sort(paths.begin(), paths.end(), [&](const fs::path & a, const fs::path & b)
 		{
-			return _cal_order_by_secname(a) < _cal_order_by_secname(b);
+			return _cal_order_by_secname(a.filename().string()) < _cal_order_by_secname(b.filename().string());
 		});
 
-	auto prepath = folderpath + ((folderpath.back() == '/') ? "" : "/");
-
-	for (auto& filename : filenames)
+	for (const auto &path : paths)
 	{
-		auto filepath = prepath + filename;
-		std::ifstream fin(filepath);
+		std::ifstream fin(path);
 		std::string content, line;
 		for (; std::getline(fin, line); content += line + " ");
-		add_file(content, filepath);
-		filesorder_[filepath] = filesorder_.size();
+		add_file(content, path.path());
+		filesorder_[path.path()] = filesorder_.size();
 	}
 
 	serialize();
