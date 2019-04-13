@@ -6,16 +6,25 @@
 #include<netinet/in.h>
 #include<string.h>
 #include<sys/wait.h>
+#include<stddef.h>
+#include<fcntl.h>
+#include<pthread.h>
+#include<sys/select.h>
+#include<unistd.h>
 
-#define LISTNUM 1024
-class SearchServer{
+
+#define LISTENNUM 1024
+#define UNPATH "datastruct.sock"
+#define THREADNUM 1024
+class SearchServer
+{
     private:
         int listenfd;
-        void * connect_thread(void * connfd);
     public:
+    
         SearchServer();
 
         ~SearchServer();
 
-        void return_search(int listenfd);//use thread to send msg to webserver
+        void return_search();//use thread to send msg to webserver
 };//
