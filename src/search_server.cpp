@@ -32,7 +32,7 @@ SearchServer::~SearchServer()
 }
 void * send_response(void * connfd)
 {
-    char* request;
+    char* request[4096];
     char* response;
     int response_len;
     struct thread_info* ptr = (struct thread_info*)connfd;
