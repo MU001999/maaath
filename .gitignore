@@ -42,3 +42,6 @@ Debug/
 # vs files
 *.sln
 *.vcxproj*
+
+# MathJax
+MathJax/
