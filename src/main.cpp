@@ -3,9 +3,9 @@
 
 int main(int argc, char *argv[])
 {
-    SearchServer ss;
-    ss.listen();
-    ss.run();
+    Server server;
+    server.listen();
+    server.run();
 
     return 0;
 }

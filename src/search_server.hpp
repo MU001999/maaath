@@ -1,16 +1,16 @@
 #pragma once
 
 
-class SearchServer
+class Server
 {
 private:
     int listen_fd_;
 
 public:
     
-    SearchServer();
+    Server();
 
-    ~SearchServer();
+    ~Server();
 
     void listen();
 

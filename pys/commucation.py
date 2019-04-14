@@ -1,3 +1,5 @@
+import sys
+import socket
 from enum import Enum
 
 
@@ -21,3 +23,20 @@ class CommProtocol(object):
 
 	def to_string(self):
 		return str(self.type) + str(self.content)
+
+
+class Connection(object):
+	
+	@staticmethod
+	def get_result(cls, type_, content):
+		sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+		sock.connect("/tmp/datastructureexpt.sock")
+		sock.sendall(CommProtocol(type_, content).to_string())
+
+		raw = ""
+		while True:
+			tmp = sock.recv(4096)
+			if tmp: raw += tmp
+			else: break
+
+		return CommProtocol(raw)
