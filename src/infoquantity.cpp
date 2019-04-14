@@ -1,8 +1,8 @@
 #include <cmath>
 
 #include <map>
-#include <iostream>
 #include <fstream>
+#include <iostream>
 
 #include "utf8string.hpp"
 #include "infoquantity.hpp"
@@ -23,12 +23,12 @@ public:
 		double freq, sum;
 
 		std::ifstream fin(filename1);
-		if (!fin) std::cout << "Error opening1" << std::endl;
+		if (!fin) abort();
 		fin >> word >> sum;
 		while (fin >> word >> freq) info_quantity_[word] = log(sum / freq);
 
 		fin.open(filename2);
-		if (!fin) std::cout << "Error opening2" << std::endl;
+		if (!fin) abort();
 		fin >> word >> sum;
 		while (fin >> word >> freq) info_quantity_[word] = log(sum / freq);
 	}

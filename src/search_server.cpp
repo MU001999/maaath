@@ -1,81 +1,68 @@
-#include"search_server.hpp"
+#include <cstring>
+#include <cstdlib>
+
+#include <thread>
+#include <string>
+#include <functional>
+
+#include <fcntl.h>
+#include <unistd.h>
+#include <sys/un.h>
+#include <sys/socket.h>
+
 #include"utf8string.hpp"
-#include"commucation.cpp"
-struct thread_info
+#include"commucation.hpp"
+#include"search_server.hpp"
+
+
+static void _process(int fd, sockaddr_un un, socklen_t len)
 {
-    pthread_t conn;
-    int flag;
-    int connfd;
-};
-SearchServer::SearchServer()
-{
-    int tempfd,offset;
-    struct sockaddr_un un;
-    tempfd = socket(AF_UNIX,SOCK_STREAM,0);
-    if(tempfd<0)
-        exit(-2);
-    this->listenfd = tempfd;
-    const char * path = UNPATH;
-    unlink(path);
-    memset(un,0,sizeof(un));
-    un.sun_family = AF_UNIX;
-    strcpy(un.sun_path,path);
-    offset = offsetof(struct sockaddr_un,sun_path);
-    bind(this->listenfd,(struct sockaddr*)&un,offset);
-    listen(this->listenfd,LISTENNUM);
-    int flag = fcntl(this->listenfd,F_GETFL,0);
-    fcntl(this->listenfd,F_SETFL,flag|O_NONBLOCK);
+    char buff[4096];
+    if (read(fd, buff, 4096) == -1) return;
+    
+    std::string result;
+    // get result
+
+    if (write(fd, result.c_str(), result.size() + 1) == -1) return;
+
+    close(fd);
 }
+
+
+SearchServer::SearchServer() : listen_fd_(socket(AF_UNIX, SOCK_STREAM, 0))
+{
+    if (listen_fd_ == -1) abort();
+
+    sockaddr_un un;
+    un.sun_family = AF_UNIX;
+    strcpy(un.sun_path, "datastructureexpt.socket");
+
+    auto size = offsetof(sockaddr_un, sun_path) + strlen(un.sun_path);
+    if (bind(listen_fd_, (sockaddr *)&un, size) < 0) abort();
+}
+
 SearchServer::~SearchServer()
 {
-    shutdown(this->listenfd,2);
+    close(listen_fd_);
 }
-void * send_response(void * connfd)
+
+void SearchServer::listen()
 {
-    char* request[4096];
-    char* response;
-    int response_len;
-    struct thread_info* ptr = (struct thread_info*)connfd;
-    while(1)
-    {
-        int n = recv(ptr->connfd,request,BUFFSIZE,0);
-        /* get search request*/
-        int flags = send(ptr->connfd,response,response_len,0);
-        /*get errno*/
-    }
-    ptr->flag = -1;
-    ptr->connfd = -1;
+    fcntl(listen_fd_, F_SETFL, fcntl(listen_fd_, F_GETFL, 0) | O_NONBLOCK);
+    ::listen(listen_fd_, 1024);
 }
-void SearchServer::return_search()
+
+void SearchServer::run()
 {
-    struct thread_info pool[THREADNUM];
-    for(int i = 0;i<THREADNUM;i++)
-        pool.flag = -1;
-    int connfd;
-    struct sockaddr_in client;
-    socklen_t connlen = sizeof(client);
-    while(1)
+    sockaddr_un remote_addr;
+    socklen_t len = sizeof(remote_addr);
+
+    while (true)
     {
-        connfd = accept(this->listenfd,(struct sockaddr*)&client,&connlen);
-        if(connfd==-1)
-        {
-            if(errno==EAGAIN)continue;
-            else break;
-        }
-        else
-        {   int i;
-            for(i = 0;i<THREADNUM;i++)
-            {
-                if(pool.flag==-1)
-                {   
-                    pool[i].connfd = connfd;
-                    pthread_create(&pool[i].conn,NULL,send_response,&pool[i]);
-                }
-            }
-            if(i==THREADNUM)
-            {
-                send(connfd,"the pool is full\n",20,0);
-            }
-        }
+        auto client_fd = accept(listen_fd_, (sockaddr *)&remote_addr, &len);
+        if (client_fd == -1) continue;
+
+        std::thread t(std::bind(_process, client_fd, remote_addr, len));
+        t.detach();
     }
 }
