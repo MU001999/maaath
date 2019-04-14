@@ -12,7 +12,7 @@ class TYPE(Enum):
 
 
 class CommProtocol(object):
-	
+
 	def __init__(self, type_or_raw, content = None):
 		if content is None:
 			self.type = int(type_or_raw[0])
@@ -26,7 +26,7 @@ class CommProtocol(object):
 
 
 class Connection(object):
-	
+
 	@staticmethod
 	def get_result(cls, type_, content):
 		sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)

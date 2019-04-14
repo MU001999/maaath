@@ -21,7 +21,7 @@ static void _process(int fd, sockaddr_un un, socklen_t len)
 {
     char buff[4096];
     if (read(fd, buff, 4096) == -1) return;
-    
+
     std::string result;
     // get result
 

@@ -4,7 +4,7 @@
 CommProtocol::CommProtocol(const std::string &raw) : type_(static_cast<TYPE>(raw[0] - '0')), content_(raw.substr(1))
 {
     // ...
-} 
+}
 
 CommProtocol::CommProtocol(TYPE type, const std::string &content) : type_(type), content_(content)
 {

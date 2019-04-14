@@ -11,6 +11,7 @@
 
 #include "utf8string.hpp"
 #include "infoquantity.hpp"
+#include "segmentation.hpp"
 #include "invertedindex.hpp"
 
 
@@ -86,7 +87,7 @@ std::map<std::string, double> InvertedIndex::cal_scores_(const data_type& kw_inf
 			}
 			else if (concept_pos > -1)
 				scores[infos[i].filepath] -= abs(filesorder_[infos[i].filepath] - concept_pos) * 100;
-			
+
 			scores[infos[i].filepath] += infos[i].times * InfoQuantity::get_infoquantity(kw_infos.first);
 		}
 	}
@@ -220,9 +221,9 @@ void InvertedIndex::add_files(const std::string & folderpath)
 {
     std::vector<fs::path> paths;
 
-    for (const auto &p : fs::directory_iterator(folderpath))
+    for (auto &p : fs::directory_iterator(folderpath))
     {
-        if (p->is_regular_file()) paths.push_back(p->path());
+        if (p.is_regular_file()) paths.push_back(p.path());
     }
 
 	sort(paths.begin(), paths.end(), [&](const fs::path & a, const fs::path & b)
@@ -230,13 +231,13 @@ void InvertedIndex::add_files(const std::string & folderpath)
 			return _cal_order_by_secname(a.filename().string()) < _cal_order_by_secname(b.filename().string());
 		});
 
-	for (const auto &path : paths)
+	for (auto &path : paths)
 	{
 		std::ifstream fin(path);
 		std::string content, line;
 		for (; std::getline(fin, line); content += line + " ");
-		add_file(content, path.path());
-		filesorder_[path.path()] = filesorder_.size();
+		add_file(content, path.string());
+		filesorder_[path.string()] = filesorder_.size();
 	}
 
 	serialize();
