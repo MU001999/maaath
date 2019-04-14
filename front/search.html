@@ -1,76 +1,79 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
-        <title>search</title>
-        <script type="text/x-mathjax-config">
-            MathJax.Hub.Config({
-                tex2jax: {
-                    inlineMath: [ ['$','$'], ["\\(","\\)"] ],
-                    displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
-                    showProcessingMessages: true,
-                    messageStyle: "none"
-                }
-            });
-        </script>
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
-        </script>
-        <script type="text/javascript">
-            (function () {
-                var Queue = MathJax.Hub.queue;
-                var math = null;
-                Queue.Push(function () {
-                    math = MathJax.Hub.getAllJax("preview")[0];
-                });
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <title>search</title>
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+        tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        showProcessingMessages: true,
+        messageStyle: "none"
+        }
+        });
+    </script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+    </script>
+    <script type="text/javascript">
+        (function () {
+        var Queue = MathJax.Hub.queue;
+        var math = null;
+        Queue.Push(function () {
+        math = MathJax.Hub.getAllJax("preview")[0];
+        });
 
-                window.UpdateMath = function (Tex) {
-                    Queue.Push(["Text", math, "\\displaystyle{" + Tex + "}"]);
-                }
-            })();
-        </script>
-        <style>
+        window.UpdateMath = function (Tex) {
+        Queue.Push(["Text", math, "\\displaystyle{" + Tex + "}"]);
+        }
+        })();
+    </script>
+    <style>
+
         #all {
-            text-align:center;
+            text-align: center;
         }
+
         #title {
-            height:250px;
+            height: 250px;
         }
+
         #body {
-            height:425px;
+            height: 425px;
             background: url(body.jpg);
             background-position: center center;
             background-repeat: no-repeat;
         }
-        </style>
-    </head>
-    <body>
-    
-    <div id = "all">
-        <div id = "title">
-            <img src = "title.jpg">
+    </style>
+</head>
+<body>
+
+    <div id="all">
+        <div id="title">
+            <img src="title.jpg">
         </div>
-        <div id = "body">
-        <form method = "get" action = "www.jusot.com">
-            <div id = "choice">
-                <br><br><br><br><br><br>
-                <input type = "radio" name = "choice" value = "Article" checked>Article
-                <input type = "radio" name = "choice" value = "Definition">Definition
-                <input type = "radio" name = "choice" value = "Property">Property
-                <input type = "radio" name = "choice" value = "Example">Example
-                <input type = "radio" name = "choice" value = "Exercise">Exercise
-                <br><br>
-            </div>
-            <div id = "searchBar">
-                Tex: <input type = "text" id = "lex" onkeyup="UpdateMath(this.value)">
-                Txt: <input type = "text" id = "txt">
-                <button type = "submit">Search Now!</button>
-            </div>
-            <div id = "preview">
-                <br><br><br>
-                Tex you typed: ${}$
-            </div>
-        </form> 
+        <div id="body">
+            <form method="get" action="www.jusot.com">
+                <div id="choice">
+                    <br><br><br><br><br><br>
+                    <input type="radio" name="choice" value="Article" checked>Article
+                    <input type="radio" name="choice" value="Definition">Definition
+                    <input type="radio" name="choice" value="Property">Property
+                    <input type="radio" name="choice" value="Example">Example
+                    <input type="radio" name="choice" value="Exercise">Exercise
+                    <br><br>
+                </div>
+                <div id="searchBar">
+                    Tex: <input type="text" id="lex" onkeyup="UpdateMath(this.value)">
+                    Txt: <input type="text" id="txt">
+                    <button type="submit">Search Now!</button>
+                </div>
+                <div id="preview">
+                    <br><br><br>
+                    Tex you typed: ${}$
+                </div>
+            </form>
         </div>
     </div>
-    </body>    
+</body>
 </html>
