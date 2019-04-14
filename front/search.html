@@ -13,8 +13,10 @@
         }
         });
     </script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
-    </script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full"></script>
+    <!--
+    <script type="text/javascript" src="./MathJax/MathJax.js?config=TeX-AMS_HTML-full"></script>
+    -->
     <script type="text/javascript">
         (function () {
         var Queue = MathJax.Hub.queue;
@@ -64,7 +66,8 @@
                     <br><br>
                 </div>
                 <div id="searchBar">
-                    Tex: <input type="text" id="lex" onkeyup="UpdateMath(this.value)">
+                    Tex: <input type="text" id="lex">
+                    <button type="button" onclick="UpdateMath(document.getElementById('lex').value)">Preview</button>
                     Txt: <input type="text" id="txt">
                     <button type="submit">Search Now!</button>
                 </div>
