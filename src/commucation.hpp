@@ -19,6 +19,9 @@ public:
     CommProtocol(TYPE type, const std::string &content);
     ~CommProtocol() = default;
 
+    TYPE type() const;
+    std::string content() const;
+
     std::string to_string() const;
 
     static std::string to_string(const CommProtocol &commp);

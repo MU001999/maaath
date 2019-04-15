@@ -11,6 +11,16 @@ CommProtocol::CommProtocol(TYPE type, const std::string &content) : type_(type),
     // ...
 }
 
+CommProtocol::TYPE CommProtocol::type() const
+{
+    return type_;
+}
+
+std::string CommProtocol::content() const
+{
+    return content_;
+}
+
 std::string CommProtocol::to_string() const
 {
     return std::to_string(type_) + content_;
