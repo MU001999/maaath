@@ -1,6 +1,8 @@
 #include <cstring>
 #include <cstdlib>
 
+#include <array>
+#include <vector>
 #include <thread>
 #include <string>
 #include <functional>
@@ -10,11 +12,16 @@
 #include <sys/un.h>
 #include <sys/socket.h>
 
-#include"utf8string.hpp"
-#include"commucation.hpp"
-#include"search_server.hpp"
+#include "utf8string.hpp"
+#include "commucation.hpp"
+#include "segmentation.hpp"
+#include "search_server.hpp"
+#include "invertedindex.hpp"
 
 #define UN_PATH "/tmp/datastructureexpt.socket"
+
+
+extern std::array<InvertedIndex, 5> iis;
 
 
 static void _process(int fd, sockaddr_un un, socklen_t len)
@@ -23,7 +30,18 @@ static void _process(int fd, sockaddr_un un, socklen_t len)
     if (read(fd, buff, 4096) == -1) return;
 
     std::string result;
-    // get result
+
+    CommProtocol commp(buff);
+    auto keywords = Segmentation::segment(commp.content());
+    auto filepaths = iis[commp.type()].get_filepaths(keywords);
+
+    /*
+    for (auto &filepath : filepaths)
+    {
+        auto article = get_article(filepath, keywords);
+        result += filepath + "#" + article;
+    }
+    */
 
     if (write(fd, result.c_str(), result.size() + 1) == -1) return;
 
