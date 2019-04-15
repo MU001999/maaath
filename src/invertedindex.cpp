@@ -29,7 +29,6 @@ struct _KeywordInfo
 // Returns map for ambiguity section by given sentence
 static decltype(auto) _get_ambiguity_section(const Utf8String& sentence)
 {
-	int pos_of_sen = 0, temp_pos = 0, end_of_sen = 0;
 	std::map<int, int> ambiguity;
 
 	for (int pos = 0, length; pos < (int)sentence.size() - 1;)
@@ -97,7 +96,12 @@ std::map<std::string, double> InvertedIndex::cal_scores_(const data_type& kw_inf
 
 InvertedIndex::InvertedIndex(const std::string & filepath) : tempfilepath_(filepath)
 {
-	serialize();
+	ready_ = unserialize();
+}
+
+bool InvertedIndex::ready() const
+{
+	return ready_;
 }
 
 /*
@@ -127,12 +131,7 @@ bool InvertedIndex::serialize()
 bool InvertedIndex::unserialize()
 {
 	std::ifstream fin(tempfilepath_);
-
-	if (!fin)
-	{
-		add_files();
-		return false;
-	}
+	if (!fin) return false;
 
 	std::string line, kw;
 	while (std::getline(fin, kw))
@@ -149,7 +148,7 @@ bool InvertedIndex::unserialize()
 		}
 	}
 
-	return true;
+	return !kw_infos_mapping_.empty();
 }
 
 std::vector<FileInfoWithAllKeywords> InvertedIndex::get_fileinfos(const std::vector<key_type> & keywords, int pagenum, int perpage)
@@ -189,6 +188,11 @@ std::vector<FileInfoWithAllKeywords> InvertedIndex::get_fileinfos(const std::vec
 		});
 
 	return decltype(fileinfos)(fileinfos.begin() + pagenum * perpage - perpage, fileinfos.begin() + pagenum * perpage);
+}
+
+std::vector<std::string> InvertedIndex::get_filepaths(const std::string &keywords)
+{
+	return get_filepaths(Segmentation::segment(keywords));
 }
 
 std::vector<std::string> InvertedIndex::get_filepaths(const std::vector<key_type> & keywords)
