@@ -55,7 +55,7 @@ static void _process(int fd, sockaddr_un un, socklen_t len)
         {
             pairs.push_back({"filename", filepath.substr(filepath.rfind('/')+1)});
             pairs.push_back({"path", filepath});
-            pairs.push_back({"abstract", AbstractBuilder::gen_abstract(kws, filepaths)});
+            pairs.push_back({"abstract", AbstractBuilder::gen_abstract(kws, filepath)});
         }
         result = _gen_response(pairs);
     }

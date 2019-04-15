@@ -87,11 +87,13 @@ string tableName; // Bad - mixed case
 
 普通常量命名方式同变量
 
-全局常量应以'_'开头命名，后每个单词以一个大写字母开头，在不能区分的时候可使用下划线。例如：
+全局常量以一个大写字母开头，在不能区分的时候可使用下划线。例如：
 ```cpp
 constexpr int kDaysInAWeek = 7;
 constexpr int kAndroid8_0_0 = 24; // Android 8.0.0
 ```
+
+静态全局常量则应在全局常量的基础上在前面加上'_';
 
 ### 函数名称
 
