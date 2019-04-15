@@ -3,31 +3,46 @@
 #include <string>
 
 
-class CommProtocol
+/*
+Request:
+[TYPE_ID][KEYWORDS]
+
+Response4search:
+filename#...#
+path#...#
+abstract#...#
+...
+
+Response4knowgraph:
+keywordpair#...# (first pair of concepts, delim is '-', for example, CONCEPT1-CONCEPT2)
+keywordpair#...# (second ...)
+...
+keywordnum#...# (count of first concept, delim is '-', for example, CONCEPT-10)
+keywordnum#...# (count of second ...)
+...
+*/
+
+
+class Request
 {
 public:
-    enum TYPE
+    enum CommType
     {
         Article = 0,
         Definition,
         Property,
         Example,
-        Exercise
+        Exercise,
+        ConceptMap
     };
 
-    CommProtocol(const std::string &raw);
-    CommProtocol(TYPE type, const std::string &content);
-    ~CommProtocol() = default;
+    Request(const std::string &raw);
+    ~Request() = default;
 
-    TYPE type() const;
-    std::string content() const;
-
-    std::string to_string() const;
-
-    static std::string to_string(const CommProtocol &commp);
-    static std::string to_string(TYPE type, const std::string &content);
+    CommType type() const;
+    std::string keywords() const;
 
 private:
-    TYPE type_;
-    std::string content_;
+    std::string keywords_;
+    CommType type_;
 };
