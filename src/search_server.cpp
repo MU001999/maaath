@@ -5,6 +5,7 @@
 #include <vector>
 #include <thread>
 #include <string>
+#include <utility>
 #include <functional>
 
 #include <fcntl.h>
@@ -17,12 +18,19 @@
 #include "segmentation.hpp"
 #include "search_server.hpp"
 #include "invertedindex.hpp"
+#include "abstractbuild.hpp"
 
 #define UN_PATH "/tmp/datastructureexpt.socket"
 
 
 extern std::array<InvertedIndex, 5> iis;
 
+static std::string _gen_response(const std::vector<std::pair<std::string, std::string>> &pairs)
+{
+    std::string result;
+    for (const auto &p : pairs) result += p.first + "#" + p.second + "#";
+    return result;
+}
 
 static void _process(int fd, sockaddr_un un, socklen_t len)
 {
@@ -31,17 +39,26 @@ static void _process(int fd, sockaddr_un un, socklen_t len)
 
     std::string result;
 
-    CommProtocol commp(buff);
-    auto keywords = Segmentation::segment(commp.content());
-    auto filepaths = iis[commp.type()].get_filepaths(keywords);
-
-    /*
-    for (auto &filepath : filepaths)
+    Request req(buff);
+    auto keywords = Segmentation::segment(req.keywords());
+    if (req.type() == Request::ConceptMap)
     {
-        auto article = get_article(filepath, keywords);
-        result += filepath + "#" + article;
+        // gen conceptmap
     }
-    */
+    else
+    {
+        std::vector<std::pair<std::string, std::string>> pairs;
+        std::vector<std::string> kws;
+        for (const auto &kw : keywords) kws.push_back(kw.raw());
+        auto filepaths = iis[req.type()].get_filepaths(keywords);
+        for (const auto &filepath : filepaths)
+        {
+            pairs.push_back({"filename", filepath.substr(filepath.rfind('/')+1)});
+            pairs.push_back({"path", filepath});
+            pairs.push_back({"abstract", AbstractBuilder::gen_abstract(kws, filepaths)});
+        }
+        result = _gen_response(pairs);
+    }
 
     if (write(fd, result.c_str(), result.size() + 1) == -1) return;
 
