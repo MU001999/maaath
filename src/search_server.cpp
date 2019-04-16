@@ -37,14 +37,14 @@ static void _process(int fd, sockaddr_un un, socklen_t len)
     char buff[4096];
     if (read(fd, buff, 4096) == -1) return;
 
-    std::string result;
     std::vector<std::pair<std::string, std::string>> pairs;
 
     Request req(buff);
     auto keywords = Segmentation::segment(req.keywords());
     if (req.type() == Request::ConceptMap)
     {
-        for (const auto &keyword : keywords) pairs.push_back({"keyword", keyword.raw()});
+        for (const auto &keyword : keywords)
+            pairs.push_back({"keyword", keyword.raw()});
     }
     else
     {
@@ -53,13 +53,13 @@ static void _process(int fd, sockaddr_un un, socklen_t len)
         auto filepaths = iis[req.type()].get_filepaths(keywords);
         for (const auto &filepath : filepaths)
         {
-            pairs.push_back({"filename", filepath.substr(filepath.rfind('/')+1)});
+            pairs.push_back({"filename", filepath.substr(filepath.rfind('/') + 1)});
             pairs.push_back({"path", filepath});
             pairs.push_back({"abstract", AbstractBuilder::gen_abstract(kws, filepath)});
         }
-        result = _gen_response(pairs);
     }
 
+    auto result = _gen_response(pairs);
     if (write(fd, result.c_str(), result.size() + 1) == -1) return;
 
     close(fd);
