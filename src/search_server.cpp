@@ -38,16 +38,16 @@ static void _process(int fd, sockaddr_un un, socklen_t len)
     if (read(fd, buff, 4096) == -1) return;
 
     std::string result;
+    std::vector<std::pair<std::string, std::string>> pairs;
 
     Request req(buff);
     auto keywords = Segmentation::segment(req.keywords());
     if (req.type() == Request::ConceptMap)
     {
-        // gen conceptmap
+        for (const auto &keyword : keywords) pairs.push_back({"keyword", keyword.raw()});
     }
     else
     {
-        std::vector<std::pair<std::string, std::string>> pairs;
         std::vector<std::string> kws;
         for (const auto &kw : keywords) kws.push_back(kw.raw());
         auto filepaths = iis[req.type()].get_filepaths(keywords);
