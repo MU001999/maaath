@@ -45,3 +45,7 @@ Debug/
 
 # MathJax
 MathJax/
+
+bin/
+obj/
+tmp/
