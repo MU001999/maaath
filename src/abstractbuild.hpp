@@ -12,7 +12,7 @@ class Utf8String;
 struct Sentence
 {
     std::string content;
-    float score;
+    double score;
 };
 
 

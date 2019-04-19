@@ -39,6 +39,6 @@ public:
     std::string keywords() const;
 
 private:
-    std::string keywords_;
     CommType type_;
+    std::string keywords_;
 };

@@ -6,11 +6,11 @@
 
 
 std::array<InvertedIndex, 5> iis = {
-    InvertedIndex("../temp/article.tmp"),
-    InvertedIndex("../temp/definition.tmp"),
-    InvertedIndex("../temp/property.tmp"),
-    InvertedIndex("../temp/example.tmp"),
-    InvertedIndex("../temp/exercise.tmp"),
+    InvertedIndex("../tmp/article.tmp"),
+    InvertedIndex("../tmp/definition.tmp"),
+    InvertedIndex("../tmp/property.tmp"),
+    InvertedIndex("../tmp/example.tmp"),
+    InvertedIndex("../tmp/exercise.tmp"),
 };
 
 static std::array<std::string, 5> _folderpaths = {

@@ -5,8 +5,8 @@
 #include <vector>
 #include <unordered_map>
 
+#include "utf8string.hpp"
 
-class Utf8String;
 
 // Struct contains filepath and one keyword's info in it
 struct FileInfo
