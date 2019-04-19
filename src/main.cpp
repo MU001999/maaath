@@ -21,8 +21,6 @@ static std::array<std::string, 5> _folderpaths = {
     "../resources/exercise"
 };
 
-static Server _server;
-
 int main(int argc, char *argv[])
 {
     for (std::size_t i = 0; i < 5; ++i)
@@ -30,8 +28,9 @@ int main(int argc, char *argv[])
         if (!iis[i].ready()) iis[i].add_files(_folderpaths[i]);
     }
 
-    _server.listen();
-    _server.run();
+    Server server;
+    server.listen();
+    server.run();
 
     return 0;
 }
