@@ -46,6 +46,7 @@ Debug/
 # MathJax
 MathJax/
 
+dse/
 bin/
 obj/
 tmp/
