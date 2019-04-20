@@ -103,6 +103,9 @@ std::map<std::string, double> InvertedIndex::cal_scores_(const data_type& kw_inf
 InvertedIndex::InvertedIndex(const std::string & filepath) : tempfilepath_(filepath)
 {
 	ready_ = unserialize();
+#ifdef _DEBUG
+    printf("[InvertedIndex] [Unserialize] [Path] [%s] [Result] [%s]\n", filepath.c_str(), ready_ ? "true" : "false");
+#endif
 }
 
 bool InvertedIndex::ready() const
@@ -229,12 +232,20 @@ std::vector<std::string> InvertedIndex::get_filepaths(const std::vector<key_type
 
 void InvertedIndex::add_files(const std::string & folderpath)
 {
+#ifdef _DEBUG
+    printf("[InvertedIndex] [FolerPath] [%s]\n", folderpath.c_str());
+#endif
+
     std::vector<fs::path> paths;
 
     for (auto &p : fs::directory_iterator(folderpath))
     {
         if (p.is_regular_file()) paths.push_back(p.path());
     }
+
+#ifdef _DEBUG
+    printf("[InvertedIndex] [Numofpaths] [%ud]\n", paths.size());
+#endif
 
 	sort(paths.begin(), paths.end(), [&](const fs::path & a, const fs::path & b)
 		{

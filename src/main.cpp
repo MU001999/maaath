@@ -41,19 +41,18 @@ int main(int argc, char *argv[])
     for (std::size_t i = 0; i < 5; ++i)
     {
         // init if unserialize failed
-        if (!iis[i].ready()) iis[i].add_files(_folderpaths[i]);
+        if (!iis[i].ready())
+        {
+#ifdef _DEBUG
+            printf("[Main] [IIS] [Addfiles] [%d] [Filepath] [%s]\n", i, _folderpaths[i].c_str());
+#endif
+            iis[i].add_files(_folderpaths[i]);
+        }
     }
 
     // declare server
     Server server;
-#ifdef _DEBUG
-    std::cout << "[Server] [Init]" << std::endl;
-#endif
     server.listen();
-#ifdef _DEBUG
-    std::cout << "[Server] [Listen]" << std::endl;
-    std::cout << "[Server] [Run]" << std::endl;
-#endif
     server.run();
 
     return 0;
