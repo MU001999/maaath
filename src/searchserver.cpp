@@ -16,7 +16,7 @@
 #include "utf8string.hpp"
 #include "commucation.hpp"
 #include "segmentation.hpp"
-#include "search_server.hpp"
+#include "searchserver.hpp"
 #include "invertedindex.hpp"
 #include "abstractbuild.hpp"
 
@@ -74,6 +74,9 @@ static void _process(int fd, sockaddr_un un, socklen_t len)
 
 Server::Server() : listen_fd_(socket(AF_UNIX, SOCK_STREAM, 0))
 {
+#ifdef _DEBUG
+    printf("[Server] [Constructor]\n");
+#endif
     if (listen_fd_ == -1) abort();
     unlink(UN_PATH);
 
@@ -83,6 +86,10 @@ Server::Server() : listen_fd_(socket(AF_UNIX, SOCK_STREAM, 0))
 
     auto size = offsetof(sockaddr_un, sun_path) + strlen(un.sun_path);
     if (bind(listen_fd_, (sockaddr *)&un, size) < 0) abort();
+
+#ifdef _DEBUG
+    printf("[Server] [Constructor] [Over]\n");
+#endif
 }
 
 Server::~Server()
@@ -94,6 +101,9 @@ void Server::listen()
 {
     fcntl(listen_fd_, F_SETFL, fcntl(listen_fd_, F_GETFL, 0) | O_NONBLOCK);
     ::listen(listen_fd_, 1024);
+#ifdef _DEBUG
+    printf("[Server] [Listen] [Over]\n");
+#endif
 }
 
 void Server::run()
@@ -101,10 +111,18 @@ void Server::run()
     sockaddr_un remote_addr;
     socklen_t len = sizeof(remote_addr);
 
+#ifdef _DEBUG
+    printf("[Server] [Run] [Ready]\n");
+#endif
+
     while (true)
     {
         auto client_fd = accept(listen_fd_, (sockaddr *)&remote_addr, &len);
         if (client_fd == -1) continue;
+
+#ifdef _DEBUG
+        printf("[Server] [Run] [Loop] [Accept] [Fd] [%d]\n", client_fd);
+#endif
 
         std::thread t(std::bind(_process, client_fd, remote_addr, len));
         t.detach();
