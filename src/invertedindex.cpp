@@ -14,7 +14,7 @@
 #include "segmentation.hpp"
 #include "invertedindex.hpp"
 
-// #define _DEBUG
+#define _DEBUG
 #ifdef _DEBUG
 #include <cstdio>
 #include <iostream>
@@ -244,7 +244,7 @@ void InvertedIndex::add_files(const std::string & folderpath)
     }
 
 #ifdef _DEBUG
-    printf("[InvertedIndex] [Numofpaths] [%ud]\n", paths.size());
+    printf("[InvertedIndex] [Numofpaths] [%d]\n", (int)paths.size());
 #endif
 
 	sort(paths.begin(), paths.end(), [&](const fs::path & a, const fs::path & b)

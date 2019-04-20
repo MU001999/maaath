@@ -22,7 +22,7 @@
 
 #define UN_PATH "/tmp/datastructureexpt.socket"
 
-// #define _DEBUG
+#define _DEBUG
 #ifdef _DEBUG
 #include <cstdio>
 #include <iostream>
@@ -46,11 +46,27 @@ static void _process(int fd, sockaddr_un un, socklen_t len)
     std::vector<std::pair<std::string, std::string>> pairs;
 
     Request req(buff);
+
+#ifdef _DEBUG
+    printf("[Server] [Receive] [Type %d] [Keywords] [%s]\n", req.type(), req.keywords().c_str());
+#endif
+
     auto keywords = Segmentation::segment(req.keywords());
     if (req.type() == Request::ConceptMap)
     {
-        for (const auto &keyword : keywords)
+#ifdef _DEBUG
+        printf("[Server] [Keywords] [Segment] [Result] [ ");
+#endif
+        for (auto &keyword : keywords)
+        {
+#ifdef _DEBUG
+            printf("%s ", keyword.c_str());
+#endif
             pairs.push_back({"keyword", keyword.raw()});
+        }
+#ifdef _DEBUG
+        printf("]\n");
+#endif
     }
     else
     {

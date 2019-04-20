@@ -6,7 +6,7 @@
 #include "searchserver.hpp"
 #include "invertedindex.hpp"
 
-// #define _DEBUG
+#define _DEBUG
 #ifdef _DEBUG
 #include <cstdio>
 #include <iostream>
@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
     daemon(0, 0);
 #endif
 
-    for (std::size_t i = 0; i < 5; ++i)
+    for (int i = 0; i < 5; ++i)
     {
         // init if unserialize failed
         if (!iis[i].ready())

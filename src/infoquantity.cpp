@@ -28,10 +28,19 @@ public:
 		std::string word;
 		double freq, sum;
 
+#ifdef _DEBUG
+        printf("[InfoQuantity] [Contructor] [charfreq.txt]\n");
+#endif
+
 		std::ifstream fin(filename1);
 		if (!fin) abort();
 		fin >> word >> sum;
 		while (fin >> word >> freq) info_quantity_[word] = log(sum / freq);
+        fin.close();
+
+#ifdef _DEBUG
+        printf("[InfoQuantity] [Contructor] [wordfreq.txt]\n");
+#endif
 
 		fin.open(filename2);
 		if (!fin) abort();
