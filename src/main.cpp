@@ -24,11 +24,11 @@ std::array<InvertedIndex, 5> iis = {
 
 // static folder paths for inverted index objects
 static std::array<std::string, 5> _folderpaths = {
-    "../resources/article",
-    "../resources/definition",
-    "../resources/property",
-    "../resources/example",
-    "../resources/exercise"
+    "../resources/Document/Article",
+    "../resources/Document/Definition",
+    "../resources/Document/Property",
+    "../resources/Document/Example",
+    "../resources/Document/Exercise"
 };
 
 int main(int argc, char *argv[])
