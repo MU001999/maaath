@@ -5,7 +5,17 @@
 
 Utf8String::Utf8String() {}
 
-Utf8String::Utf8String(data_type&& data) noexcept : data_(std::move(data)) {}
+Utf8String::Utf8String(data_type&& data) noexcept : data_(std::move(data))
+{
+    for (auto chr : data_)
+    {
+        if (chr < 0b10000000U) raw_string_ += chr;
+        else if (chr < 0b111U << 13) (raw_string_ += chr >> 8 & 0xFF) += chr & 0xFF;
+        else if (chr < 0b1111U << 20) ((raw_string_ += chr >> 16 & 0xFF) += chr >> 8 & 0xFF) += chr & 0xFF;
+        else if (chr < 0b11111U << 27) (((raw_string_ += chr >> 24 & 0xFF) += chr >> 16 & 0xFF) += chr >> 8 & 0xFF) += chr & 0xFF;
+        else break;
+    }
+}
 
 Utf8String::Utf8String(const raw_type& raw_string_) : raw_string_(raw_string_)
 {
@@ -204,7 +214,7 @@ Utf8String::raw_type Utf8String::raw()
 
 Utf8String::raw_type Utf8String::raw() const noexcept
 {
-	return raw_string_;
+	return const_cast<Utf8String &>(*this).raw();
 }
 
 const char* Utf8String::c_str()
@@ -214,7 +224,7 @@ const char* Utf8String::c_str()
 
 const char* Utf8String::c_str() const noexcept
 {
-	return raw_string_.c_str();
+	return raw().c_str();
 }
 
 
