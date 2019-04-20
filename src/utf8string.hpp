@@ -154,20 +154,3 @@ extern std::ostream& operator<<(std::ostream& out, const Utf8String& str);
 
 // Performs stream input and output on strings 
 extern std::istream& operator>>(std::istream& in, Utf8String& str);
-
-
-namespace std
-{
-	template <>
-	struct less<Utf8String>
-	{
-		using result_type = bool;
-		using first_argument_type = Utf8String;
-		using second_argument_type = Utf8String;
-
-		bool operator()(const Utf8String& lhs, const Utf8String& rhs) const
-		{
-			return lhs < rhs;
-		}
-	};
-}

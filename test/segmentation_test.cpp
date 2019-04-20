@@ -8,9 +8,6 @@
 
 #define _DEBUG
 
-#define TEST(NAME) static int NAME = []{
-#define END()      return 0; }();
-
 
 TEST_CLASS(Segmentation)
 

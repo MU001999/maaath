@@ -21,6 +21,7 @@ TEST_CLASS(Utf8String)
         assert(Utf8String("日照香炉绳子炎").substr(1, 4) == "照香炉绳");
     TEST_METHOD_END()
 
+
     TEST_METHOD(operators)
         assert(Utf8String("你微微一笑")[0] == '你');
 
@@ -46,6 +47,7 @@ TEST_CLASS(Utf8String)
         assert(an8s == '我');
         assert(an8s.substr(0, 1) == '我');
     TEST_METHOD_END()
+
 
     TEST_METHOD(eq_and_neq)
         assert(Utf8String("我是一朵花") == "我是一朵花");
