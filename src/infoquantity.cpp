@@ -7,6 +7,12 @@
 #include "utf8string.hpp"
 #include "infoquantity.hpp"
 
+// #define _DEBUG
+#ifdef _DEBUG
+#include <cstdio>
+#include <iostream>
+#endif
+
 
 // temporary class
 static class _InfoQuantity

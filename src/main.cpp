@@ -7,6 +7,10 @@
 #include "search_server.hpp"
 
 // #define _DEBUG
+#ifdef _DEBUG
+#include <cstdio>
+#include <iostream>
+#endif
 
 
 // global inverted index objects
@@ -42,7 +46,14 @@ int main(int argc, char *argv[])
 
     // declare server
     Server server;
+#ifdef _DEBUG
+    std::cout << "[Server] [Init]" << std::endl;
+#endif
     server.listen();
+#ifdef _DEBUG
+    std::cout << "[Server] [Listen]" << std::endl;
+    std::cout << "[Server] [Run]" << std::endl;
+#endif
     server.run();
 
     return 0;

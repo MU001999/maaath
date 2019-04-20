@@ -5,6 +5,13 @@
 #include "utf8string.hpp"
 #include "abstractbuild.hpp"
 
+// #define _DEBUG
+#ifdef _DEBUG
+#include <cstdio>
+#include <iostream>
+#endif
+
+
 static constexpr auto _kMaxSentence   = 128,
                       _kDensityWeight = 2000,
                       _kAbstractNum   = 5;

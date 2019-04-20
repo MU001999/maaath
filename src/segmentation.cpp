@@ -7,6 +7,12 @@
 #include "infoquantity.hpp"
 #include "segmentation.hpp"
 
+// #define _DEBUG
+#ifdef _DEBUG
+#include <cstdio>
+#include <iostream>
+#endif
+
 
 // struct records word and its position start in its sentence
 struct _Wordmap
@@ -64,6 +70,14 @@ static decltype(auto) _get_segmentation(const Utf8String & sentence)
 		}
 	}
 
+#ifdef _DEBUG
+	std::cout << "[CODE LINE] " << __LINE__ << std::endl;
+	for (auto& wm : word_maps)
+	{
+		std::cout << wm.word << std::endl;
+	}
+#endif // _DEBUG
+
 	int arrange = -1;
 	int count = word_maps.size();
 	std::vector<_Wordmap> best_segment;
@@ -73,11 +87,19 @@ static decltype(auto) _get_segmentation(const Utf8String & sentence)
 	{
 		std::bitset<32> bits(arrange);
 
+#ifdef _DEBUG
+		std::cout << "[BITS] " << bits << std::endl;
+#endif // _DEBUG
+
 		auto temp_segment = _choice_word(word_maps, bits, count);
 		if (!_is_overlapping(temp_segment))
 		{
 			if ((tmpfreq = _cal_infoquantity_of_words(temp_segment)) >= freq)
 			{
+#ifdef _DEBUG
+				std::cout << "[FREQ] " << tmpfreq << std::endl;
+#endif // _DEBUG
+
 				freq = tmpfreq;
 				best_segment = temp_segment;
 			}

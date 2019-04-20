@@ -14,6 +14,12 @@
 #include "segmentation.hpp"
 #include "invertedindex.hpp"
 
+// #define _DEBUG
+#ifdef _DEBUG
+#include <cstdio>
+#include <iostream>
+#endif
+
 
 namespace fs = std::filesystem;
 

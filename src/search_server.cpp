@@ -22,6 +22,12 @@
 
 #define UN_PATH "/tmp/datastructureexpt.socket"
 
+// #define _DEBUG
+#ifdef _DEBUG
+#include <cstdio>
+#include <iostream>
+#endif
+
 
 extern std::array<InvertedIndex, 5> iis;
 
