@@ -18,7 +18,7 @@
 namespace fs = std::filesystem;
 
 
-// Temporary struct in this file
+// temporary struct in this file
 struct _KeywordInfo
 {
 	double times = 0.0;
@@ -26,7 +26,7 @@ struct _KeywordInfo
 };
 
 
-// Returns map for ambiguity section by given sentence
+// returns map for ambiguity section by given sentence
 static decltype(auto) _get_ambiguity_section(const Utf8String& sentence)
 {
 	std::map<int, int> ambiguity;
@@ -56,7 +56,7 @@ static decltype(auto) _get_ambiguity_section(const Utf8String& sentence)
 	return ambiguity;
 }
 
-// Calculate the order of given section name as '1.5.2 <NAME>' and return the result
+// calculate the order of given section name as '1.5.2 <NAME>' and return the result
 static int _cal_order_by_secname(const std::string& secname)
 {
 	int first, second, third; char tmp;
@@ -66,7 +66,7 @@ static int _cal_order_by_secname(const std::string& secname)
 }
 
 
-// Contructor of FileInfoWithAllKeywords
+// contructor of FileInfoWithAllKeywords
 FileInfoWithAllKeywords::FileInfoWithAllKeywords(const std::string& filepath) : filepath(filepath) {}
 
 

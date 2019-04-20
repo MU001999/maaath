@@ -8,7 +8,7 @@
 #include "infoquantity.hpp"
 
 
-// Temporary class
+// temporary class
 static class _InfoQuantity
 {
 private:
@@ -16,7 +16,7 @@ private:
 
 public:
 
-	// Constructor, receives the freq files
+	// constructor, receives the freq files
 	_InfoQuantity(const std::string &filename1 = "../resources/charfreq.txt", const std::string &filename2 = "../resources/wordfreq.txt")
 	{
 		std::string word;
@@ -33,16 +33,16 @@ public:
 		while (fin >> word >> freq) info_quantity_[word] = log(sum / freq);
 	}
 
-	// Destructor
+	// destructor
 	~_InfoQuantity() {}
 
-	// Returns the infoquantity of given word
+	// returns the infoquantity of given word
 	double get_infoquantity(const Utf8String & word)
 	{
 		return info_quantity_[word];
 	}
 
-	// Returns the number of elements matching specific word
+	// returns the number of elements matching specific word
 	bool count(const Utf8String & word) const
 	{
 		return info_quantity_.count(word);

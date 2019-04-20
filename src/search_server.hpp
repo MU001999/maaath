@@ -10,6 +10,9 @@ public:
     Server();
     ~Server();
 
+    // to listen
     void listen();
+
+    // to accept and process
     void run();
 };

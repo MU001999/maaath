@@ -8,7 +8,7 @@
 #include "segmentation.hpp"
 
 
-// Struct records word and its position start in its sentence
+// struct records word and its position start in its sentence
 struct _Wordmap
 {
 	Utf8String word;
@@ -16,7 +16,7 @@ struct _Wordmap
 };
 
 
-// Returns summary of infoquantities by given words
+// returns summary of infoquantities by given words
 static double _cal_infoquantity_of_words(const std::vector<_Wordmap>& wl)
 {
 	double res = 0.0;
@@ -26,7 +26,7 @@ static double _cal_infoquantity_of_words(const std::vector<_Wordmap>& wl)
 	return res;
 }
 
-// Returns vector<_Wordmap> by given bits
+// returns vector<_Wordmap> by given bits
 static decltype(auto) _choice_word(const std::vector<_Wordmap>& word, std::bitset<32> bits, int count)
 {
 	std::vector<_Wordmap> res;
@@ -36,7 +36,7 @@ static decltype(auto) _choice_word(const std::vector<_Wordmap>& word, std::bitse
 	return res;
 }
 
-// Checks it's overlapping or not
+// checks it's overlapping or not
 static bool _is_overlapping(const std::vector<_Wordmap>& wd)
 {
 	int word_end_pos = -1;
@@ -49,7 +49,7 @@ static bool _is_overlapping(const std::vector<_Wordmap>& wd)
 	return false;
 }
 
-// Real segment function, returns segmentation result from given sentence
+// real segment function, returns segmentation result from given sentence
 static decltype(auto) _get_segmentation(const Utf8String & sentence)
 {
 	std::vector<_Wordmap> word_maps;
@@ -64,14 +64,6 @@ static decltype(auto) _get_segmentation(const Utf8String & sentence)
 		}
 	}
 
-#ifdef DEBUG
-	std::cout << "[CODE LINE] " << __LINE__ << std::endl;
-	for (auto& wm : word_maps)
-	{
-		std::cout << wm.word << std::endl;
-	}
-#endif // DEBUG
-
 	int arrange = -1;
 	int count = word_maps.size();
 	std::vector<_Wordmap> best_segment;
@@ -81,19 +73,11 @@ static decltype(auto) _get_segmentation(const Utf8String & sentence)
 	{
 		std::bitset<32> bits(arrange);
 
-#ifdef DEBUG
-		std::cout << "[BITS] " << bits << std::endl;
-#endif // DEBUG
-
 		auto temp_segment = _choice_word(word_maps, bits, count);
 		if (!_is_overlapping(temp_segment))
 		{
 			if ((tmpfreq = _cal_infoquantity_of_words(temp_segment)) >= freq)
 			{
-#ifdef DEBUG
-				std::cout << "[FREQ] " << tmpfreq << std::endl;
-#endif // DEBUG
-
 				freq = tmpfreq;
 				best_segment = temp_segment;
 			}

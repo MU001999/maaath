@@ -32,7 +32,9 @@ public:
         ConceptMap
     };
 
+    // constructor
     Request(const std::string &raw);
+    // destructor
     ~Request() = default;
 
     CommType type() const;
