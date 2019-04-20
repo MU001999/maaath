@@ -1,14 +1,11 @@
 #include <iostream>
 
-// #define DEBUG
+#include "common.hpp"
 
 #include "../src/utf8string.cpp"
 #include "../src/infoquantity.cpp"
 #include "../src/segmentation.cpp"
 #include "../src/invertedindex.cpp"
 
+#define _DEBUG
 
-int main()
-{
-    return 0;
-}
