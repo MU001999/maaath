@@ -50,3 +50,5 @@ dse/
 bin/
 obj/
 tmp/
+
+resources/Document/
