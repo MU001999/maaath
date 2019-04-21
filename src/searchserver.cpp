@@ -44,14 +44,14 @@ static void _process(int fd, sockaddr_un un, socklen_t len)
     if (read(fd, buff, 4096) == -1) return;
 
     std::vector<std::pair<std::string, std::string>> pairs;
-
     Request req(buff);
-
+    auto keywords = req.keywords().front() == '$'
+        ? Segmentation::segment(req.keywords())
+        : std::vector<Utf8String>{};
+        // std::vector<Utf8String>{ get_all_formulas(req.keywords().substr(0, req.keywords().find('$', 1))).front() };
 #ifdef _DEBUG
     printf("[Server] [Receive] [Type %d] [Keywords] [%s]\n", req.type(), req.keywords().c_str());
 #endif
-
-    auto keywords = Segmentation::segment(req.keywords());
     if (req.type() == Request::ConceptMap)
     {
 #ifdef _DEBUG
@@ -71,16 +71,16 @@ static void _process(int fd, sockaddr_un un, socklen_t len)
     else
     {
         std::vector<std::string> kws;
-        for (const auto &kw : keywords) kws.push_back(kw.raw());
+        for (const auto& kw : keywords) kws.push_back(kw.raw());
         auto filepaths = iis[req.type()].get_filepaths(keywords);
-        for (const auto &filepath : filepaths)
+        for (const auto& filepath : filepaths)
         {
-            pairs.push_back({"filename", filepath.substr(filepath.rfind('/') + 1)});
-            pairs.push_back({"path", filepath});
-            pairs.push_back({"abstract", AbstractBuilder::gen_abstract(kws, filepath)});
+            pairs.push_back({ "filename", filepath.substr(filepath.rfind('/') + 1) });
+            pairs.push_back({ "path", filepath });
+            pairs.push_back({ "abstract", AbstractBuilder::gen_abstract(kws, filepath) });
         }
     }
-
+    
     auto result = _gen_response(pairs);
     if (write(fd, result.c_str(), result.size() + 1) == -1) return;
 
@@ -102,7 +102,6 @@ Server::Server() : listen_fd_(socket(AF_UNIX, SOCK_STREAM, 0))
 
     auto size = offsetof(sockaddr_un, sun_path) + strlen(un.sun_path);
     if (bind(listen_fd_, (sockaddr *)&un, size) < 0) abort();
-
 #ifdef _DEBUG
     printf("[Server] [Constructor] [Over]\n");
 #endif
@@ -126,20 +125,16 @@ void Server::run()
 {
     sockaddr_un remote_addr;
     socklen_t len = sizeof(remote_addr);
-
 #ifdef _DEBUG
     printf("[Server] [Run] [Ready]\n");
 #endif
-
     while (true)
     {
         auto client_fd = accept(listen_fd_, (sockaddr *)&remote_addr, &len);
         if (client_fd == -1) continue;
-
 #ifdef _DEBUG
         printf("[Server] [Run] [Loop] [Accept] [Fd] [%d]\n", client_fd);
 #endif
-
         std::thread t(std::bind(_process, client_fd, remote_addr, len));
         t.detach();
     }
