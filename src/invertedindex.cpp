@@ -32,6 +32,33 @@ struct _KeywordInfo
 };
 
 
+static std::vector<std::string> _combine(std::vector<std::vector<std::string>> paths_list)
+{
+    if (paths_list.empty()) return {};
+
+    sort(paths_list.begin(), paths_list.end(), [](const std::vector<std::string> & a, const std::vector<std::string> & b) { return a.size() < b.size(); });
+    for (auto& paths : paths_list) std::sort(paths.begin(), paths.end());
+    auto result = paths_list.front();
+
+    for (const auto& paths : paths_list)
+    {
+        decltype(result) tmp;
+        for (size_t i = 0, j = 0; i < result.size() && j < paths.size();)
+        {
+            if (paths[i] == result[j])
+            {
+                tmp.push_back(paths[i++]);
+                ++j;
+            }
+            else if (paths[i] < result[j]) ++i;
+            else ++j;
+        }
+        result = tmp;
+    }
+
+    return result;
+}
+
 // returns map for ambiguity section by given sentence
 static decltype(auto) _get_ambiguity_section(const Utf8String& sentence)
 {
@@ -39,6 +66,13 @@ static decltype(auto) _get_ambiguity_section(const Utf8String& sentence)
 
 	for (int pos = 0, length; pos < (int)sentence.size() - 1;)
 	{
+        if (sentence[pos] == '$')
+        {
+            ambiguity[pos] = sentence.find('$', pos + 1) + 1;
+            pos = ambiguity[pos];
+            continue;
+        }
+
 		for (length = 7; length > 1; --length)
 		{
 			auto tmp = sentence.substr(pos, length);
@@ -172,7 +206,7 @@ std::vector<FileInfoWithAllKeywords> InvertedIndex::get_fileinfos(const std::vec
 	}
 
 	std::map<std::string, FileInfoWithAllKeywords> path_infos_mapping;
-	// for (auto filepath : and_files(paths_list)) path_infos_mapping[filepath] = filepath;
+	for (const auto &filepath : _combine(paths_list)) path_infos_mapping.emplace(filepath, filepath);
 
 	for (auto& path_infos : path_infos_mapping) for (auto& kw_infos : kw_infos_mapping) for (auto& info : kw_infos.second)
 		if (info.filepath == path_infos.first)
@@ -215,8 +249,7 @@ std::vector<std::string> InvertedIndex::get_filepaths(const std::vector<key_type
 		for (auto& info : kw_infos_mapping[kw]) paths_list.back().push_back(info.filepath);
 	}
 
-	std::vector<std::string> filepaths;
-	// auto filepaths = and_files(filepaths_list);
+	auto filepaths = _combine(paths_list);
 
 	for (auto& filepath : filepaths) for (auto& kw_infos : kw_infos_mapping) for (auto& info : kw_infos.second)
 		if (info.filepath == filepath) for_cal_scores[kw_infos.first].push_back(info);
@@ -273,7 +306,17 @@ void InvertedIndex::add_file(const key_type & sentence, const std::string & file
 	auto ambiguities = _get_ambiguity_section(sentence);
 	for (auto& mp : ambiguities)
 	{
-		for (auto& word : Segmentation::segment(sentence.substr(mp.first, mp.second - mp.first)))
+        if (sentence[mp.first] == '$')
+        {
+            /*
+            for (const auto &formula : get_all_formulas(sentence.substr(mp.first, mp.second - mp.first)))
+            {
+                alltimes += 1;
+                kwinfos[formula].times += 1;
+            }
+            */
+        }
+        else for (auto& word : Segmentation::segment(sentence.substr(mp.first, mp.second - mp.first)))
 		{
 			alltimes += 1;
 			kwinfos[word].times += 1;
