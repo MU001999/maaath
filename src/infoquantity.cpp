@@ -46,6 +46,7 @@ public:
 		if (!fin) abort();
 		fin >> word >> sum;
 		while (fin >> word >> freq) info_quantity_[word] = log(sum / freq);
+        fin.close();
 	}
 
 	// destructor
