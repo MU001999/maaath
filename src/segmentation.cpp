@@ -99,7 +99,6 @@ static decltype(auto) _get_segmentation(const Utf8String & sentence)
 #ifdef _DEBUG
 				std::cout << "[FREQ] " << tmpfreq << std::endl;
 #endif // _DEBUG
-
 				freq = tmpfreq;
 				best_segment = temp_segment;
 			}
