@@ -1,4 +1,0 @@
-\concept{乘方、幂、底数、指数、次方、因数、积}
-\begin{concept}
-求n个相同因数的积的运算，叫做乘方，乘方  指数的结果叫做幂(power). 在$a^n$中，a叫做底数(base number), n叫做指数(exponent), 当$a^n$看作a的n次方的结果时，也可读作“a的n次幂"。\\
-\end{concept}
