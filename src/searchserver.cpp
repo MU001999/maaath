@@ -46,38 +46,38 @@ static void _process(int fd, sockaddr_un un, socklen_t len)
     std::vector<std::pair<std::string, std::string>> pairs;
     Request req(buff);
     auto keywords = req.keywords().front() == '$'
-        ? Segmentation::segment(req.keywords())
-        : std::vector<Utf8String>{};
-        // std::vector<Utf8String>{ get_all_formulas(req.keywords().substr(0, req.keywords().find('$', 1))).front() };
+        // ? std::vector<Utf8String>{ get_all_formulas(req.keywords().substr(0, req.keywords().find('$', 1))).front() };
+        ? std::vector<Utf8String>{}
+        : Segmentation::segment(req.keywords());
 #ifdef _DEBUG
     printf("[Server] [Receive] [Type %d] [Keywords] [%s]\n", req.type(), req.keywords().c_str());
+    printf("[Server] [Keywords] [Segment] [Result] [ ");
+    for (auto& keyword : keywords) printf("%s ", keyword.c_str());
+    printf("]\n");
 #endif
-    if (req.type() == Request::ConceptMap)
+    if (req.type() == Request::ConceptMap) for (auto &keyword : keywords)
     {
-#ifdef _DEBUG
-        printf("[Server] [Keywords] [Segment] [Result] [ ");
-#endif
-        for (auto &keyword : keywords)
-        {
-#ifdef _DEBUG
-            printf("%s ", keyword.c_str());
-#endif
-            pairs.push_back({"keyword", keyword.raw()});
-        }
-#ifdef _DEBUG
-        printf("]\n");
-#endif
+        pairs.push_back({"keyword", keyword.raw()});
     }
     else
     {
         std::vector<std::string> kws;
-        for (const auto& kw : keywords) kws.push_back(kw.raw());
+        for (auto& kw : keywords) kws.push_back(kw.raw());
         auto filepaths = iis[req.type()].get_filepaths(keywords);
+#ifdef _DEBUG
+        printf("[Server] [Getfilepaths] [Over]\n");
+#endif
         for (const auto& filepath : filepaths)
         {
+#ifdef _DEBUG
+            printf("[Server] [Processing] [Filepath] [%s]\n", filepath.c_str());
+#endif
             pairs.push_back({ "filename", filepath.substr(filepath.rfind('/') + 1) });
             pairs.push_back({ "path", filepath });
             pairs.push_back({ "abstract", AbstractBuilder::gen_abstract(kws, filepath) });
+#ifdef _DEBUG
+            printf("[Server] [Processing] [Filepath] [%s] [Over]\n", filepath.c_str());
+#endif
         }
     }
     
