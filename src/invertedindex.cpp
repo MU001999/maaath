@@ -43,7 +43,7 @@ static std::vector<std::string> _combine(std::vector<std::vector<std::string>> p
     for (const auto& paths : paths_list)
     {
         decltype(result) tmp;
-        for (size_t i = 0, j = 0; i < result.size() && j < paths.size();)
+        for (size_t i = 0, j = 0; i < paths.size() && j < result.size();)
         {
             if (paths[i] == result[j])
             {
@@ -68,18 +68,17 @@ static decltype(auto) _get_ambiguity_section(const Utf8String& sentence)
 	{
         if (sentence[pos] == '$')
         {
-            ambiguity[pos] = sentence.find('$', pos + 1) + 1;
-            pos = ambiguity[pos];
-            continue;
+            auto end_pos = sentence.find('$', pos + 1);
+            if (end_pos == sentence.npos) break;
+            else ambiguity[pos] = end_pos + 1;
         }
-
-		for (length = 7; length > 1; --length)
+		else for (length = 7; length > 1; --length)
 		{
 			auto tmp = sentence.substr(pos, length);
 			if (!InfoQuantity::count(tmp)) continue;
 			for (int anpos = pos + length - 1, anlen; anpos > pos; --anpos)
 			{
-				for (anlen = 7; anpos + anlen > pos + length; --anlen)
+				for (anlen = 7; anpos + anlen > pos + length && anpos < (int)sentence.size(); --anlen)
 				{
 					auto antmp = sentence.substr(anpos, anlen);
 					if (!InfoQuantity::count(antmp)) continue;
@@ -90,7 +89,7 @@ static decltype(auto) _get_ambiguity_section(const Utf8String& sentence)
 			}
 			break;
 		}
-		pos += length;
+        pos = ambiguity.count(pos) ? ambiguity[pos] : (pos + 1);
 	}
 
 	return ambiguity;
@@ -186,7 +185,7 @@ bool InvertedIndex::unserialize()
 			double times, density;
 			bool is_appeared_in_title;
 
-			fin >> times >> density >> is_appeared_in_title;
+			fin >> times >> density >> is_appeared_in_title; char c; fin.get(c);
 			kw_infos_mapping_[kw].push_back({ line, times, density, is_appeared_in_title });
 		}
 	}
@@ -240,6 +239,9 @@ std::vector<std::string> InvertedIndex::get_filepaths(const std::string &keyword
 
 std::vector<std::string> InvertedIndex::get_filepaths(const std::vector<key_type> & keywords)
 {
+#ifdef _DEBUG
+    printf("[InvertedIndex] [Getfilepaths]\n");
+#endif
 	data_type kw_infos_mapping, for_cal_scores;
 	std::vector<std::vector<std::string>> paths_list;
 	for (auto& kw : keywords)
@@ -248,9 +250,13 @@ std::vector<std::string> InvertedIndex::get_filepaths(const std::vector<key_type
 		paths_list.push_back(std::vector<std::string>());
 		for (auto& info : kw_infos_mapping[kw]) paths_list.back().push_back(info.filepath);
 	}
-
+#ifdef _DEBUG
+    printf("[InvertedIndex] [Getfilepaths] [Combine]\n");
+#endif
 	auto filepaths = _combine(paths_list);
-
+#ifdef _DEBUG
+    printf("[InvertedIndex] [Getfilepaths] [Combine] [Over]\n");
+#endif
 	for (auto& filepath : filepaths) for (auto& kw_infos : kw_infos_mapping) for (auto& info : kw_infos.second)
 		if (info.filepath == filepath) for_cal_scores[kw_infos.first].push_back(info);
 
@@ -259,7 +265,9 @@ std::vector<std::string> InvertedIndex::get_filepaths(const std::vector<key_type
 		{
 			return scores[a] < scores[b];
 		});
-
+#ifdef _DEBUG
+    printf("[InvertedIndex] [Getfilepaths] [Over]\n");
+#endif
 	return filepaths;
 }
 
@@ -289,7 +297,7 @@ void InvertedIndex::add_files(const std::string & folderpath)
 	{
 		std::ifstream fin(path);
 		std::string content, line;
-		for (; std::getline(fin, line); content += line + " ");
+        while (std::getline(fin, line)) for (auto c : line) content += c == '\r' ? ' ' : c;
 		add_file(content, path.string());
 		filesorder_[path.string()] = filesorder_.size();
 	}
@@ -299,6 +307,9 @@ void InvertedIndex::add_files(const std::string & folderpath)
 
 void InvertedIndex::add_file(const key_type & sentence, const std::string & filepath)
 {
+#ifdef _DEBUG
+    printf("[InvertedIndex] [Addfile] [Filepath] [%s]\n", filepath.c_str());
+#endif
 	double alltimes = 0.0;
 
 	std::map<key_type, _KeywordInfo> kwinfos;
@@ -308,6 +319,9 @@ void InvertedIndex::add_file(const key_type & sentence, const std::string & file
 	{
         if (sentence[mp.first] == '$')
         {
+            auto formula = sentence.substr(mp.first, mp.second - mp.first);
+            alltimes += 1;
+            kwinfos[formula].times += 1;
             /*
             for (const auto &formula : get_all_formulas(sentence.substr(mp.first, mp.second - mp.first)))
             {
