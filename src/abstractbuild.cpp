@@ -14,8 +14,7 @@
 
 static constexpr auto _kMaxSentence   = 128,
                       _kDensityWeight = 2000,
-                      _kAbstractNum   = 5;
-static Utf8String _patterns = "。，；";
+                      _kAbstractNum   = 10;
 
 
 bool operator<(const Sentence &a, const Sentence &b)
@@ -25,55 +24,72 @@ bool operator<(const Sentence &a, const Sentence &b)
 
 std::string AbstractBuilder::read_file_(const std::string& filepath)
 {
+#ifdef _DEBUG
+    printf("[AbstractBuild] [Readfile]\n");
+#endif
     std::ifstream fin(filepath);
+    if (!fin) return "";
     std::string content, line;
     for (; std::getline(fin, line); content += line + " ");
     return content;
 }
 
-AbstractBuilder::StrList AbstractBuilder::sentence_filter_(const std::string &article)
+std::vector<std::string> AbstractBuilder::sentence_filter_(const std::string &article)
 {
-    StrList allsentences;
+    std::vector<std::string> allsentences;
 
-    auto sentences = divide_sentence_(article, _patterns.front());
+    auto sentences = divide_sentence_(article, '.');
     while (!sentences.empty()) {
-        Sentence stc = sentences.top();
-        if (allsentences.back() != stc.content)
+        auto stc = sentences.top();
+        if (allsentences.empty() || allsentences.back() != stc.content)
             allsentences.push_back(stc.content);
         sentences.pop();
     }
-
+#ifdef _DEBUG
+    printf("[AbstractBuild] [SentenceFilter] [Over]\n");
+#endif
     return allsentences;
 }
 
-AbstractBuilder::StrPriQueue AbstractBuilder::divide_sentence_(const Utf8String &article, const Utf8String &pattern)
+std::priority_queue<Sentence> AbstractBuilder::divide_sentence_(const Utf8String &article, char pattern)
 {
-    StrPriQueue sentences;
+    std::priority_queue<Sentence> sentences;
 
     std::size_t start = 0, pos = article.find(pattern);
-    while (pos != std::string::npos) {
-        if (start != pos) {
+    while (pos != article.npos) 
+    {
+        if (start != pos) 
+        {
             auto content = article.substr(start, pos - start);
             sentences.push({ content.raw(), score_sentence_(content.raw()) });
         }
         start = pos + 1;
         pos = article.find(pattern, start);
     }
-    if (start < article.size()) {
+    if (start < article.size()) 
+    {
         auto content = article.substr(start);
-        sentences.push({content.raw(), score_sentence_(content.raw()) });
+        sentences.push({ content.raw(), score_sentence_(content.raw()) });
     }
-
+#ifdef _DEBUG
+    printf("[AbstractBuild] [DivideSentence] [Over]\n");
+#endif
     return sentences;
 }
 
 void AbstractBuilder::parse_file_(const std::string &filepath)
 {
+#ifdef _DEBUG
+    printf("[AbstractBuild] [Parsefile]\n");
+#endif
     get_abstract_(sentence_filter_(read_file_(filepath)));
 }
 
 double AbstractBuilder::score_sentence_(const std::string &sentence)
 {
+#ifdef _DEBUG
+    printf("[AbstractBuild] [ScoreSentence]\n");
+#endif
     if (sentence.empty()) return 0;
 
     double numerator = 0, denominator = sentence.size();
@@ -90,15 +106,21 @@ double AbstractBuilder::score_sentence_(const std::string &sentence)
     else return numerator / denominator * _kDensityWeight + (double)(sentence.size());
 }
 
-void AbstractBuilder::get_abstract_(const StrList &sentences)
+void AbstractBuilder::get_abstract_(const std::vector<std::string> &sentences)
 {
+#ifdef _DEBUG
+    printf("[AbstractBuild] [GetAbstract]\n");
+#endif
     auto it = sentences.end();
     for (std::size_t i = 0; i < _kAbstractNum && it > sentences.begin(); ++i)
         abstract_ += *--it + "。";
 }
 
-AbstractBuilder::AbstractBuilder(const StrList &keywords, const std::string &filepath) : keywords_(keywords)
+AbstractBuilder::AbstractBuilder(const std::vector<std::string> &keywords, const std::string &filepath) : keywords_(keywords)
 {
+#ifdef _DEBUG
+    printf("[AbstractBuild] [AbstractBuilder]\n");
+#endif
     parse_file_(filepath);
 }
 
@@ -109,5 +131,8 @@ std::string AbstractBuilder::abstract()
 
 std::string AbstractBuilder::gen_abstract(const std::vector<std::string> &keywords, const std::string &filepath)
 {
+#ifdef _DEBUG
+    printf("[AbstractBuild]\n");
+#endif
     return AbstractBuilder(keywords, filepath).abstract();
 }

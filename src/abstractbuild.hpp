@@ -18,22 +18,18 @@ struct Sentence
 
 class AbstractBuilder {
 private:
-    using StrList = std::vector<std::string>;
-    using StrPriQueue = std::priority_queue<Sentence>;
-    using StrListIter = StrList::iterator;
-
-    StrList keywords_;
+    std::vector<std::string> keywords_;
     std::string abstract_;
 
     std::string read_file_(const std::string &filepath);
-    StrList sentence_filter_(const std::string &content);
-    StrPriQueue divide_sentence_(const Utf8String &article, const Utf8String &pattern);
+    std::vector<std::string> sentence_filter_(const std::string &content);
+    std::priority_queue<Sentence> divide_sentence_(const Utf8String &article, char pattern);
     double score_sentence_(const std::string& sentence);
-    void get_abstract_(const StrList& sentences);
+    void get_abstract_(const std::vector<std::string>& sentences);
     void parse_file_(const std::string& filepath);
 
 public:
-    AbstractBuilder(const StrList &keywords, const std::string &filepath);
+    AbstractBuilder(const std::vector<std::string> &keywords, const std::string &filepath);
     ~AbstractBuilder() = default;
 
     std::string abstract();
