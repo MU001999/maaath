@@ -19,7 +19,6 @@ Python规范参考：[Google Python Style Guide](https://google.github.io/styleg
 * src --------- 源代码
 * test -------- 测试代码
 * front ------- 前端部分
-* examples ---- 示例
 * resources --- 资源文件
 
 
