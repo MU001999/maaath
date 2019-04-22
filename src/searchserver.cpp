@@ -40,7 +40,7 @@ static std::string _gen_response(const std::vector<std::pair<std::string, std::s
 
 static void _process(int fd, sockaddr_un un, socklen_t len)
 {
-    char buff[4096];
+    char buff[4096] = {0};
     if (read(fd, buff, 4096) == -1) return;
 
     std::vector<std::pair<std::string, std::string>> pairs;
