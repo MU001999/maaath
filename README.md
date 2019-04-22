@@ -18,6 +18,7 @@ Python规范参考：[Google Python Style Guide](https://google.github.io/styleg
 ## 目录结构
 * src --------- 源代码
 * test -------- 测试代码
+* front ------- 前端部分
 * examples ---- 示例
 * resources --- 资源文件
 
@@ -74,7 +75,3 @@ B组提供合并文件路径列表的接口，提供文件路径列表的列表
 * 计算文章总信息量的接口，总信息量 = 累加（信息量 * 频度），接受map<kw, fileinfolist>
 * 计算文章总分数的接口
 * 根据上述接口排序
-
-### 前后端分离
-
-> （暂不确定是否为A组部分内容）
