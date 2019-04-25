@@ -23,7 +23,7 @@
 
 #define UN_PATH "/tmp/datastructureexpt.socket"
 
-#define _DEBUG
+// #define _DEBUG
 #ifdef _DEBUG
 #include <cstdio>
 #include <iostream>

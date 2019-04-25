@@ -14,7 +14,7 @@
 #include "segmentation.hpp"
 #include "invertedindex.hpp"
 
-#define _DEBUG
+// #define _DEBUG
 #ifdef _DEBUG
 #include <cstdio>
 #include <iostream>
