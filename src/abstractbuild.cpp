@@ -93,12 +93,20 @@ double AbstractBuilder::score_sentence_(const std::string &sentence)
     if (sentence.empty()) return 0;
 
     double numerator = 0, denominator = sentence.size();
-    for (const auto &keyword : keywords_) {
-        std::size_t start = 0, pos = sentence.find(keyword);
-        while (pos != std::string::npos) {
-            if (start != pos) numerator += keywords_.size();
-            start = pos + 1;
-            pos = sentence.find(keyword, start);
+    for (const auto &keyword : keywords_)
+    {
+        if (keyword.front() == '$')
+        {
+            // TODO: te shu chu li
+        }
+        else
+        {
+            std::size_t start = 0, pos = sentence.find(keyword);
+            while (pos != std::string::npos) {
+                if (start != pos) numerator += keywords_.size();
+                start = pos + 1;
+                pos = sentence.find(keyword, start);
+            }
         }
     }
 
