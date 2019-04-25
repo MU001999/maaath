@@ -47,7 +47,7 @@ static void _process(int fd, sockaddr_un un, socklen_t len)
     std::vector<std::pair<std::string, std::string>> pairs;
     Request req(buff);
     auto keywords = req.keywords().front() == '$'
-        // ? std::vector<Utf8String>{ get_all_formulas(req.keywords().substr(0, req.keywords().find('$', 1))).front() };
+        // ? std::vector<Utf8String>{ "$" + get_all_formulas(req.keywords().substr(0, req.keywords().find('$', 1))).front() };
         ? std::vector<Utf8String>{}
         : Segmentation::segment(req.keywords());
 #ifdef _DEBUG

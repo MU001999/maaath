@@ -319,14 +319,11 @@ void InvertedIndex::add_file(const key_type & sentence, const std::string & file
 	{
         if (sentence[mp.first] == '$')
         {
-            auto formula = sentence.substr(mp.first, mp.second - mp.first);
-            alltimes += 1;
-            kwinfos[formula].times += 1;
             /*
             for (const auto &formula : get_all_formulas(sentence.substr(mp.first, mp.second - mp.first)))
             {
                 alltimes += 1;
-                kwinfos[formula].times += 1;
+                kwinfos["$" + formula].times += 1;
             }
             */
         }

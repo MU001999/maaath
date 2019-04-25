@@ -97,21 +97,39 @@ double AbstractBuilder::score_sentence_(const std::string &sentence)
     {
         if (keyword.front() == '$')
         {
-            // TODO: te shu chu li
+            auto pos = sentence.find('$');
+            if (pos == sentence.npos) continue;
+            /*
+            auto input_formula = keyword.substr(1);
+            while (pos != sentence.npos)
+            {
+                auto end_pos = sentence.find('$', pos + 1);
+                if (end_pos == sentence.npos) break;
+                for (const auto &formula : get_all_formulas(sentence.substr(pos, end_pos - pos)))
+                {
+                    if (formula == input_formula)
+                    {
+                        numerator += keyword.size();
+                        break;
+                    }
+                }
+                pos = sentence.find('$', end_pos + 1);
+            }
+            */
         }
         else
         {
-            std::size_t start = 0, pos = sentence.find(keyword);
-            while (pos != std::string::npos) {
-                if (start != pos) numerator += keywords_.size();
-                start = pos + 1;
-                pos = sentence.find(keyword, start);
+            auto pos = sentence.find(keyword);
+            while (pos != sentence.npos)
+            {
+                numerator += keyword.size();
+                pos = sentence.find(keyword, pos + 1);
             }
         }
     }
 
     if (numerator == 0) return 0;
-    else return numerator / denominator * _kDensityWeight + (double)(sentence.size());
+    else return numerator * _kDensityWeight / denominator;
 }
 
 void AbstractBuilder::get_abstract_(const std::vector<std::string> &sentences)
