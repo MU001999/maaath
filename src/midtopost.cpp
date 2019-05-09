@@ -129,6 +129,29 @@ list<string> MidtoPost::turn(string &input)
                 opsymbol = temp;
                 str--;
             }
+            else if (*str == 't')
+			{
+				while (*str != 's')
+				{
+					temp[i] = *str;
+					str++;
+					i++;
+				}
+				temp[i++] = 's';
+				temp[i] = '\0';
+				opsymbol = temp;
+			}
+			else if (*str == 'd')
+			{
+				while (*str != 'v')
+				{
+					temp[i++] = *str;
+					str++;
+				}
+				temp[i++] = 'v';
+				temp[i] = '\0';
+				opsymbol = temp;
+			}
             else
             {
                 while (*str != '{')
