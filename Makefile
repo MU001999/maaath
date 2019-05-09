@@ -34,6 +34,7 @@ ${DIR_TMP}:
 test: ${DIR_OBJ}
 	make DEBUG="-D _DEBUG"
 	cd bin; ./dse
+	rm -rf ${DIR_OBJ}/*
 
 .PHONY: clean
 clean:
