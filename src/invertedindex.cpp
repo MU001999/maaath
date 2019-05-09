@@ -1,5 +1,6 @@
 #include <cstdio>
 #include <cfloat>
+#include <cctype>
 #include <cstdlib>
 
 #include <bitset>
@@ -89,7 +90,7 @@ static decltype(auto) _get_ambiguity_section(const Utf8String& sentence)
 			}
 			break;
 		}
-        pos = ambiguity.count(pos) ? ambiguity[pos] : (pos + 1);
+        pos = ambiguity.count(pos) ? ambiguity[pos] + 1 : (pos + 1);
 	}
 
 	return ambiguity;
@@ -319,13 +320,14 @@ void InvertedIndex::add_file(const key_type & sentence, const std::string & file
 	{
         if (sentence[mp.first] == '$')
         {
-            /*
-            for (const auto &formula : get_all_formulas(sentence.substr(mp.first, mp.second - mp.first)))
+            std::string formula = sentence.substr(mp.first, mp.second - mp.first).raw(), tmp;
+            for (auto chr : formula) if (!std::isspace(chr)) tmp += chr;
+
+            for (const auto &formula : Segmentation::get_all_formulas(tmp))
             {
                 alltimes += 1;
                 kwinfos["$" + formula].times += 1;
             }
-            */
         }
         else for (auto& word : Segmentation::segment(sentence.substr(mp.first, mp.second - mp.first)))
 		{

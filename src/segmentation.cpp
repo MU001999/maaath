@@ -6,6 +6,10 @@
 #include "utf8string.hpp"
 #include "infoquantity.hpp"
 #include "segmentation.hpp"
+#include "tnode.hpp"
+#include "priority.hpp"
+#include "varindep.hpp"
+#include "midtopost.hpp"
 
 // #define _DEBUG
 #ifdef _DEBUG
@@ -114,4 +118,24 @@ static decltype(auto) _get_segmentation(const Utf8String & sentence)
 std::vector<Utf8String> Segmentation::segment(const Utf8String & sentence)
 {
 	return _get_segmentation(sentence);
+}
+
+std::list<std::string> Segmentation::get_all_formulas(const std::string &formula)
+{
+#ifdef _DEBUG
+	std::cout << "[GET FORMULAS] " << formula << std::endl;
+#endif // _DEBUG
+	if (Utf8String(formula).size() < formula.size()) return {};
+
+	std::list<std::string> formulas;
+
+	static Priority priority;
+	auto mylist = MidtoPost::turntree(formula.substr(1, formula.size() - 2));
+
+	expr_tree tree;
+	VarIndep a;
+	tree.parse_expr(mylist, &priority);
+	tree.show(&priority, &a, formulas);
+
+	return formulas;
 }

@@ -8,16 +8,18 @@ OBJ = $(patsubst %.cpp, ${DIR_OBJ}/%.o, $(notdir ${SRC}))
 
 TARGET = dse
 
+DEBUG =
+
 BIN_TARGET = $(DIR_BIN)/$(TARGET)
 
 CC = g++
-CPPFLAGS = -g -Wall -std=c++17 -I${DIR_SRC}
+CPPFLAGS = -g $(DEBUG) -Wall -std=c++17 -I${DIR_SRC}
 
 ${BIN_TARGET}: ${OBJ} | ${DIR_BIN} ${DIR_TMP}
 	${CC} ${OBJ} -o $@ -lstdc++fs -lpthread
 
 ${DIR_OBJ}/%.o: ${DIR_SRC}/%.cpp | ${DIR_OBJ}
-	${CC} ${CPPFLAGS} -c $< -o $@
+	${CC} ${CPPFLAGS}  -c $< -o $@
 
 ${DIR_BIN}:
 	mkdir $@
