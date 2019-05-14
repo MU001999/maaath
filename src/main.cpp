@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
 {
 #ifndef _DEBUG
     // change program to daemon
-    daemon(0, 0);
+    daemon(1, 0);
 #endif
 
     for (int i = 0; i < 5; ++i)
