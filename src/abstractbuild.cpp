@@ -38,8 +38,9 @@ std::vector<std::string> AbstractBuilder::sentence_filter_(const std::string &ar
 {
     std::vector<std::string> allsentences;
 
-    auto sentences = divide_sentence_(article, '.');
-    while (!sentences.empty()) {
+    auto sentences = divide_sentence_(article);
+    while (!sentences.empty())
+    {
         auto stc = sentences.top();
         if (allsentences.empty() || allsentences.back() != stc.content)
             allsentences.push_back(stc.content);
@@ -51,7 +52,7 @@ std::vector<std::string> AbstractBuilder::sentence_filter_(const std::string &ar
     return allsentences;
 }
 
-std::priority_queue<Sentence> AbstractBuilder::divide_sentence_(const Utf8String &article, char pattern)
+std::priority_queue<Sentence> AbstractBuilder::divide_sentence_(const Utf8String &article, char32_t pattern)
 {
     std::priority_queue<Sentence> sentences;
 

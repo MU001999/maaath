@@ -23,7 +23,7 @@ private:
 
     std::string read_file_(const std::string &filepath);
     std::vector<std::string> sentence_filter_(const std::string &content);
-    std::priority_queue<Sentence> divide_sentence_(const Utf8String &article, char pattern);
+    std::priority_queue<Sentence> divide_sentence_(const Utf8String &article, char32_t pattern = '，');
     double score_sentence_(const std::string& sentence);
     void get_abstract_(const std::vector<std::string>& sentences);
     void parse_file_(const std::string& filepath);
