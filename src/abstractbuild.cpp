@@ -52,7 +52,7 @@ std::vector<std::string> AbstractBuilder::sentence_filter_(const std::string &ar
     return allsentences;
 }
 
-std::priority_queue<Sentence> AbstractBuilder::divide_sentence_(const Utf8String &article, char32_t pattern)
+std::priority_queue<Sentence> AbstractBuilder::divide_sentence_(const Utf8String &article, const Utf8String &pattern)
 {
     std::priority_queue<Sentence> sentences;
 
