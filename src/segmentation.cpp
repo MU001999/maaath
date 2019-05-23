@@ -65,7 +65,7 @@ static decltype(auto) _get_segmentation(const Utf8String & sentence)
 	std::vector<_Wordmap> word_maps;
 	for (int i = 0; i < (int)sentence.size() - 1; i++)
 	{
-		// Enumerate all possible words
+		// enumerate all possible words
 		for (int j = 7; j >= 2; j--)
 		{
 			if (i + j > (int)sentence.size()) j = sentence.size() - i;
@@ -78,8 +78,9 @@ static decltype(auto) _get_segmentation(const Utf8String & sentence)
 	std::cout << "[CODE LINE] " << __LINE__ << std::endl;
 	for (auto& wm : word_maps)
 	{
-		std::cout << wm.word << std::endl;
+		std::cout << wm.word << " ";
 	}
+    std::cout << std::endl;
 #endif // _DEBUG
 
 	int arrange = -1;
@@ -108,6 +109,20 @@ static decltype(auto) _get_segmentation(const Utf8String & sentence)
 			}
 		}
 	}
+
+	// add single character into result
+    auto temp_segment = best_segment;
+    best_segment.clear();
+    int end_pos = -1;
+    for (auto &word : temp_segment)
+    {
+        while (++end_pos < word.pos_in_sentence)
+            best_segment.push_back({ sentence[end_pos] , end_pos });
+        best_segment.push_back(word);
+        end_pos = word.pos_in_sentence + word.word.size() - 1;
+    }
+    while (++end_pos < (int)sentence.size())
+        best_segment.push_back({ sentence[end_pos] , end_pos });
 
 	std::vector<Utf8String> result;
 	for (auto& wm : best_segment) result.push_back(wm.word);
