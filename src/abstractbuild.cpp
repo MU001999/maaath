@@ -1,6 +1,7 @@
 #include <string>
 #include <fstream>
 #include <iostream>
+#include <streambuf>
 
 #include "utf8string.hpp"
 #include "abstractbuild.hpp"
@@ -27,9 +28,7 @@ std::string AbstractBuilder::read_file_(const std::string& filepath)
 #endif
     std::ifstream fin(filepath);
     if (!fin) return "";
-    std::string content, line;
-    for (; std::getline(fin, line); content += line + " ");
-    return content;
+    return std::string(std::istreambuf_iterator<char>(fin), std::istreambuf_iterator<char>());
 }
 
 std::vector<std::string> AbstractBuilder::sentence_filter_(const std::string &article)
