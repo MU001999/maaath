@@ -24,7 +24,7 @@ TEST_CLASS(Segmentation)
             std::cout << s.raw() << " ";
         std::cout << std::endl;
 
-        for (auto& s : Segmentation::segment("有理数的数轴很神奇，它有好多的点"))
+        for (auto& s : Segmentation::segment("有理数的数轴很神奇，它有好多个小点点"))
             std::cout << s.raw() << " ";
         std::cout << std::endl;
     TEST_METHOD_END()

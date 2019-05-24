@@ -25,6 +25,22 @@ struct _Wordmap
 	int pos_in_sentence;
 };
 
+// add single character into result
+static std::vector<_Wordmap> _continuitify(const std::vector<_Wordmap>& wl, const Utf8String &sentence)
+{
+	std::vector<_Wordmap> result;
+    int end_pos = -1;
+    for (auto &word : wl)
+    {
+        while (++end_pos < word.pos_in_sentence)
+            result.push_back({ sentence[end_pos] , end_pos });
+        result.push_back(word);
+        end_pos = word.pos_in_sentence + word.word.size() - 1;
+    }
+    while (++end_pos < (int)sentence.size())
+        result.push_back({ sentence[end_pos] , end_pos });
+	return result;
+} 
 
 // returns summary of infoquantities by given words
 static double _cal_infoquantity_of_words(const std::vector<_Wordmap>& wl)
@@ -87,7 +103,7 @@ static decltype(auto) _get_segmentation(const Utf8String & sentence)
 	int count = word_maps.size();
 	std::vector<_Wordmap> best_segment;
 
-	double freq = DBL_MIN, tmpfreq;
+	double freq = DBL_MAX, tmpfreq;
 	while (++arrange < (1 << count))
 	{
 		std::bitset<32> bits(arrange);
@@ -99,7 +115,7 @@ static decltype(auto) _get_segmentation(const Utf8String & sentence)
 		auto temp_segment = _choice_word(word_maps, bits, count);
 		if (!_is_overlapping(temp_segment))
 		{
-			if ((tmpfreq = _cal_infoquantity_of_words(temp_segment)) >= freq)
+			if ((tmpfreq = _cal_infoquantity_of_words(_continuitify(temp_segment, sentence))) <= freq)
 			{
 #ifdef _DEBUG
 				std::cout << "[FREQ] " << tmpfreq << std::endl;
@@ -110,19 +126,7 @@ static decltype(auto) _get_segmentation(const Utf8String & sentence)
 		}
 	}
 
-	// add single character into result
-    auto temp_segment = best_segment;
-    best_segment.clear();
-    int end_pos = -1;
-    for (auto &word : temp_segment)
-    {
-        while (++end_pos < word.pos_in_sentence)
-            best_segment.push_back({ sentence[end_pos] , end_pos });
-        best_segment.push_back(word);
-        end_pos = word.pos_in_sentence + word.word.size() - 1;
-    }
-    while (++end_pos < (int)sentence.size())
-        best_segment.push_back({ sentence[end_pos] , end_pos });
+	best_segment = _continuitify(best_segment, sentence);
 
 	std::vector<Utf8String> result;
 	for (auto& wm : best_segment) result.push_back(wm.word);
