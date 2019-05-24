@@ -12,8 +12,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#define LENGTH 100
-
 class MidtoPost
 {
 private:

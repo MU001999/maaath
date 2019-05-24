@@ -29,17 +29,18 @@
 #include <iostream>
 #endif
 
-
 extern std::array<InvertedIndex, 5> iis;
 
-static std::string _gen_response(const std::vector<std::pair<std::string, std::string>> &pairs)
+namespace
+{
+std::string gen_response(const std::vector<std::pair<std::string, std::string>> &pairs)
 {
     std::string result;
     for (const auto &p : pairs) result += p.first + "#" + p.second + "#";
     return result;
 }
 
-static void _process(int fd, sockaddr_un un, socklen_t len)
+void process(int fd, sockaddr_un un, socklen_t len)
 {
     char buff[4096] = {0};
     if (read(fd, buff, 4096) == -1) return;
@@ -89,12 +90,12 @@ static void _process(int fd, sockaddr_un un, socklen_t len)
         }
     }
     
-    auto result = _gen_response(pairs);
+    auto result = gen_response(pairs);
     if (write(fd, result.c_str(), result.size() + 1) == -1) return;
 
     close(fd);
 }
-
+} // namespace
 
 Server::Server() : listen_fd_(socket(AF_UNIX, SOCK_STREAM, 0))
 {
@@ -143,7 +144,7 @@ void Server::run()
 #ifdef _DEBUG
         printf("[Server] [Run] [Loop] [Accept] [Fd] [%d]\n", client_fd);
 #endif
-        std::thread t(std::bind(_process, client_fd, remote_addr, len));
+        std::thread t(std::bind(process, client_fd, remote_addr, len));
         t.detach();
     }
 }

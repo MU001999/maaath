@@ -3,7 +3,6 @@
 #include <list>
 #include <vector>
 
-
 class Utf8String;
 
 struct Segmentation

@@ -2,7 +2,6 @@
 
 #include <string>
 
-
 /*
 Request:
 [TYPE_ID][KEYWORDS]
@@ -17,7 +16,6 @@ Response4knowgraph:
 keyword#...# (first keyword after segmentation)
 ...
 */
-
 
 class Request
 {

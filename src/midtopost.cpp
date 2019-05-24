@@ -1,6 +1,8 @@
 #include "midtopost.hpp"
 #include <fstream>
 
+#define LENGTH 100
+
 using namespace std;
 
 MidtoPost::MidtoPost()

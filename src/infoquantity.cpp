@@ -13,9 +13,10 @@
 #include <iostream>
 #endif
 
-
+namespace
+{
 // temporary class
-static class _InfoQuantity
+class _InfoQuantity
 {
 private:
 	std::map<Utf8String, double> info_quantity_;
@@ -64,7 +65,7 @@ public:
 		return info_quantity_.count(word);
 	}
 } _infoquantity;
-
+} // namespace
 
 double InfoQuantity::get_infoquantity(const Utf8String & word)
 {

@@ -8,13 +8,11 @@
 
 class Utf8String;
 
-
 struct Sentence
 {
     std::string content;
     double score;
 };
-
 
 class AbstractBuilder {
 private:

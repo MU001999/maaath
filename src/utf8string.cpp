@@ -2,7 +2,6 @@
 
 #include "utf8string.hpp"
 
-
 Utf8String::Utf8String() {}
 
 Utf8String::Utf8String(data_type&& data) noexcept : data_(std::move(data))
@@ -59,7 +58,6 @@ Utf8String::Utf8String(const Utf8String & rhs) : data_(rhs.data_), raw_string_(r
 Utf8String::Utf8String(Utf8String && rhs) noexcept : data_(std::move(rhs.data_)), raw_string_(std::move(rhs.raw_string_)) {}
 
 Utf8String::~Utf8String() {}
-
 
 Utf8String& Utf8String::operator=(const raw_type & raw_string)
 {
@@ -227,12 +225,10 @@ const char* Utf8String::c_str() const noexcept
 	return raw().c_str();
 }
 
-
 Utf8String::size_type Utf8String::find(const Utf8String & str, size_type pos) const
 {
 	return data_.find(str.data_, pos);
 }
-
 
 Utf8String operator+(const Utf8String & lhs, const Utf8String & rhs)
 {

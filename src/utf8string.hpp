@@ -2,7 +2,6 @@
 
 #include <string>
 
-
 class Utf8String
 {
 public:
@@ -22,7 +21,6 @@ private:
 public:
 	// this is a special value equal to the maximum value representable by the type size_type. The exact meaning depends on context, but it is generally used either as end of string indicator by the functions that expect a string index or as the error indicator by the functions that return a string index.
 	static const size_type npos = -1;
-
 
 	// default constructor
 	Utf8String();
@@ -50,7 +48,6 @@ public:
 
 	// destructor, destroys the string, deallocating internal storage if used
 	~Utf8String();
-
 
 	// assigns values to the string
 	Utf8String& operator=(const raw_type& raw_string);
@@ -118,11 +115,9 @@ public:
 	// returns a non-modifiable standard C character array version of the string
 	const char* c_str() const noexcept;
 
-
 	// find characters in the string 
 	size_type find(const Utf8String& str, size_type pos = 0) const;
 	 
-
 	friend Utf8String operator+(const Utf8String& lhs, const Utf8String& rhs);
 
 	friend bool operator==(const Utf8String& lhs, const Utf8String& rhs);
@@ -135,7 +130,6 @@ public:
 
 	friend std::istream& operator>>(std::istream& in, Utf8String& str);
 };
-
 
 // concatenates two strings or a string and a char 
 extern Utf8String operator+(const Utf8String& lhs, const Utf8String& rhs);

@@ -12,9 +12,9 @@
 #include <iostream>
 #endif
 
-
 // global inverted index objects
-std::array<InvertedIndex, 5> iis = {
+std::array<InvertedIndex, 5> iis =
+{
     InvertedIndex("../tmp/article.tmp"),
     InvertedIndex("../tmp/definition.tmp"),
     InvertedIndex("../tmp/property.tmp"),
@@ -23,7 +23,8 @@ std::array<InvertedIndex, 5> iis = {
 };
 
 // static folder paths for inverted index objects
-static std::array<std::string, 5> _folderpaths = {
+static std::array<std::string, 5> _folderpaths =
+{
     "../resources/Document/Article",
     "../resources/Document/Definition",
     "../resources/Document/Property",

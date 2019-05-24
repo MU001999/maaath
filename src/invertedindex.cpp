@@ -21,10 +21,10 @@
 #include <iostream>
 #endif
 
-
 namespace fs = std::filesystem;
 
-
+namespace 
+{
 // temporary struct in this file
 struct _KeywordInfo
 {
@@ -32,8 +32,7 @@ struct _KeywordInfo
 	bool is_appeared_in_title = false;
 };
 
-
-static std::vector<std::string> _combine(std::vector<std::vector<std::string>> paths_list)
+std::vector<std::string> combine(std::vector<std::vector<std::string>> paths_list)
 {
     if (paths_list.empty()) return {};
 
@@ -61,7 +60,7 @@ static std::vector<std::string> _combine(std::vector<std::vector<std::string>> p
 }
 
 // returns map for ambiguity section by given sentence
-static decltype(auto) _get_ambiguity_section(const Utf8String& sentence)
+decltype(auto) get_ambiguity_section(const Utf8String& sentence)
 {
 	std::map<int, int> ambiguity;
 
@@ -97,18 +96,17 @@ static decltype(auto) _get_ambiguity_section(const Utf8String& sentence)
 }
 
 // calculate the order of given section name as '1.5.2 <NAME>' and return the result
-static int _cal_order_by_secname(const std::string& secname)
+int cal_order_by_secname(const std::string& secname)
 {
 	int first, second, third; char tmp;
 	std::stringstream ss(secname);
 	ss >> first >> tmp >> second >> tmp >> third;
 	return first * 10000 + second * 100 + third;
 }
-
+} // namespace
 
 // contructor of FileInfoWithAllKeywords
 FileInfoWithAllKeywords::FileInfoWithAllKeywords(const std::string& filepath) : filepath(filepath) {}
-
 
 std::map<std::string, double> InvertedIndex::cal_scores_(const data_type& kw_infos_mapping)
 {
@@ -206,7 +204,7 @@ std::vector<FileInfoWithAllKeywords> InvertedIndex::get_fileinfos(const std::vec
 	}
 
 	std::map<std::string, FileInfoWithAllKeywords> path_infos_mapping;
-	for (const auto &filepath : _combine(paths_list)) path_infos_mapping.emplace(filepath, filepath);
+	for (const auto &filepath : combine(paths_list)) path_infos_mapping.emplace(filepath, filepath);
 
 	for (auto& path_infos : path_infos_mapping) for (auto& kw_infos : kw_infos_mapping) for (auto& info : kw_infos.second)
 		if (info.filepath == path_infos.first)
@@ -254,7 +252,7 @@ std::vector<std::string> InvertedIndex::get_filepaths(const std::vector<key_type
 #ifdef _DEBUG
     printf("[InvertedIndex] [Getfilepaths] [Combine]\n");
 #endif
-	auto filepaths = _combine(paths_list);
+	auto filepaths = combine(paths_list);
 #ifdef _DEBUG
     printf("[InvertedIndex] [Getfilepaths] [Combine] [Over]\n");
 #endif
@@ -291,7 +289,7 @@ void InvertedIndex::add_files(const std::string & folderpath)
 
 	sort(paths.begin(), paths.end(), [&](const fs::path & a, const fs::path & b)
 		{
-			return _cal_order_by_secname(a.filename().string()) < _cal_order_by_secname(b.filename().string());
+			return cal_order_by_secname(a.filename().string()) < cal_order_by_secname(b.filename().string());
 		});
 
 	for (auto &path : paths)
@@ -315,7 +313,7 @@ void InvertedIndex::add_file(const key_type & sentence, const std::string & file
 
 	std::map<key_type, _KeywordInfo> kwinfos;
 
-	auto ambiguities = _get_ambiguity_section(sentence);
+	auto ambiguities = get_ambiguity_section(sentence);
 	for (auto& mp : ambiguities)
 	{
         if (sentence[mp.first] == '$')

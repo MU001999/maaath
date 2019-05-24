@@ -1,6 +1,5 @@
 #pragma once
 
-
 class Server
 {
 private:

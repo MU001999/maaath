@@ -11,11 +11,9 @@
 #include <iostream>
 #endif
 
-
 static constexpr auto _kMaxSentence   = 128,
                       _kDensityWeight = 2000,
                       _kAbstractNum   = 10;
-
 
 bool operator<(const Sentence &a, const Sentence &b)
 {

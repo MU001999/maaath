@@ -1,6 +1,5 @@
 #pragma once
 
-
 class Utf8String;
 
 struct InfoQuantity

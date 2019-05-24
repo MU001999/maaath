@@ -7,7 +7,6 @@
 
 #include "utf8string.hpp"
 
-
 // struct contains filepath and one keyword's info in it
 struct FileInfo
 {
@@ -16,14 +15,12 @@ struct FileInfo
 	bool is_appeared_in_title = false;
 };
 
-
 // struct contains single keyword's info in one file
 struct KeywordInfo
 {
 	double times = 0.0, density = 0.0;
 	bool is_appeared_in_title = false;
 };
-
 
 // struct contains filepath and all keywords' info in it
 struct FileInfoWithAllKeywords
@@ -33,7 +30,6 @@ struct FileInfoWithAllKeywords
 
 	FileInfoWithAllKeywords(const std::string& filepath);
 };
-
 
 class InvertedIndex
 {
