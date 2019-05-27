@@ -17,7 +17,8 @@ def test(s):
 
 if __name__ == "__main__":
 	# print(test("5数轴有理数绝对值"))
-	print(test("0数轴有理数绝对值"))
+	# print(test("0数轴有理数绝对值"))
+	print(test("0$x-3x+9r=-1701$"));
 
 	# print(test("1数轴有理数绝对值"))
 	# print(test("2数轴有理数绝对值"))
