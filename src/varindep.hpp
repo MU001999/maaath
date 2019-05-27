@@ -11,8 +11,9 @@ private:
     char lastkey;
 
 public:
+    using ITEM = std::pair<std::string, char>;
+    using ITERATOR = std::map<std::string, char>::iterator;
+
     friend class expr_tree;
     char GetSymbol(std::string);
-    typedef std::pair<std::string, char> ITEM;
-    typedef std::map<std::string, char>::iterator ITERATOR;
 };

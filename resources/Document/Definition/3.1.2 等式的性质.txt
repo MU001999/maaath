@@ -1,0 +1,4 @@
+
+  \includegraphics[scale=0.6]{1-1.JPG}\\
+
+  \includegraphics[scale=0.6]{1-2.JPG}\\

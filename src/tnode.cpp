@@ -8,6 +8,8 @@ string a;
 
 void expr_tree::parse_expr(list<string> str, Priority *pri)
 {
+    if (str.empty())
+        return;
     stack<base_node *> stack_node;
     for (auto c : str)
     {
@@ -41,10 +43,13 @@ void expr_tree::parse_expr(list<string> str, Priority *pri)
             }
             stack_node.push(node);
         }
-        else return;
+        else
+            return;
     }
     if (!stack_node.empty())
         root = stack_node.top();
+    else
+        return;
     while (!stack_node.empty())
         stack_node.pop();
 }
@@ -81,6 +86,8 @@ void expr_tree::clone_tree(Priority *pri, base_node *n, list<string> &sub)
         clone_tree(pri, n->lc, sub);
         clone_tree(pri, n->rc, sub);
     }
+    else
+        return;
 }
 void expr_tree::set_pri(Priority *pri, base_node *n)
 {
@@ -93,6 +100,8 @@ void expr_tree::set_pri(Priority *pri, base_node *n)
         set_pri(pri, n->lc);
         set_pri(pri, n->rc);
     }
+    else
+        return;
 }
 void expr_tree::copy_tree(base_node *n, base_node *&nn)
 {
@@ -164,12 +173,16 @@ void expr_tree::set_ord(Priority *pri, base_node *n, VarIndep *a)
         }
         else
         {
-            if (n->rc) n->rc->c = a->GetSymbol(n->rc->c);
-            else n->lc->c = a->GetSymbol(n->lc->c);
+            if (n->rc)
+                n->rc->c = a->GetSymbol(n->rc->c);
+            else
+                n->lc->c = a->GetSymbol(n->lc->c);
         }
         set_ord(pri, n->lc, a);
         set_ord(pri, n->rc, a);
     }
+    else
+        return;
 }
 
 void expr_tree::destory(base_node *&root)

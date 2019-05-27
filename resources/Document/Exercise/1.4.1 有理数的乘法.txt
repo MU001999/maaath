@@ -1,0 +1,73 @@
+
+
+
+
+1.计算：
+
+（1）$6\times(-9)$\\
+
+（2）$(-4)\times6$\\
+
+（3）$(-6)\times(-1)$\\
+
+（4）$(-6)\times0$\\
+
+（5）$\frac{2}{3}\times(-\frac{9}{4})$\\
+
+（6）$(-\frac{1}{3})\times\frac{1}{4}$\\
+
+2.商店降价销售某种商品，每件降5元，售出60件后，与按原价销售同样数量的商品相比，销售额有什么变化？\\
+
+3.写出下列各数的倒数\\
+
+1，-1，$\frac{1}{3}$，$-\frac{1}{3}$，5，-5，$\frac{2}{3}$，$-\frac{2}{3}$\\
+
+
+思考\\
+观察下列各式，它们的积是正的还是负的？\\
+$2 \times 3 \times 4 \times (-5)$，\\
+$2 \times 3 \times (-4) \times (-5)$，\\
+$2 \times( -3) \times (-4) \times (-5)$，\\
+$(-2) \times (-3) \times (-4) \times (-5)$.\\
+几个不是0的数相乘，积的符号为负因数的个数之间有什么关系？\\
+
+例3 计算：\\
+(1)
+$ (-3) \times \frac{5}{6} \times (-\frac{9}{5}) \times (-\frac{1}{4}) $\\
+(2)
+$ (-5) \times 6 \times (-\frac{4}{5}) \times \frac{1}{4} $
+
+解：(1)\\
+$ (-3) \times \frac{5}{6} \times (-\frac{9}{5}) \times (-\frac{1}{4}) \\
+ = -3 \times \frac{5}{6} \times \frac{9}{5} \times \frac{1}{4} = -\frac{9}{8} $\\
+(2)\\
+$ (-5) \times 6 \times (-\frac{4}{5}) \times \frac{1}{4} \\
+ = 5 \times 6 \times \frac{4}{5} \times \frac{1}{4} = 6 $\\
+
+思考\\
+你能看出下式的结果吗？如果能，请说明理由.\\
+$7.8 \times (-8.1) \times 0 \times (-19.6)$，\\
+\begin{propertory}
+几个数相乘，如果其中有因数为0，那么积等于0\\
+\end{propertory}
+
+练习\\
+1、口算：\\
+(1) $(-2) \times 3 \times 4 \times (-1)$;  (2) $(-5) \times (-3) \times 4 \times (-2)$;\\
+(3) $(-2) \times (-2) \times (-2) \times (-2)$;  (4) $(-3) \times (-3) \times (-3) \times (-3)$.\\
+
+2、计算：\\
+(1) $(-5) \times 8 \times (-7) \times (-0.25)$;\\
+(2) $ (-\frac{5}{12}) \times \frac{8}{15} \times \frac{1}{2} \times (-\frac{2}{3}) $;\\
+
+
+思考\\
+    比较上面两种解法，它们再运算顺序上有什么区别？解法2用了什么运算律？哪种解法运算量小？\\
+
+练习\\
+
+计算：\\
+(1) $(-85) \times (-25) \times (-4)$;
+(2) $ (\frac{9}{10} - \frac{1}{15}) \times 30 $;\\
+(3) $ (-\frac{7}{8}) \times 15 \times (-1\frac{1}{7}) $;
+(4)$ (-\frac{6}{5}) \times (-\frac{2}{3}) + (-\frac{6}{5}) \times (+\frac{17}{3}) $;\\
