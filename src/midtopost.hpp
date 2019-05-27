@@ -22,7 +22,7 @@ private:
 
 public:
     MidtoPost();
-    int compare(std::stack<std::string> oper, const std::string &ch, int flag3);
+    int compare(const std::stack<std::string> &oper, const std::string &ch, int flag3);
     std::list<std::string> turn(std::string &input);
     static std::list<std::string> turntree(const std::string &input);
 };

@@ -91,15 +91,6 @@ decltype(auto) get_segmentation(const Utf8String & sentence)
         }
     }
 
-#ifdef _DEBUG
-    std::cout << "[CODE LINE] " << __LINE__ << std::endl;
-    for (auto& wm : word_maps)
-    {
-        std::cout << wm.word << " ";
-    }
-    std::cout << std::endl;
-#endif // _DEBUG
-
     int arrange = -1;
     int count = word_maps.size();
     std::vector<_Wordmap> best_segment;
@@ -109,18 +100,11 @@ decltype(auto) get_segmentation(const Utf8String & sentence)
     {
         std::bitset<32> bits(arrange);
 
-#ifdef _DEBUG
-        std::cout << "[BITS] " << bits << std::endl;
-#endif // _DEBUG
-
         auto temp_segment = choice_word(word_maps, bits, count);
         if (!is_overlapping(temp_segment))
         {
             if ((tmpfreq = cal_infoquantity_of_words(continuitify(temp_segment, sentence))) <= freq)
             {
-#ifdef _DEBUG
-                std::cout << "[FREQ] " << tmpfreq << std::endl;
-#endif // _DEBUG
                 freq = tmpfreq;
                 best_segment = temp_segment;
             }
@@ -152,6 +136,8 @@ std::list<std::string> Segmentation::get_all_formulas(const std::string &formula
 
     static Priority priority;
     auto mylist = MidtoPost::turntree(formula.substr(1, formula.size() - 2));
+
+    if (mylist.empty()) return formulas;
 
     expr_tree tree;
     VarIndep a;
