@@ -7,6 +7,7 @@
 #include <fstream>
 #include <sstream>
 #include <iterator>
+#include <streambuf>
 #include <algorithm>
 #include <filesystem>
 
@@ -295,8 +296,7 @@ void InvertedIndex::add_files(const std::string & folderpath)
     for (auto &path : paths)
     {
         std::ifstream fin(path);
-        std::string content, line;
-        while (std::getline(fin, line)) for (auto c : line) content += c == '\r' ? ' ' : c;
+        auto content = std::string(std::istreambuf_iterator<char>(fin), std::istreambuf_iterator<char>());
         add_file(content, path.string());
         filesorder_[path.string()] = filesorder_.size();
     }
