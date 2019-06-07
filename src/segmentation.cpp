@@ -41,7 +41,7 @@ std::vector<_Wordmap> continuitify(const std::vector<_Wordmap>& wl, const Utf8St
     while (++end_pos < (int)sentence.size())
         result.push_back({ sentence[end_pos] , end_pos });
     return result;
-} 
+}
 
 // returns summary of infoquantities by given words
 double cal_infoquantity_of_words(const std::vector<_Wordmap>& wl)
@@ -124,8 +124,10 @@ std::vector<Utf8String> Segmentation::segment(const Utf8String & sentence)
     return get_segmentation(sentence);
 }
 
-std::list<std::string> Segmentation::get_all_formulas(const std::string &formula)
+std::list<std::string> Segmentation::get_all_formulas(const std::string &input)
 {
+    std::string formula;
+    for (auto c : input) if (!isspace(c)) formula += c;
 #ifdef _DEBUG
     std::cout << "[GET FORMULAS] " << formula << std::endl;
 #endif // _DEBUG

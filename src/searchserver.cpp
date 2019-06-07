@@ -51,9 +51,8 @@ void process(int fd, sockaddr_un un, socklen_t len)
     std::vector<Utf8String> keywords;
     if (req.keywords().front() == '$')
     {
-        std::string formula = req.keywords().substr(0, req.keywords().find('$', 1) + 1), tmp;
-        for (auto chr : formula) if (!std::isspace(chr)) tmp += chr;
-        auto formulas = Segmentation::get_all_formulas(tmp);
+        auto formula = req.keywords().substr(0, req.keywords().find('$', 1) + 1);
+        auto formulas = Segmentation::get_all_formulas(formula);
         if (!formulas.empty()) keywords.push_back("$" + formulas.front());
     }
     else keywords =  Segmentation::segment(req.keywords());
@@ -89,7 +88,7 @@ void process(int fd, sockaddr_un un, socklen_t len)
 #endif
         }
     }
-    
+
     auto result = gen_response(pairs);
     if (write(fd, result.c_str(), result.size() + 1) == -1) return;
 

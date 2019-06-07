@@ -24,7 +24,7 @@
 
 namespace fs = std::filesystem;
 
-namespace 
+namespace
 {
 // temporary struct in this file
 struct _KeywordInfo
@@ -318,10 +318,8 @@ void InvertedIndex::add_file(const key_type & sentence, const std::string & file
     {
         if (sentence[mp.first] == '$')
         {
-            std::string formula = sentence.substr(mp.first, mp.second - mp.first).raw(), tmp;
-            for (auto chr : formula) if (!std::isspace(chr)) tmp += chr;
-
-            for (const auto &formula : Segmentation::get_all_formulas(tmp))
+            auto formula = sentence.substr(mp.first, mp.second - mp.first).raw();
+            for (const auto &formula : Segmentation::get_all_formulas(formula))
             {
                 alltimes += 1;
                 kwinfos["$" + formula].times += 1;
