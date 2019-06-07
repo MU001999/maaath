@@ -4,6 +4,7 @@
 #include <streambuf>
 
 #include "utf8string.hpp"
+#include "segmentation.hpp"
 #include "abstractbuild.hpp"
 
 // #define _DEBUG
@@ -54,9 +55,9 @@ std::priority_queue<Sentence> AbstractBuilder::divide_sentence_(const Utf8String
     std::priority_queue<Sentence> sentences;
 
     std::size_t start = 0, pos = article.find(pattern);
-    while (pos != article.npos) 
+    while (pos != article.npos)
     {
-        if (start != pos) 
+        if (start != pos)
         {
             auto content = article.substr(start, pos - start);
             sentences.push({ content.raw(), score_sentence_(content.raw()) });
@@ -64,7 +65,7 @@ std::priority_queue<Sentence> AbstractBuilder::divide_sentence_(const Utf8String
         start = pos + 1;
         pos = article.find(pattern, start);
     }
-    if (start < article.size()) 
+    if (start < article.size())
     {
         auto content = article.substr(start);
         sentences.push({ content.raw(), score_sentence_(content.raw()) });
@@ -93,27 +94,33 @@ double AbstractBuilder::score_sentence_(const std::string &sentence)
     double numerator = 0, denominator = sentence.size();
     for (const auto &keyword : keywords_)
     {
+#ifdef _DEBUG
+    printf("[AbstractBuild] [Score] [Keyword] [%s]\n", keyword.c_str());
+#endif
         if (keyword.front() == '$')
         {
             auto pos = sentence.find('$');
             if (pos == sentence.npos) continue;
-            /*
+
             auto input_formula = keyword.substr(1);
             while (pos != sentence.npos)
             {
                 auto end_pos = sentence.find('$', pos + 1);
                 if (end_pos == sentence.npos) break;
-                for (const auto &formula : get_all_formulas(sentence.substr(pos, end_pos - pos)))
+                for (const auto &formula : Segmentation::get_all_formulas(sentence.substr(pos, end_pos - pos + 1)))
                 {
                     if (formula == input_formula)
                     {
+#ifdef _DEBUG
+    printf("[AbstractBuild] [Find Sub Formula]\n");
+    std::cout << formula << std::endl;
+#endif
                         numerator += keyword.size();
                         break;
                     }
                 }
-                pos = sentence.find('$', end_pos + 1);
+                pos = sentence.find('$', end_pos);
             }
-            */
         }
         else
         {
