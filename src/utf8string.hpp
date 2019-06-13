@@ -12,7 +12,7 @@ public:
     using reference = value_type &;
     using const_reference = const value_type &;
     using pointer = value_type *;
-    using const_pointer = const value_type &;
+    using const_pointer = const value_type *;
 
 private:
     data_type data_;
