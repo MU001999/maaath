@@ -9,7 +9,7 @@
 #### 成员类型
 
 成员类型 | 定义
-- | -
+-------- | ----
 data_type | std::u32string
 value_type | data_type::value_type
 raw_type | std::string
@@ -19,9 +19,13 @@ const_reference | const value_type&
 pointer | value_type*
 const_pointer | const value_type*
 
-#### 提供的接口
+#### 成员函数
 
-Utf8String()：构造utf8类型结构体
+函数名 | 功能
+------ | ----
+（构造函数） | 构造Utf8String
+（析构函数） | 销毁字符串
+
 value_type& front()：访问第一个字符
 void clear()：清空内容
 void push_back(value_type ch)：在末尾增加一个字符
