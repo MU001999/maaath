@@ -8,16 +8,16 @@
 
 #### 成员类型
 
-成员类型 | 定义
--------- | ----
-data_type | std::u32string
-value_type | data_type::value_type
-raw_type | std::string
-size_type | data_type::size_type
-reference | value_type&
+成员类型         | 定义
+--------------- | ---------------
+data_type       | std::u32string
+value_type      | data_type::value_type
+raw_type        | std::string
+size_type       | data_type::size_type
+reference       | value_type&
 const_reference | const value_type&
-pointer | value_type*
-const_pointer | const value_type*
+pointer         | value_type*
+const_pointer   | const value_type*
 
 #### 成员函数
 
@@ -25,17 +25,26 @@ const_pointer | const value_type*
 ------ | ----
 （构造函数） | 构造Utf8String
 （析构函数） | 销毁字符串
-
-value_type& front()：访问第一个字符
-void clear()：清空内容
-void push_back(value_type ch)：在末尾增加一个字符
-Utf8String substr(size_type pos, size_type count = npos) const：返回截取字符串
-size_type size() const noexcept：返回字符数量
-size_type length() const noexcept：返回字符数量
-bool empty() const noexcept：判断字符串是否为空
-raw_type raw()：返回初始字符串
-const char* c_str()：返回字符串的不可修改的C标准字符数组的版本
-size_type find(const Utf8String& str, size_type pos = 0) const：在字符串中查找字符
+front      | 访问首字符
+back       | 访问最后的字符
+clear      | 清除内容
+push_back  | 后附字符到结尾
+substr     | 返回子串
+size       | 返回字符数
+length     | 返回字符数
+empty      | 检查字符串是否为空
+raw        | 返回std::string类型的版本
+c_str      | 返回不可修改的C字符数组版本
+find       | 于字符串中查找字符(串)
+operator=  | 为字符串赋值
+operator[] | 访问指定字符
+operator+= | 后附字符(串)到结尾
+operator+  | 连接两个字符串或者一个字符串和一个字符
+operator== | 以字典序比较两个字符串是否相等
+operator!= | 以字典序比较两个字符串是否不相等
+operator<  | 以字典序比较两个字符串
+operator<< | 执行字符串的流输入
+operator>> | 执行字符串的流输出
 
 ## 中文分词
 
@@ -52,21 +61,21 @@ segmentation.cpp:
     传入一个UTF-8编码的字符串，将这个字符串按照中文语义切割，返回一个中文词向量
 
 算法:
-    
+
     1.按词频词典找出中文字串中存在的歧义区间
-    
+
     2.歧义区间中选出若干种词的组合，每种组合要消除歧义
-    
+
     3.计算出选出的组合中信息量最小的，这个组合可以认为是最接近语义的组合
-    
+
     如 记者读报纸
     分割的结果是 记者 读 报纸
 
 searchserver.cpp:
 
-提供的类: 
+提供的类:
 
-    Server 
+    Server
 
 提供的接口:
 

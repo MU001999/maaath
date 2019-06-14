@@ -75,17 +75,17 @@ public:
 
     // accesses the first character
     value_type& front();
-    
+
     // accesses the first character
     const value_type& front() const;
 
-    // accesses the last character 
+    // accesses the last character
     value_type& back();
 
-    // accesses the last character 
+    // accesses the last character
     const value_type& back() const;
 
-    // clears the contents 
+    // clears the contents
     void clear();
 
     // appends a character to the end
@@ -100,7 +100,7 @@ public:
     // returns the number of characters
     size_type length() const noexcept;
 
-    // checks whether the string is empty 
+    // checks whether the string is empty
     bool empty() const noexcept;
 
     // returns the raw string
@@ -115,9 +115,9 @@ public:
     // returns a non-modifiable standard C character array version of the string
     const char* c_str() const noexcept;
 
-    // find characters in the string 
+    // find characters in the string
     size_type find(const Utf8String& str, size_type pos = 0) const;
-     
+
     friend Utf8String operator+(const Utf8String& lhs, const Utf8String& rhs);
     friend bool operator==(const Utf8String& lhs, const Utf8String& rhs);
     friend bool operator!=(const Utf8String& lhs, const Utf8String& rhs);
@@ -126,15 +126,15 @@ public:
     friend std::istream& operator>>(std::istream& in, Utf8String& str);
 };
 
-// concatenates two strings or a string and a char 
+// concatenates two strings or a string and a char
 extern Utf8String operator+(const Utf8String& lhs, const Utf8String& rhs);
-// lexicographically compares two strings 
+// lexicographically compares two strings
 extern bool operator==(const Utf8String& lhs, const Utf8String& rhs);
-// lexicographically compares two strings 
+// lexicographically compares two strings
 extern bool operator!=(const Utf8String& lhs, const Utf8String& rhs);
 // lexicographically compares two strings
 extern bool operator<(const Utf8String& lhs, const Utf8String& rhs);
-// performs stream input and output on strings 
+// performs stream input and output on strings
 extern std::ostream& operator<<(std::ostream& out, const Utf8String& str);
-// performs stream input and output on strings 
+// performs stream input and output on strings
 extern std::istream& operator>>(std::istream& in, Utf8String& str);
