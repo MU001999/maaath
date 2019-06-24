@@ -2,9 +2,7 @@
 
 > 本项目仅包含A组部分实践内容
 
-
-## [使用文档](./DOC.md)
-
+## [文档](./DOC.md)
 
 ## 代码规范
 
@@ -14,13 +12,12 @@ Python规范参考：[Google Python Style Guide](https://google.github.io/styleg
 
 更改以及补充参见：[Code Style](./CODESTYLE.md)
 
-
 ## 目录结构
+
 * src --------- 源代码
 * test -------- 测试代码
 * front ------- 前端部分
 * resources --- 资源文件
-
 
 ## 需求分析
 
@@ -30,8 +27,7 @@ Python规范参考：[Google Python Style Guide](https://google.github.io/styleg
 + [x] 获取信息量
 + [x] 中文分词
 + [x] 倒排索引
-* [x] 结果量化
-
++ [x] 结果量化
 
 ## 接口设计
 
