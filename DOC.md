@@ -118,7 +118,6 @@ data_type       | std::map\<key_type, value_type\>
 ready         | 返回该倒排索引是否已建立成功
 serialize     | 由对象序列化到文件
 unserialize   | 由文件反序列化到对象
-get_fileinfos | 检索给定关键词,返回检索结果,包含关键词在文章中的信息
 get_filepaths | 检索给定关键词,返回检索结果,只包含结果的文件路径
 add_files     | 根据给定文件夹路径,添加新的索引
 add_file      | 根据给定文件路径,添加新的索引
