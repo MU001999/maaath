@@ -48,82 +48,119 @@ operator>> | 执行字符串的流输出
 
 ## 中文分词
 
+依赖Utf8String类型,对中文基于信息量实现分词操作,并封装成一个可以直接获取分词结果的接口
+
+### InfoQuantity
+
+封装词语信息量的查询操作
+
+#### 接口
+
+* `double get_infoquantity(const Utf8String &word);`
+
+    接受一个词,并返回该词的信息量
+
+* `bool count(const Utf8String &word);`
+
+    接受一个词,并返回该词在词频文件是否存在
+
+### Segmentation
+
+#### 接口
+
+* `std::vector<Utf8String> segment(const Utf8String &sentence);`
+
+    接口接受一个UTF-8编码的Utf8String类型的字符串,并返回分词之后的词语集合.该接口保证返回词语集合的顺序与其在原句中的次序相同.
+
+#### 算法
+
+1. 按词频词典找出字符串中存在的歧义区间
+
+1. 歧义区间中选出若干种词的组合，每种组合要消除歧义
+
+1. 计算出选出的组合中信息量最小的，这个组合可以认为是最接近语义的组合
+
 ## 倒排索引
+
+封装倒排索引,实现如下功能:
+
+1. 倒排索引的建立
+1. 根据关键词进行检索
+1. 对象到文件的序列化
+1. 文件到对象的反序列化
+
+### FileInfo
+
+描述单个关键词与单个文件之间联系的结构体
+
+包含以下信息:
+
+1. 关键词所在文章的文件路径
+1. 关键词在该文章中出现的次数和频率
+1. 关键词是否出现在文章的标题中
+
+### KeywordInfo
+
+描述单个关键词在单个文件中的信息的结构体
+
+包含以下信息:
+
+1. 关键词在该文章中出现的次数和频率
+1. 关键词是否出现在文章的标题中
+
+### FileInfoWithAllKeywords
+
+描述单个文章以及其中出现的所有关键词的联系的结构体
+
+包含以下信息:
+
+1. 该文章的文件路径
+1. 类型为`std::map<Utf8String, KeywordInfo>`的关键词与关键词信息的对象
+
+### InvertedIndex
+
+#### 成员类型
+
+成员类型         | 定义
+--------------- | ---------------
+key_type        | Utf8String
+value_type      | std::vector\<FileInfo\>
+data_type       | std::map\<key_type, value_type\>
+
+#### 成员函数
+
+函数名 | 功能
+------ | ----
+（构造函数）    | 建立倒排索引
+ready         | 返回该倒排索引是否已建立成功
+serialize     | 由对象序列化到文件
+unserialize   | 由文件反序列化到对象
+get_fileinfos | 检索给定关键词,返回检索结果,包含关键词在文章中的信息
+get_filepaths | 检索给定关键词,返回检索结果,只包含结果的文件路径
+add_files     | 根据给定文件夹路径,添加新的索引
+add_file      | 根据给定文件路径,添加新的索引
 
 ## 检索服务器
 
-segmentation.cpp:
+基于Socket的UNIX域实现进程间通信, 并通过多线程优化多进程访问时的效率
 
-提供的接口：
-    std::vector<Utf8String> Segmentation::segment(const Utf8String & sentence)
+### Request
 
-功能:
-    传入一个UTF-8编码的字符串，将这个字符串按照中文语义切割，返回一个中文词向量
+规定与其它进程通信的细节
 
-算法:
+包含以下信息:
 
-    1.按词频词典找出中文字串中存在的歧义区间
+1. 检索的类型
+1. 检索的关键词列表
 
-    2.歧义区间中选出若干种词的组合，每种组合要消除歧义
+### SearchServer
 
-    3.计算出选出的组合中信息量最小的，这个组合可以认为是最接近语义的组合
+封装服务器的行为,只提供监听和启动操作,隐藏实现细节
 
-    如 记者读报纸
-    分割的结果是 记者 读 报纸
+#### 成员函数
 
-searchserver.cpp:
-
-提供的类:
-
-    Server
-
-提供的接口:
-
-    Server::listen()
-    Server::run()
-功能:
-
-    侦听来自前端服务器的检索请求，将检索结果返回给前端服务器
-    每个请求用一个线程处理
-
-infoquantity.cpp：
-
-功能：
-    读取词频文件，将文件内容存入词频列表
-    提取某个词的词频
-
-提供的接口：
-    double get_infoquantity(const Utf8String & word)：根据参数输入的词提取该词词频
-    bool count(const Utf8String & word) const：判断参数输入的词在词频列表中是否只存在一次
-
-invertedindex.cpp：
-
-功能：
-    将字符串进行分词，建立倒排索引
-
-提供的类：
-    InvertedIndex
-
-提供的接口：
-    InvertedIndex(const std::string& filepath)：接收序列化文件，构建倒排索引
-    bool ready() const：判断倒排索引是否建立完成
-    bool serialize()：判断输出到序列化文件是否完成
-    bool unserialize()：判断由文件反序列化输出到结构体是否完成
-    std::vector<FileInfoWithAllKeywords> get_fileinfos(const std::vector<key_type>& keywords, int pagenum = 1, int perpage = 10)：由输入的关键词返回文件信息
-    std::vector<std::string> get_filepaths(const std::string &keywords)
-    std::vector<std::string> get_filepaths(const std::vector<key_type>& keywords) ：由输入的关键词返回文件路径
-    void add_files(const std::string& folderpath)：根据输入的文件路径添加文件
-    void add_file(const key_type& sentence, const std::string& filepath)：将一个句子中所有的词添加到倒排索引
-
-commucation.cpp：
-
-功能：
-    将web页面的请求保存至结构体以用于与后端沟通
-
-提供的类：
-    Request
-
-提供的接口：
-    Request(const std::string &raw)：将web页面的请求存入结构体
-    Request::CommType Request::type() const：返回类型
-    std::string Request::keywords() const：返回关键词
+函数名 | 功能
+------ | ----
+（构造函数） | 构造SearchServer, 初始化套接字
+listen     | 开始监听外部请求
+run        | 进入主循环,处理外部检索请求
