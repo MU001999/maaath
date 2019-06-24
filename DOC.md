@@ -100,15 +100,6 @@ operator>> | 执行字符串的流输出
 1. 关键词在该文章中出现的次数和频率
 1. 关键词是否出现在文章的标题中
 
-### FileInfoWithAllKeywords
-
-描述单个文章以及其中出现的所有关键词的联系的结构体
-
-包含以下信息:
-
-1. 该文章的文件路径
-1. 类型为`std::map<Utf8String, KeywordInfo>`的关键词与关键词信息的对象
-
 ### InvertedIndex
 
 #### 成员类型

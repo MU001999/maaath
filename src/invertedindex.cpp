@@ -23,7 +23,6 @@
 #endif
 
 namespace fs = std::filesystem;
-
 namespace
 {
 // temporary struct in this file
@@ -105,9 +104,6 @@ int cal_order_by_secname(const std::string& secname)
     return first * 10000 + second * 100 + third;
 }
 } // namespace
-
-// contructor of FileInfoWithAllKeywords
-FileInfoWithAllKeywords::FileInfoWithAllKeywords(const std::string& filepath) : filepath(filepath) {}
 
 std::map<std::string, double> InvertedIndex::cal_scores_(const data_type& kw_infos_mapping)
 {
@@ -191,45 +187,6 @@ bool InvertedIndex::unserialize()
     }
 
     return !kw_infos_mapping_.empty();
-}
-
-std::vector<FileInfoWithAllKeywords> InvertedIndex::get_fileinfos(const std::vector<key_type> & keywords, int pagenum, int perpage)
-{
-    data_type kw_infos_mapping, for_cal_scores;
-    std::vector<std::vector<std::string>> paths_list;
-    for (auto& kw : keywords)
-    {
-        kw_infos_mapping[kw] = kw_infos_mapping_[kw];
-        paths_list.push_back(std::vector<std::string>());
-        for (auto& info : kw_infos_mapping[kw]) paths_list.back().push_back(info.filepath);
-    }
-
-    std::map<std::string, FileInfoWithAllKeywords> path_infos_mapping;
-    for (const auto &filepath : combine(paths_list)) path_infos_mapping.emplace(filepath, filepath);
-
-    for (auto& path_infos : path_infos_mapping) for (auto& kw_infos : kw_infos_mapping) for (auto& info : kw_infos.second)
-        if (info.filepath == path_infos.first)
-    {
-        for_cal_scores[kw_infos.first].push_back(info);
-        path_infos.second.kwinfos[kw_infos.first] =
-        {
-            info.times, info.density, info.is_appeared_in_title
-        };
-    }
-
-    std::vector<FileInfoWithAllKeywords> fileinfos;
-    for (auto& path_infos : path_infos_mapping)
-    {
-        fileinfos.push_back(path_infos.second);
-    }
-
-    auto scores = cal_scores_(for_cal_scores);
-    std::sort(fileinfos.rbegin(), fileinfos.rend(), [&](const FileInfoWithAllKeywords & a, const FileInfoWithAllKeywords & b)
-        {
-            return scores[a.filepath] < scores[b.filepath];
-        });
-
-    return decltype(fileinfos)(fileinfos.begin() + pagenum * perpage - perpage, fileinfos.begin() + pagenum * perpage);
 }
 
 std::vector<std::string> InvertedIndex::get_filepaths(const std::string &keywords)

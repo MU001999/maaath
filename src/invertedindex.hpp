@@ -22,15 +22,6 @@ struct KeywordInfo
     bool is_appeared_in_title = false;
 };
 
-// struct contains filepath and all keywords' info in it
-struct FileInfoWithAllKeywords
-{
-    std::string filepath;
-    std::map<Utf8String, KeywordInfo> kwinfos;
-
-    FileInfoWithAllKeywords(const std::string& filepath);
-};
-
 class InvertedIndex
 {
 public:
@@ -59,9 +50,6 @@ public:
 
     // unserialize from serialization file
     bool unserialize();
-
-    // returns fileinfos by given keywords
-    std::vector<FileInfoWithAllKeywords> get_fileinfos(const std::vector<key_type>& keywords, int pagenum = 1, int perpage = 10);
 
     std::vector<std::string> get_filepaths(const std::string &keywords);
 
