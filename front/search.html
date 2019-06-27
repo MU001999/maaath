@@ -1,8 +1,8 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
-    <title>search</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf8" />
+    <title>Freefall Math</title>
     <script type="text/x-mathjax-config">
         MathJax.Hub.Config({
         tex2jax: {
@@ -30,54 +30,31 @@
         }
         })();
     </script>
-    <style>
-
-        #all {
-            text-align: center;
-        }
-
-        #title {
-            height: 250px;
-        }
-
-        #body {
-            height: 425px;
-            background: url(body.jpg);
-            background-position: center center;
-            background-repeat: no-repeat;
-        }
-    </style>
 </head>
 <body>
-
-    <div id="all">
-        <div id="title">
-            <img src="title.jpg">
-        </div>
-        <div id="body">
-            <form method="get" action="www.jusot.com">
-                <div id="choice">
-                    <br><br><br><br><br><br>
-                    <input type="radio" name="choice" value="Article" checked />Article
-                    <input type="radio" name="choice" value="Definition" />Definition
-                    <input type="radio" name="choice" value="Property" />Property
-                    <input type="radio" name="choice" value="Example" />Example
-                    <input type="radio" name="choice" value="Exercise" />Exercise
-                    <input type="radio" name="choice" value="ConceptMap" />Knowledge Graph
-                    <br><br>
-                </div>
-                <div id="searchBar">
-                    Tex: <input type="text" id="lex">
-                    <button type="button" onclick="UpdateMath(document.getElementById('lex').value)">Preview</button>
-                    Txt: <input type="text" id="txt">
-                    <button type="submit">Search Now!</button>
-                </div>
-                <div id="preview">
-                    <br><br><br>
-                    Tex you typed: ${}$
-                </div>
-            </form>
-        </div>
+    <div style="text-align: center">
+        <h1>Freefall Math</h1>
     </div>
+    <form method="get" action="www.jusot.com" style="text-align: center">
+        <div id="choice">
+            <br><br><br><br><br><br>
+            <input type="radio" name="choice" value="Article" checked />Article
+            <input type="radio" name="choice" value="Definition" />Definition
+            <input type="radio" name="choice" value="Property" />Property
+            <input type="radio" name="choice" value="Example" />Example
+            <input type="radio" name="choice" value="Exercise" />Exercise
+            <input type="radio" name="choice" value="ConceptMap" />ConceptMap
+            <br><br>
+        </div>
+        <div id="searchBar">
+            Tex: <input type="text" id="lex" onkeyup="UpdateMath(this.value)">
+            Txt: <input type="text" id="txt">
+            <button type="submit">Search Now!</button>
+        </div>
+        <div id="preview">
+            <br><br><br>
+            Tex you typed: ${}$
+        </div>
+    </form>
 </body>
 </html>
