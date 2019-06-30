@@ -70,7 +70,7 @@ decltype(auto) get_ambiguity_section(const Utf8String& sentence)
         {
             auto end_pos = sentence.find('$', pos + 1);
             if (end_pos == sentence.npos) break;
-            else ambiguity[pos] = end_pos + 1;
+            ambiguity[pos] = end_pos + 1;
         }
         else for (length = 7; length > 1; --length)
         {
@@ -83,13 +83,31 @@ decltype(auto) get_ambiguity_section(const Utf8String& sentence)
                     auto antmp = sentence.substr(anpos, anlen);
                     if (!InfoQuantity::count(antmp)) continue;
                     ambiguity[pos] = anpos + anlen;
-                    anpos = pos;
                     break;
                 }
+                if (ambiguity.count(pos)) break;
             }
-            break;
+            if (ambiguity.count(pos)) break;
         }
-        pos = ambiguity.count(pos) ? ambiguity[pos] + 1 : (pos + 1);
+        
+        // pos = ambiguity.count(pos) ? ambiguity[pos] : (pos + 1);
+        
+        if (ambiguity.count(pos))
+        {
+            pos = ambiguity[pos];
+        }
+        else
+        {
+            for (auto length = 7; length > 1; --length)
+            {
+                auto tmp = sentence.substr(pos, length);
+                if (!InfoQuantity::count(tmp)) continue;
+                ambiguity[pos] = pos + length;
+                break;
+            }
+
+            pos = ambiguity.count(pos) ? ambiguity[pos] : (pos + 1);
+        }
     }
 
     return ambiguity;
