@@ -90,8 +90,6 @@ decltype(auto) get_ambiguity_section(const Utf8String& sentence)
             if (ambiguity.count(pos)) break;
         }
         
-        // pos = ambiguity.count(pos) ? ambiguity[pos] : (pos + 1);
-        
         if (ambiguity.count(pos))
         {
             pos = ambiguity[pos];
@@ -306,34 +304,6 @@ void InvertedIndex::add_file(const key_type & sentence, const std::string & file
         }
         else for (auto& word : Segmentation::segment(sentence.substr(mp.first, mp.second - mp.first)))
         {
-            alltimes += 1;
-            kwinfos[word].times += 1;
-            kwinfos[word].is_appeared_in_title |= Utf8String(filepath).find(word);
-        }
-    }
-
-    int endpos = -1;
-    for (auto& mp : ambiguities)
-    {
-        while (++endpos < mp.first - 1)
-        {
-            for (int length = 2; endpos + length < mp.first; ++length)
-            {
-                auto word = sentence.substr(endpos, length);
-                if (!InfoQuantity::count(word)) continue;
-                alltimes += 1;
-                kwinfos[word].times += 1;
-                kwinfos[word].is_appeared_in_title |= Utf8String(filepath).find(word);
-            }
-        }
-        endpos = mp.second - 1;
-    }
-    while (++endpos < (int)sentence.size() - 1)
-    {
-        for (int length = 2; endpos + length < (int)sentence.size(); ++length)
-        {
-            auto word = sentence.substr(endpos, length);
-            if (!InfoQuantity::count(word)) continue;
             alltimes += 1;
             kwinfos[word].times += 1;
             kwinfos[word].is_appeared_in_title |= Utf8String(filepath).find(word);
