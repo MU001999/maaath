@@ -129,18 +129,22 @@ std::map<std::string, double> InvertedIndex::cal_scores_(const data_type& kw_inf
 
     for (auto& kw_infos : kw_infos_mapping)
     {
+        int i, concept_pos = -1;
+
         auto& infos = kw_infos.second;
-        for (int i = 0, concept_pos = -1; i < (int)infos.size(); ++i)
+        for (i = 0; i < (int)infos.size(); ++i)
         {
             if (infos[i].is_appeared_in_title)
             {
                 scores[infos[i].filepath] += 1000;
                 concept_pos = filesorder_[infos[i].filepath];
             }
-            else if (concept_pos > -1)
-                scores[infos[i].filepath] -= abs(filesorder_[infos[i].filepath] - concept_pos) * 100;
-
             scores[infos[i].filepath] += infos[i].times * InfoQuantity::get_infoquantity(kw_infos.first);
+        }
+
+        if (concept_pos != -1) for (i = 0; i < (int)infos.size(); ++i)
+        {
+            scores[infos[i].filepath] -= abs(filesorder_[infos[i].filepath] - concept_pos) * 100;
         }
     }
 
