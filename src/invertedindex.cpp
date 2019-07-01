@@ -59,58 +59,6 @@ std::vector<std::string> combine(std::vector<std::vector<std::string>> paths_lis
     return result;
 }
 
-// returns map for ambiguity section by given sentence
-decltype(auto) get_ambiguity_section(const Utf8String& sentence)
-{
-    std::map<int, int> ambiguity;
-
-    for (int pos = 0, length; pos < (int)sentence.size() - 1;)
-    {
-        if (sentence[pos] == '$')
-        {
-            auto end_pos = sentence.find('$', pos + 1);
-            if (end_pos == sentence.npos) break;
-            ambiguity[pos] = end_pos + 1;
-        }
-        else for (length = 7; length > 1; --length)
-        {
-            auto tmp = sentence.substr(pos, length);
-            if (!InfoQuantity::count(tmp)) continue;
-            for (int anpos = pos + length - 1, anlen; anpos > pos; --anpos)
-            {
-                for (anlen = 7; anpos + anlen > pos + length && anpos < (int)sentence.size(); --anlen)
-                {
-                    auto antmp = sentence.substr(anpos, anlen);
-                    if (!InfoQuantity::count(antmp)) continue;
-                    ambiguity[pos] = anpos + anlen;
-                    break;
-                }
-                if (ambiguity.count(pos)) break;
-            }
-            if (ambiguity.count(pos)) break;
-        }
-        
-        if (ambiguity.count(pos))
-        {
-            pos = ambiguity[pos];
-        }
-        else
-        {
-            for (auto length = 7; length > 1; --length)
-            {
-                auto tmp = sentence.substr(pos, length);
-                if (!InfoQuantity::count(tmp)) continue;
-                ambiguity[pos] = pos + length;
-                break;
-            }
-
-            pos = ambiguity.count(pos) ? ambiguity[pos] : (pos + 1);
-        }
-    }
-
-    return ambiguity;
-}
-
 // calculate the order of given section name as '1.5.2 <NAME>' and return the result
 int cal_order_by_secname(const std::string& secname)
 {
@@ -290,29 +238,16 @@ void InvertedIndex::add_file(const key_type & sentence, const std::string & file
 
     std::map<key_type, _KeywordInfo> kwinfos;
 
-    auto ambiguities = get_ambiguity_section(sentence);
-    for (auto& mp : ambiguities)
+    for (auto &word : Segmentation::segment(sentence))
     {
-        if (sentence[mp.first] == '$')
-        {
-            auto formula = sentence.substr(mp.first, mp.second - mp.first).raw();
-            for (const auto &formula : Segmentation::get_all_formulas(formula))
-            {
-                alltimes += 1;
-                kwinfos["$" + formula].times += 1;
-            }
-        }
-        else for (auto& word : Segmentation::segment(sentence.substr(mp.first, mp.second - mp.first)))
-        {
-            alltimes += 1;
-            kwinfos[word].times += 1;
-            kwinfos[word].is_appeared_in_title |= Utf8String(filepath).find(word);
-        }
+        alltimes += 1;
+        kwinfos[word].times += 1;
+        kwinfos[word].is_appeared_in_title |= Utf8String(filepath).find(word);
     }
 
-    for (auto& kwinfo : kwinfos)
+    for (auto &kwinfo : kwinfos)
     {
-        auto& info = kwinfo.second;
+        auto &info = kwinfo.second;
         kw_infos_mapping_[kwinfo.first].push_back({ filepath, info.times, info.times / alltimes, info.is_appeared_in_title });
     }
 }

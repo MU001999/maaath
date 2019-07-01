@@ -77,7 +77,7 @@ bool is_overlapping(const std::vector<_Wordmap>& wd)
 }
 
 // real segment function, returns segmentation result from given sentence
-decltype(auto) get_segmentation(const Utf8String & sentence)
+decltype(auto) segment_unit(const Utf8String & sentence)
 {
     std::vector<_Wordmap> word_maps;
     for (int i = 0; i < (int)sentence.size() - 1; i++)
@@ -111,17 +111,86 @@ decltype(auto) get_segmentation(const Utf8String & sentence)
         }
     }
 
-    best_segment = continuitify(best_segment, sentence);
-
     std::vector<Utf8String> result;
     for (auto& wm : best_segment) result.push_back(wm.word);
     return result;
+}
+
+// returns map for ambiguity section by given sentence
+decltype(auto) get_ambiguity_section(const Utf8String& sentence)
+{
+    std::map<int, int> ambiguity;
+
+    for (int pos = 0, length; pos < (int)sentence.size() - 1;)
+    {
+        if (sentence[pos] == '$')
+        {
+            auto end_pos = sentence.find('$', pos + 1);
+            if (end_pos == sentence.npos) break;
+            ambiguity[pos] = end_pos + 1;
+        }
+        else for (length = 7; length > 1; --length)
+        {
+            auto tmp = sentence.substr(pos, length);
+            if (!InfoQuantity::count(tmp)) continue;
+            for (int anpos = pos + length - 1, anlen; anpos > pos; --anpos)
+            {
+                for (anlen = 7; anpos + anlen > pos + length && anpos < (int)sentence.size(); --anlen)
+                {
+                    auto antmp = sentence.substr(anpos, anlen);
+                    if (!InfoQuantity::count(antmp)) continue;
+                    ambiguity[pos] = anpos + anlen;
+                    break;
+                }
+                if (ambiguity.count(pos)) break;
+            }
+            if (ambiguity.count(pos)) break;
+        }
+        
+        if (ambiguity.count(pos))
+        {
+            pos = ambiguity[pos];
+        }
+        else
+        {
+            for (auto length = 7; length > 1; --length)
+            {
+                auto tmp = sentence.substr(pos, length);
+                if (!InfoQuantity::count(tmp)) continue;
+                ambiguity[pos] = pos + length;
+                break;
+            }
+
+            pos = ambiguity.count(pos) ? ambiguity[pos] : (pos + 1);
+        }
+    }
+
+    return ambiguity;
 }
 } // namespace
 
 std::vector<Utf8String> Segmentation::segment(const Utf8String & sentence)
 {
-    return get_segmentation(sentence);
+    std::vector<Utf8String> result;
+
+    auto ambiguities = get_ambiguity_section(sentence);
+    for (auto& mp : ambiguities)
+    {
+        if (sentence[mp.first] == '$')
+        {
+            auto formula = sentence.substr(mp.first, mp.second - mp.first).raw();
+            for (auto &formula : get_all_formulas(formula))
+            {
+                result.push_back("$" + formula);
+            }
+        }
+        else for (auto& word : segment_unit(sentence.substr(mp.first, mp.second - mp.first)))
+        {
+            result.push_back(word);
+        }
+    }
+
+    return result;
 }
 
 std::list<std::string> Segmentation::get_all_formulas(const std::string &input)
